@@ -3,4 +3,7 @@ project(ACAV)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(ACAV main.cpp)
+add_executable(ACAV main.cpp
+        Point.cpp
+        Point.h
+        Point_type.h)
