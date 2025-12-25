@@ -8,4 +8,10 @@ add_executable(ACAV main.cpp
         Point.h
         Point_type.h
         Map.cpp
-        Map.h)
+        Map.h
+        Vehicle.cpp
+        Vehicle.h
+        EgoVehicle.cpp
+        EgoVehicle.h
+        CPUVehicle.cpp
+        CPUVehicle.h)

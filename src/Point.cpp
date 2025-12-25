@@ -8,6 +8,7 @@ string Point::setVehicle(string id) {
     if (!occupied()) {
         vehicleID = id;
         count++;
+        setOccupied();
     }
     else {
         count++;
@@ -25,6 +26,8 @@ void Point::setOccupied() {
 void Point::setNotOccupied() {
     if (count == 1) {
         isOccupied = false;
+        count = 0;
+        vehicleID = "";
     }
 }
 

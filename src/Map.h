@@ -5,19 +5,22 @@
 
 using std::vector;
 
+class Vehicle;
+
 class Map {
 private:
     vector<vector<Point>> grid;
     const int dim;
+    vector<std::unique_ptr<Vehicle>> vehicles;
 public:
-    Map(int d): dim(d) {
-        grid.resize(dim + 1);
-        for (int i = 0; i < dim + 1; i++) {
-            grid.at(i).resize(dim + 1, Point(Point_type::Empty));
-        }
-    };
+    explicit Map(int d);
+    ~Map() = default;
     void initialize();
     bool crash() const;
+    const vector<vector<Point>>& getGrid() const;
+    int getDim() const;
+    void updatePositions();
+    void generateVehicle(bool, int);
 };
 
 
