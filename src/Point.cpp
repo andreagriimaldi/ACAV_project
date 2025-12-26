@@ -4,7 +4,7 @@ string Point::getVehicle() const {
     return vehicleID;
 }
 
-string Point::setVehicle(string id) {
+void Point::setVehicle(string id) {
     if (!occupied()) {
         vehicleID = id;
         count++;

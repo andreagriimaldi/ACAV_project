@@ -7,7 +7,9 @@ Map::Map(int d): dim(d) {
         grid.at(i).resize(dim + 1, Point(Point_type::Empty));
     }
     vehicles.reserve(10);
-};
+}
+
+Map::~Map() = default;
 
 void Map::initialize() {
 
@@ -32,7 +34,15 @@ void Map::initialize() {
 }
 
 bool Map::crash() const {
-    //For each vehicle call incident() on all its points
+    //The check is performed with the updated positions
+    for (const std::unique_ptr<Vehicle>& v: vehicles) {
+        for (const Point& p: v->updateMap()) {
+            if (p.incident())
+                return true;
+        }
+    }
+
+    return false;
 }
 
 const vector<vector<Point>>& Map::getGrid() const {

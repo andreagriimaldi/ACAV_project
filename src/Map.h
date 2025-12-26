@@ -14,7 +14,7 @@ private:
     vector<std::unique_ptr<Vehicle>> vehicles;
 public:
     explicit Map(int d);
-    ~Map() = default;
+    ~Map();
     void initialize();
     bool crash() const;
     const vector<vector<Point>>& getGrid() const;

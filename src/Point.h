@@ -14,7 +14,7 @@ private:
 public:
     Point(Point_type t) : vehicleID(""), isOccupied(false), type(t), count(0){};
     string getVehicle() const;
-    string setVehicle(string);
+    void setVehicle(string);
     bool occupied() const;
     void setOccupied();
     void setNotOccupied();
