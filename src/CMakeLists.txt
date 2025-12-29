@@ -15,8 +15,8 @@ add_executable(ACAV main.cpp
         EgoVehicle.h
         CPUVehicle.cpp
         CPUVehicle.h
-        ../SfmlRenderer.cpp
-        ../SfmlRenderer.h
+        SfmlRenderer.cpp
+        SfmlRenderer.h
 )
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)

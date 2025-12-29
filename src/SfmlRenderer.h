@@ -1,7 +1,7 @@
 #ifndef ACAV_SFMLRENDERER_H
 #define ACAV_SFMLRENDERER_H
 #include <SFML/Graphics.hpp>
-#include "src/Map.h"
+#include "Map.h"
 
 class SfmlRenderer{
 private:

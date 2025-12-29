@@ -1,4 +1,7 @@
 #include "Map.h"
+
+#include <iostream>
+
 #include "Vehicle.h"
 
 Map::Map(int d): dim(d) {
@@ -15,9 +18,9 @@ void Map::initialize() {
 
     for (int i = 0; i < dim + 1; i++) {
         for (int j = 0; j < dim + 1; j++) {
-            bool west = (i > 0 and i < dim/3) and (j > dim/3 and j < (2/3)*dim);
-            bool center = (i > dim/3 and i < (2/3)*dim and j > 0 and j < dim);
-            bool east = (i > (2/3)*dim and i < dim) and (j > dim/3 and j < (2/3)*dim);
+            bool west = (i > 0 and i <= dim/3) and (j > dim/3 and j < (2*dim)/3);
+            bool center = (i > dim/3 and i < (2*dim)/3 and j > 0 and j < dim);
+            bool east = (i >= (2*dim)/3 and i < dim) and (j > dim/3 and j < (2*dim)/3);
             bool bound = i == 0 or i == dim or j == 0 or j == dim;
 
             if (west or center or east) {
