@@ -5,7 +5,7 @@
 
 class CPUVehicle: public Vehicle{
 public:
-    CPUVehicle(Map &m, const vector<Point> &surf)
+    CPUVehicle(Map &m, const vector<Point*> &surf)
         : Vehicle(m, surf) {
     }
     void move() override;

@@ -39,8 +39,8 @@ void Map::initialize() {
 bool Map::crash() const {
     //The check is performed with the updated positions
     for (const std::unique_ptr<Vehicle>& v: vehicles) {
-        for (const Point& p: v->updateMap()) {
-            if (p.incident())
+        for (const Point* p: v->updateMap()) {
+            if (p->incident())
                 return true;
         }
     }
@@ -58,11 +58,11 @@ int Map::getDim() const {
 
 void Map::updatePositions() {
     for (const std::unique_ptr<Vehicle>& v: vehicles) {
-        for (Point p: v->getOldPosition()) {
-            p.setNotOccupied();
+        for (Point *p: v->getOldPosition()) {
+            p->setNotOccupied();
         }
-        for (Point p: v->updateMap()) {
-            p.setVehicle(v->getID());
+        for (Point *p: v->updateMap()) {
+            p->setVehicle(v->getID());
         }
         v->updateSurface();
     }
