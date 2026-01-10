@@ -9,7 +9,7 @@ using std::string;
 class Map;
 
 class Vehicle {
-private:
+protected:
     const string ID;
     const Map& map;
     int heading;

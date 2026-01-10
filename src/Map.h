@@ -21,6 +21,8 @@ public:
     int getDim() const;
     void updatePositions();
     void generateVehicle(bool, int, double);
+    void moveVehicles();
+
     void FakeUpdate();
 };
 

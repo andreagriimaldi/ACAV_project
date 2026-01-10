@@ -175,6 +175,15 @@ void Map::generateVehicle(bool ego, int spawn, double speed) {
     }
 }
 
+void Map::moveVehicles() {
+    //TO BE REFINED
+    for (const std::unique_ptr<Vehicle> &v: vehicles) {
+        v->move();
+    }
+    updatePositions();
+}
+
+
 void Map::FakeUpdate() {
     for (const std::unique_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
