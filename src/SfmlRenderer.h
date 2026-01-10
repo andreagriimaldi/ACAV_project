@@ -11,7 +11,7 @@ public:
     SfmlRenderer(int dim)
     : window(sf::VideoMode(sf::Vector2u{800, 800}),"Simulation"), cellSize(800.f / dim) {}
 
-    sf::Color colorFromPoint(const Point & point) const;
+    sf::Color colorFromPoint(const std::shared_ptr<Point> point) const;
 
     void draw(const Map& map);
 };

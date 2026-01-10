@@ -1,10 +1,10 @@
 #include "SfmlRenderer.h"
 
-sf::Color SfmlRenderer::colorFromPoint(const Point &point) const {
-    if (point.occupied())
+sf::Color SfmlRenderer::colorFromPoint(const std::shared_ptr<Point> point) const {
+    if (point->occupied())
         return sf::Color::Red;
 
-    switch (point.getType()) {
+    switch (point->getType()) {
         case Point_type::Empty:
             return sf::Color::Green;
         case Point_type::Boundary:

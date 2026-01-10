@@ -4,14 +4,14 @@
 #include "SfmlRenderer.h"
 
 int main() {
-    Map m = Map(30);
+    Map m = Map(90);
     m.initialize();
     //SfmlRenderer renderer = SfmlRenderer(30);
 
     std::cout << std::endl;
     for (int i = 0; i < m.getDim() + 1; i++) {
         for (int j = 0; j < m.getDim() + 1; j++) {
-            switch (m.getGrid()[j][i].getType()) {
+            switch (m.getGrid()[j][i]->getType()) {
                 case Point_type::Empty:
                     std::cout << "- ";
                     break;

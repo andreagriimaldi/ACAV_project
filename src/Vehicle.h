@@ -12,16 +12,16 @@ class Vehicle {
 private:
     string ID;
     const Map& map;
-    vector<Point*> surface;
-    vector<Point*> updatedPosition;
+    vector<std::shared_ptr<Point>> surface;
+    vector<std::shared_ptr<Point>> updatedPosition;
 public:
-    explicit Vehicle(Map& m, const vector<Point*>& surf): map(m) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf): map(m) {
         surface = surf;
     };
     virtual ~Vehicle() = default;
     string getID() const;
-    const vector<Point*>& getOldPosition() const;
-    const vector<Point*>& updateMap() const;
+    const vector<std::shared_ptr<Point>>& getOldPosition() const;
+    const vector<std::shared_ptr<Point>>& updateMap() const;
     virtual void move() = 0;
     void updateSurface();
 };

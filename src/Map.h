@@ -9,7 +9,7 @@ class Vehicle;
 
 class Map {
 private:
-    vector<vector<Point>> grid;
+    vector<vector<std::shared_ptr<Point>>> grid;
     const int dim;
     vector<std::unique_ptr<Vehicle>> vehicles;
 public:
@@ -17,7 +17,7 @@ public:
     ~Map();
     void initialize();
     bool crash() const;
-    const vector<vector<Point>>& getGrid() const;
+    const vector<vector<std::shared_ptr<Point>>>& getGrid() const;
     int getDim() const;
     void updatePositions();
     void generateVehicle(bool, int);

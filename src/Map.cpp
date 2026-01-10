@@ -7,7 +7,7 @@
 Map::Map(int d): dim(d) {
     grid.resize(dim + 1);
     for (int i = 0; i < dim + 1; i++) {
-        grid.at(i).resize(dim + 1, Point(Point_type::Empty));
+        grid.at(i).resize(dim + 1, std::make_shared<Point>(Point(Point_type::Empty)));
     }
     vehicles.reserve(10);
 }
@@ -24,11 +24,11 @@ void Map::initialize() {
             bool bound = i == 0 or i == dim or j == 0 or j == dim;
 
             if (west or center or east) {
-                grid.at(i).at(j) = Point(Point_type::Road);
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Road));
             }
 
             if (bound) {
-                grid.at(i).at(j) = Point(Point_type::Boundary);
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Boundary));
             }
         }
     }
@@ -39,7 +39,7 @@ void Map::initialize() {
 bool Map::crash() const {
     //The check is performed with the updated positions
     for (const std::unique_ptr<Vehicle>& v: vehicles) {
-        for (const Point* p: v->updateMap()) {
+        for (const std::shared_ptr<Point>& p: v->updateMap()) {
             if (p->incident())
                 return true;
         }
@@ -48,7 +48,7 @@ bool Map::crash() const {
     return false;
 }
 
-const vector<vector<Point>>& Map::getGrid() const {
+const vector<vector<std::shared_ptr<Point>>>& Map::getGrid() const {
     return grid;
 }
 
@@ -58,10 +58,10 @@ int Map::getDim() const {
 
 void Map::updatePositions() {
     for (const std::unique_ptr<Vehicle>& v: vehicles) {
-        for (Point *p: v->getOldPosition()) {
+        for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             p->setNotOccupied();
         }
-        for (Point *p: v->updateMap()) {
+        for (const std::shared_ptr<Point>& p: v->updateMap()) {
             p->setVehicle(v->getID());
         }
         v->updateSurface();

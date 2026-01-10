@@ -5,11 +5,11 @@ string Vehicle::getID() const {
     return ID;
 }
 
-const vector<Point*>& Vehicle::getOldPosition() const {
+const vector<std::shared_ptr<Point>>& Vehicle::getOldPosition() const {
     return surface;
 }
 
-const vector<Point*>& Vehicle::updateMap() const {
+const vector<std::shared_ptr<Point>>& Vehicle::updateMap() const {
     return updatedPosition;
 }
 
