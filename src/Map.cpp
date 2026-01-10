@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "CPUVehicle.h"
+#include "EgoVehicle.h"
 #include "Vehicle.h"
 
 Map::Map(int d): dim(d) {
@@ -68,7 +70,112 @@ void Map::updatePositions() {
     }
 }
 
-void Map::generateVehicle(bool, int) {
+//ego is true when the ego vehicle is being generated
+//int represents the spawn point (0 N, 1 E, 2 S, 3 W)
+void Map::generateVehicle(bool ego, int spawn, double speed) {
+    vector<std::shared_ptr<Point>> spawnPosition;
+    switch (spawn) {
+        case 0: {
+
+            for (int i = dim/3 + dim/15; i < dim/3 + 2*(dim/15); i++) {
+                spawnPosition.push_back(grid.at(i).at(dim/15));
+            }
+            for (int i = dim/3 + dim/15; i < dim/3 + 2*(dim/15); i++) {
+                spawnPosition.push_back(grid.at(i).at(dim/15 + dim/9));
+            }
+            for (int j = dim/15; j < dim/15 + dim/9; j++) {
+                spawnPosition.push_back(grid.at(dim/3 + dim/15).at(j));
+            }
+            for (int j = dim/15; j <= dim/15 + dim/9; j++) {
+                spawnPosition.push_back(grid.at(dim/3 + 2*(dim/15)).at(j));
+            }
+            if (ego) {
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 270, speed));
+            }
+            else {
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 270, speed));
+            }
+            break;
+
+        }
+        case 1: {
+
+            for (int i = dim - dim/15 - dim/9; i < dim - dim/15; i++) {
+                spawnPosition.push_back(grid.at(i).at(dim/3 + dim/15));
+            }
+            for (int i = dim - dim/15 - dim/9; i < dim - dim/15; i++) {
+                spawnPosition.push_back(grid.at(i).at(dim/3 + 2*(dim/15)));
+            }
+            for (int j = dim/3 + dim/15; j < dim/3 + 2*(dim/15); j++) {
+                spawnPosition.push_back(grid.at(dim - dim/15 - dim/9).at(j));
+            }
+            for (int j = dim/3 + dim/15; j <= dim/3 + 2*(dim/15); j++) {
+                spawnPosition.push_back(grid.at(dim - dim/15).at(j));
+            }
+            if (ego) {
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed));
+            }
+            else {
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed));
+            }
+            break;
+
+        }
+        case 2: {
+
+            for (int i = 2*(dim/3 - dim/15); i < 2*(dim/3) - dim/15; i++) {
+                spawnPosition.push_back(grid.at(i).at(dim - dim/15 - dim/9));
+            }
+            for (int i = 2*(dim/3 - dim/15); i < 2*(dim/3) - dim/15; i++) {
+                spawnPosition.push_back(grid.at(i).at(dim - dim/15));
+            }
+            for (int j = dim - dim/15 - dim/9; j < dim - dim/15; j++) {
+                spawnPosition.push_back(grid.at(2*(dim/3 - dim/15)).at(j));
+            }
+            for (int j = dim - dim/15 - dim/9; j <= dim - dim/15; j++) {
+                spawnPosition.push_back(grid.at(2*(dim/3) - dim/15).at(j));
+            }
+            if (ego) {
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 90, speed));
+            }
+            else {
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 90, speed));
+            }
+            break;
+
+        }
+        case 3: {
+
+            for (int i = dim/15; i < dim/15 + dim/9; i++) {
+                spawnPosition.push_back(grid.at(i).at(2*(dim/3 - dim/15)));
+            }
+            for (int i = dim/15; i < dim/15 + dim/9; i++) {
+                spawnPosition.push_back(grid.at(i).at(2*(dim/3) - dim/15));
+            }
+            for (int j = 2*(dim/3 - dim/15); j < 2*(dim/3) - dim/15; j++) {
+                spawnPosition.push_back(grid.at(dim/15).at(j));
+            }
+            for (int j = 2*(dim/3 - dim/15); j <= 2*(dim/3) - dim/15; j++) {
+                spawnPosition.push_back(grid.at(dim/15 + dim/9).at(j));
+            }
+            if (ego) {
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed));
+            }
+            else {
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed));
+            }
+            break;
+
+        }
+    }
+}
+
+void Map::FakeUpdate() {
+    for (const std::unique_ptr<Vehicle>& v: vehicles) {
+        for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
+            p->setVehicle(v->getID());
+        }
+    }
 }
 
 

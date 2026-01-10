@@ -5,8 +5,8 @@
 
 class CPUVehicle: public Vehicle{
 public:
-    CPUVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf)
-        : Vehicle(m, surf) {
+    CPUVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s)
+        : Vehicle(m, surf, h, s) {
     }
     void move() override;
 };

@@ -5,6 +5,14 @@ string Vehicle::getID() const {
     return ID;
 }
 
+int Vehicle::getHeading() const {
+    return heading;
+}
+
+double Vehicle::getSpeed() const {
+    return speed;
+}
+
 const vector<std::shared_ptr<Point>>& Vehicle::getOldPosition() const {
     return surface;
 }

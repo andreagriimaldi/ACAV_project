@@ -5,7 +5,7 @@ enum class Point_type {
     Empty,
     Road,
     Boundary,
-    Rotation
+    Rotation,
 };
 
 #endif //ACAV_POINT_TYPE_H

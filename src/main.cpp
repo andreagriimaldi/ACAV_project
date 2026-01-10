@@ -8,19 +8,31 @@ int main() {
     m.initialize();
     //SfmlRenderer renderer = SfmlRenderer(30);
 
+    m.generateVehicle(true, 3, 0);
+    m.generateVehicle(false, 0, 0);
+    m.generateVehicle(false, 1, 0);
+    m.generateVehicle(false, 2, 0);
+
+    m.FakeUpdate();
+
     std::cout << std::endl;
     for (int i = 0; i < m.getDim() + 1; i++) {
         for (int j = 0; j < m.getDim() + 1; j++) {
-            switch (m.getGrid()[j][i]->getType()) {
-                case Point_type::Empty:
-                    std::cout << "- ";
-                    break;
-                case Point_type::Boundary:
-                    std::cout << "h ";
-                    break;
-                case Point_type::Road:
-                    std::cout << "r ";
-                    break;
+            if (m.getGrid()[j][i]->occupied()) {
+                std::cout << "❌";
+            }
+            else {
+                switch (m.getGrid()[j][i]->getType()) {
+                    case Point_type::Empty:
+                        std::cout << "- ";
+                        break;
+                    case Point_type::Boundary:
+                        std::cout << "h ";
+                        break;
+                    case Point_type::Road:
+                        std::cout << "r ";
+                        break;
+                }
             }
         }
         std::cout << std::endl;
