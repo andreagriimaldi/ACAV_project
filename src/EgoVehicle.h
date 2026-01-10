@@ -5,8 +5,8 @@
 
 class EgoVehicle: public Vehicle {
 public:
-    EgoVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s)
-        : Vehicle(m, surf, h, s) {
+    EgoVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s, string id)
+        : Vehicle(m, surf, h, s, id) {
     }
     void move() override;
 };

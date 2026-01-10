@@ -1,6 +1,7 @@
 #include "Map.h"
 
 #include <iostream>
+#include <random>
 
 #include "CPUVehicle.h"
 #include "EgoVehicle.h"
@@ -90,10 +91,11 @@ void Map::generateVehicle(bool ego, int spawn, double speed) {
                 spawnPosition.push_back(grid.at(dim/3 + 2*(dim/15)).at(j));
             }
             if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 270, speed));
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 270, speed, "ego"));
             }
             else {
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 270, speed));
+                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 270, speed, s));
             }
             break;
 
@@ -113,10 +115,11 @@ void Map::generateVehicle(bool ego, int spawn, double speed) {
                 spawnPosition.push_back(grid.at(dim - dim/15).at(j));
             }
             if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed));
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed, "ego"));
             }
             else {
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed));
+                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed, s));
             }
             break;
 
@@ -136,10 +139,11 @@ void Map::generateVehicle(bool ego, int spawn, double speed) {
                 spawnPosition.push_back(grid.at(2*(dim/3) - dim/15).at(j));
             }
             if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 90, speed));
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 90, speed, "ego"));
             }
             else {
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 90, speed));
+                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 90, speed, s));
             }
             break;
 
@@ -159,10 +163,11 @@ void Map::generateVehicle(bool ego, int spawn, double speed) {
                 spawnPosition.push_back(grid.at(dim/15 + dim/9).at(j));
             }
             if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed));
+                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed, "ego"));
             }
             else {
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed));
+                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
+                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed, s));
             }
             break;
 

@@ -19,7 +19,12 @@ int main() {
     for (int i = 0; i < m.getDim() + 1; i++) {
         for (int j = 0; j < m.getDim() + 1; j++) {
             if (m.getGrid()[j][i]->occupied()) {
-                std::cout << "❌";
+                if (m.getGrid()[j][i]->getVehicle() == "ego") {
+                    std::cout << "❎";
+                }
+                else {
+                    std::cout << "❌";
+                }
             }
             else {
                 switch (m.getGrid()[j][i]->getType()) {
