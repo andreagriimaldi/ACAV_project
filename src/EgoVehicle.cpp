@@ -2,7 +2,7 @@
 
 void EgoVehicle::move() {
     //TEMP
-    updatedPosition.push_back(surface.at(0));
+    computeNewPosition(270, map.getDim()/2, map.getDim()/2);
 
     //THE FINAL VERSION WILL DECIDE NEW COG AND HEADING AND WILL CALL COMPUTENEWPOSITION()
     //REMEMBER THAT THE NEW COG AND HEADING WILL BE AFFECTED BY CURRENT SPEED (AND RELY ON ACC FOR THAT)

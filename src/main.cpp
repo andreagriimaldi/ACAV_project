@@ -4,9 +4,11 @@
 #include "SDLRenderer.h"
 
 int main(int argc, char* argv[]) {
+
+    //This will be passed as an argument
     constexpr int GUI_SIZE = 800;
 
-    Map m = Map(270);
+    Map m = Map(1350);
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
@@ -45,9 +47,9 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
     }
 
-    /*
     m.moveVehicles();
 
+    /*
     std::cout << std::endl;
     for (int i = 0; i < m.getDim() + 1; i++) {
         for (int j = 0; j < m.getDim() + 1; j++) {

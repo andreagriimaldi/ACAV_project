@@ -32,7 +32,7 @@ public:
     virtual void move() = 0;
     void updateSurface();
     void changeHeading(int);
-    void computeNewPosition(int newh, std::shared_ptr<Point> newcog);
+    void computeNewPosition(int, int, int);
 };
 
 

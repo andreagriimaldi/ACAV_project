@@ -5,7 +5,7 @@
 void GlobalPlan::initialize() {
     //0 = N short, 1 = N long, 2 = E short, 3 = E long, 4 = S short, 5 = S long, 6 = W short, 7 = W long, 8 = N straight, 9 = E straight
     //10 = S straight, 11 = W straight
-    vector<vector<std::shared_ptr<Point>>> grid = map.getGrid();
+    const vector<vector<std::shared_ptr<Point>>> grid = map.getGrid();
     int dim = map.getDim();
     switch (type) {
         case 0: {
@@ -95,7 +95,7 @@ int GlobalPlan::countToVisit() const{
     return points.size();
 }
 
-std::shared_ptr<Point> GlobalPlan::nextPoint() const {
+const std::shared_ptr<Point>& GlobalPlan::nextPoint() const {
     if (!points.empty()) {
         return points.front();
     }
