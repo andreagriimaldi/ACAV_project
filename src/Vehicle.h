@@ -1,6 +1,8 @@
 #ifndef ACAV_VEHICLE_H
 #define ACAV_VEHICLE_H
 #include <vector>
+
+#include "GlobalPlan.h"
 #include "Point.h"
 
 using std::vector;
@@ -16,8 +18,9 @@ protected:
     double speed;
     vector<std::shared_ptr<Point>> surface;
     vector<std::shared_ptr<Point>> updatedPosition;
+    GlobalPlan p;
 public:
-    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id): ID(id), map(m), heading(h), speed(s) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan): ID(id), map(m), heading(h), speed(s), p(m, gplan) {
         surface = surf;
     };
     virtual ~Vehicle() = default;

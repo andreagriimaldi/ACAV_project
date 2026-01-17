@@ -10,10 +10,10 @@ int main(int argc, char* argv[]) {
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
-    m.generateVehicle(true, 3, 0);
-    m.generateVehicle(false, 0, 0);
-    m.generateVehicle(false, 1, 0);
-    m.generateVehicle(false, 2, 0);
+    m.generateVehicle(true, 3, 0, 0);
+    m.generateVehicle(false, 0, 0, 1);
+    m.generateVehicle(false, 1, 0, 2);
+    m.generateVehicle(false, 2, 0, 3);
 
     m.FakeUpdate();
 

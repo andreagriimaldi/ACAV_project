@@ -5,7 +5,6 @@ void GlobalPlan::initialize() {
     //10 = S straight, 11 = W straight
     vector<vector<std::shared_ptr<Point>>> grid = map.getGrid();
     int dim = map.getDim();
-
     switch (type) {
         case 0: {
             points.push_back(grid.at(dim/3 + dim/10).at(dim/3 + dim/30));
@@ -24,7 +23,7 @@ void GlobalPlan::initialize() {
         }
         case 2: {
             points.push_back(grid.at((2*dim)/3 - dim/30).at(dim/3 + dim/10));
-            points.push_back(grid.at(static_cast<int>(std::round((2*dim)/30 - dim/10))).at(static_cast<int>(std::round(dim/3 + dim/30))));
+            points.push_back(grid.at(static_cast<int>(std::round((2*dim)/3 - dim/10))).at(static_cast<int>(std::round(dim/3 + dim/30))));
             points.push_back(grid.at(static_cast<int>(std::round((2*dim)/3 - dim/15))).at(static_cast<int>(std::round(dim/6))));
             points.push_back(grid.at(static_cast<int>(std::round((2*dim)/3 - dim/10))).at(static_cast<int>(std::round(dim/10))));
             break;
@@ -90,11 +89,11 @@ void GlobalPlan::initialize() {
     }
 }
 
-int GlobalPlan::countToVisit() {
+int GlobalPlan::countToVisit() const{
     return points.size();
 }
 
-std::shared_ptr<Point> GlobalPlan::nextPoint() {
+std::shared_ptr<Point> GlobalPlan::nextPoint() const {
     if (!points.empty()) {
         auto p = points.front();
         return p;

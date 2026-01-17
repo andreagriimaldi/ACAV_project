@@ -8,18 +8,18 @@
 
 class GlobalPlan {
     private:
-        Map map;
+        const Map& map;
         std::vector<std::shared_ptr<Point>> points;
         int type;
     public:
-        explicit GlobalPlan(Map m, int t): map(m), type(t) {
+        explicit GlobalPlan(const Map &m, int t): map(m), type(t) {
             points.resize(20);
             initialize();
         };
 
         void initialize();
-        int countToVisit();
-        std::shared_ptr<Point> nextPoint();
+        int countToVisit() const;
+        std::shared_ptr<Point> nextPoint() const;
         void popCurrent();
 
 };
