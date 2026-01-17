@@ -85,103 +85,57 @@ void Map::updatePositions() {
 //int represents the spawn point (0 N, 1 E, 2 S, 3 W)
 void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
     vector<std::shared_ptr<Point>> spawnPosition;
+    int x_min, x_max, y_min, y_max, heading;
+
     switch (spawn) {
         case 0: {
-
-            for (int i = dim/3 + dim/15; i < dim/3 + 2*(dim/15); i++) {
-                spawnPosition.push_back(grid.at(i).at(dim/15));
-            }
-            for (int i = dim/3 + dim/15; i < dim/3 + 2*(dim/15); i++) {
-                spawnPosition.push_back(grid.at(i).at(dim/15 + dim/9));
-            }
-            for (int j = dim/15; j < dim/15 + dim/9; j++) {
-                spawnPosition.push_back(grid.at(dim/3 + dim/15).at(j));
-            }
-            for (int j = dim/15; j <= dim/15 + dim/9; j++) {
-                spawnPosition.push_back(grid.at(dim/3 + 2*(dim/15)).at(j));
-            }
-            if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 270, speed, "ego", gplan));
-            }
-            else {
-                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 270, speed, s, gplan));
-            }
+            x_min = dim/3 + dim/15;
+            x_max = dim/3 + 2*(dim/15);
+            y_min = dim/15;
+            y_max = dim/15 + dim/9;
+            heading = 270;
             break;
-
         }
         case 1: {
-
-            for (int i = dim - dim/15 - dim/9; i < dim - dim/15; i++) {
-                spawnPosition.push_back(grid.at(i).at(dim/3 + dim/15));
-            }
-            for (int i = dim - dim/15 - dim/9; i < dim - dim/15; i++) {
-                spawnPosition.push_back(grid.at(i).at(dim/3 + 2*(dim/15)));
-            }
-            for (int j = dim/3 + dim/15; j < dim/3 + 2*(dim/15); j++) {
-                spawnPosition.push_back(grid.at(dim - dim/15 - dim/9).at(j));
-            }
-            for (int j = dim/3 + dim/15; j <= dim/3 + 2*(dim/15); j++) {
-                spawnPosition.push_back(grid.at(dim - dim/15).at(j));
-            }
-            if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed, "ego", gplan));
-            }
-            else {
-                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed, s, gplan));
-            }
+            x_min = dim - dim/15 - dim/9;
+            x_max = dim - dim/15;
+            y_min = dim/3 + dim/15;
+            y_max = dim/3 + 2*(dim/15);
+            heading = 0;
             break;
-
         }
         case 2: {
-
-            for (int i = 2*(dim/3 - dim/15); i < 2*(dim/3) - dim/15; i++) {
-                spawnPosition.push_back(grid.at(i).at(dim - dim/15 - dim/9));
-            }
-            for (int i = 2*(dim/3 - dim/15); i < 2*(dim/3) - dim/15; i++) {
-                spawnPosition.push_back(grid.at(i).at(dim - dim/15));
-            }
-            for (int j = dim - dim/15 - dim/9; j < dim - dim/15; j++) {
-                spawnPosition.push_back(grid.at(2*(dim/3 - dim/15)).at(j));
-            }
-            for (int j = dim - dim/15 - dim/9; j <= dim - dim/15; j++) {
-                spawnPosition.push_back(grid.at(2*(dim/3) - dim/15).at(j));
-            }
-            if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 90, speed, "ego", gplan));
-            }
-            else {
-                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 90, speed, s, gplan));
-            }
+            x_min = 2*(dim/3 - dim/15);
+            x_max = 2*(dim/3) - dim/15;
+            y_min = dim - dim/15 - dim/9;
+            y_max = dim - dim/15;
+            heading = 90;
             break;
-
         }
         case 3: {
-
-            for (int i = dim/15; i < dim/15 + dim/9; i++) {
-                spawnPosition.push_back(grid.at(i).at(2*(dim/3 - dim/15)));
-            }
-            for (int i = dim/15; i < dim/15 + dim/9; i++) {
-                spawnPosition.push_back(grid.at(i).at(2*(dim/3) - dim/15));
-            }
-            for (int j = 2*(dim/3 - dim/15); j < 2*(dim/3) - dim/15; j++) {
-                spawnPosition.push_back(grid.at(dim/15).at(j));
-            }
-            for (int j = 2*(dim/3 - dim/15); j <= 2*(dim/3) - dim/15; j++) {
-                spawnPosition.push_back(grid.at(dim/15 + dim/9).at(j));
-            }
-            if (ego) {
-                vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, 0, speed, "ego", gplan));
-            }
-            else {
-                auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-                vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, 0, speed, s, gplan));
-            }
+            x_min = dim/15;
+            x_max = dim/15 + dim/9;
+            y_min = 2*(dim/3 - dim/15);
+            y_max = 2*(dim/3) - dim/15;
+            heading = 0;
             break;
-
         }
+        default:
+            return;
+    }
+
+    for (int i = x_min; i <= x_max; i++) {
+        for (int j = y_min; j <= y_max; j++) {
+            spawnPosition.push_back(grid.at(i).at(j));
+        }
+    }
+
+    if (ego) {
+        vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, heading, speed, "ego", gplan));
+    }
+    else {
+        auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
+        vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, heading, speed, s, gplan));
     }
 }
 

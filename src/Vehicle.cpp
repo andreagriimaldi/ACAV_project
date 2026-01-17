@@ -28,3 +28,9 @@ void Vehicle::updateSurface() {
 void Vehicle::changeHeading(int newh) {
     heading = newh;
 }
+
+void Vehicle::computeNewPosition(int newh, std::shared_ptr<Point> newcog) {
+    //here I compute the updated position and update heading
+    changeHeading(newh);
+    //TO DO
+}

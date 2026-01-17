@@ -1,5 +1,7 @@
 #include "GlobalPlan.h"
 
+#include <iostream>
+
 void GlobalPlan::initialize() {
     //0 = N short, 1 = N long, 2 = E short, 3 = E long, 4 = S short, 5 = S long, 6 = W short, 7 = W long, 8 = N straight, 9 = E straight
     //10 = S straight, 11 = W straight
@@ -95,9 +97,9 @@ int GlobalPlan::countToVisit() const{
 
 std::shared_ptr<Point> GlobalPlan::nextPoint() const {
     if (!points.empty()) {
-        auto p = points.front();
-        return p;
+        return points.front();
     }
+    std::cerr << "There are no points left in the Global Plan" << std::endl;
     return nullptr;
 }
 
