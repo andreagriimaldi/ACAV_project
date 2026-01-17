@@ -1,12 +1,14 @@
 #include <iostream>
 
 #include "Map.h"
-#include "SfmlRenderer.h"
+#include "SDLRenderer.h"
 
-int main() {
+int main(int argc, char* argv[]) {
+    constexpr int GUI_SIZE = 800;
+
     Map m = Map(90);
     m.initialize();
-    //SfmlRenderer renderer = SfmlRenderer(30);
+    SDLRenderer renderer(GUI_SIZE);
 
     m.generateVehicle(true, 3, 0);
     m.generateVehicle(false, 0, 0);
@@ -43,6 +45,7 @@ int main() {
         std::cout << std::endl;
     }
 
+    /*
     m.moveVehicles();
 
     std::cout << std::endl;
@@ -72,10 +75,13 @@ int main() {
         }
         std::cout << std::endl;
     }
-
-    /*while (true) {
-        renderer.draw(m);
-    }
     */
+
+    bool running = true;
+    while (running) {
+        running = renderer.pollEvents();
+        renderer.draw(m);
+        SDL_Delay(16);  // ~60 FPS cap
+    }
     return 0;
 }

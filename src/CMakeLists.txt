@@ -3,6 +3,10 @@ project(ACAV)
 
 set(CMAKE_CXX_STANDARD 23)
 
+# Homebrew SDL2 on macOS arm64
+set(SDL2_INCLUDE_DIRS "/opt/homebrew/include/SDL2")
+set(SDL2_LIBRARIES "/opt/homebrew/lib/libSDL2.dylib")
+
 add_executable(ACAV main.cpp
         Point.cpp
         Point.h
@@ -15,16 +19,12 @@ add_executable(ACAV main.cpp
         EgoVehicle.h
         CPUVehicle.cpp
         CPUVehicle.h
-        SfmlRenderer.cpp
-        SfmlRenderer.h
+        SDLRenderer.cpp
+        SDLRenderer.h
 )
 
-find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+target_include_directories(ACAV PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(ACAV ${SDL2_LIBRARIES})
 
-target_link_libraries(ACAV
-        SFML::Graphics
-        SFML::Window
-        SFML::System
-)
 
 
