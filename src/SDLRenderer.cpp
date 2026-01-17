@@ -1,8 +1,10 @@
 #include "SDLRenderer.h"
 #include <stdexcept>
-#include <cmath>
+#include <vector>
 
-SDLRenderer::SDLRenderer(int guiSize) : windowSize(guiSize), scale(1.0) {
+SDLRenderer::SDLRenderer(int guiSize)
+    : windowSize(guiSize), mapTexture(nullptr), currentMapDim(0) {
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         throw std::runtime_error(std::string("SDL init failed: ") + SDL_GetError());
     }
@@ -27,54 +29,83 @@ SDLRenderer::SDLRenderer(int guiSize) : windowSize(guiSize), scale(1.0) {
         SDL_Quit();
         throw std::runtime_error(std::string("Renderer creation failed: ") + SDL_GetError());
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 }
 
 SDLRenderer::~SDLRenderer() {
+    if (mapTexture) SDL_DestroyTexture(mapTexture);
     if (renderer) SDL_DestroyRenderer(renderer);
     if (window) SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-void SDLRenderer::drawPoint(int x, int y, Color c) {
-    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255);
+void SDLRenderer::recreateTexture(int mapDim) {
+    if (mapTexture) {
+        SDL_DestroyTexture(mapTexture);
+    }
 
-    int px1 = static_cast<int>(std::floor(x * scale));
-    int py1 = static_cast<int>(std::floor(y * scale));
-    int px2 = static_cast<int>(std::ceil((x + 1) * scale));
-    int py2 = static_cast<int>(std::ceil((y + 1) * scale));
+    mapTexture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        mapDim,
+        mapDim
+    );
 
-    SDL_Rect rect = {px1, py1, px2 - px1, py2 - py1};
-    SDL_RenderFillRect(renderer, &rect);
+    if (!mapTexture) {
+        throw std::runtime_error(std::string("Texture creation failed: ") + SDL_GetError());
+    }
+
+    currentMapDim = mapDim;
 }
 
 void SDLRenderer::draw(const Map& map) {
     int mapDim = map.getDim() + 1;
-    scale = static_cast<double>(windowSize) / static_cast<double>(mapDim);
+
+    if (mapDim != currentMapDim) {
+        recreateTexture(mapDim);
+    }
+
+    const auto& grid = map.getGrid();
+
+    // Lock texture for direct pixel access
+    void* pixels;
+    int pitch;
+    if (SDL_LockTexture(mapTexture, nullptr, &pixels, &pitch) < 0) {
+        return;
+    }
+
+    Uint32* pixelData = static_cast<Uint32*>(pixels);
+    int pixelPitch = pitch / sizeof(Uint32);
+
+    for (int y = 0; y < mapDim; y++) {
+        for (int x = 0; x < mapDim; x++) {
+            const auto& point = grid[x][y];
+            Uint32 color;
+
+            if (point->occupied()) {
+                color = (point->getVehicle() == "ego") ? COLOR_EGO : COLOR_CPU;
+            } else {
+                switch (point->getType()) {
+                    case Point_type::Empty:    color = COLOR_EMPTY;    break;
+                    case Point_type::Road:     color = COLOR_ROAD;     break;
+                    case Point_type::Boundary: color = COLOR_BOUNDARY; break;
+                    case Point_type::Rotation: color = COLOR_ROAD;     break;
+                    default:                   color = COLOR_EMPTY;    break;
+                }
+            }
+
+            pixelData[y * pixelPitch + x] = color;
+        }
+    }
+
+    SDL_UnlockTexture(mapTexture);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    const auto& grid = map.getGrid();
-
-    for (int x = 0; x < mapDim; x++) {
-        for (int y = 0; y < mapDim; y++) {
-            const auto& point = grid[x][y];
-            Color c;
-
-            if (point->occupied()) {
-                c = (point->getVehicle() == "ego") ? COLOR_EGO : COLOR_CPU;
-            } else {
-                switch (point->getType()) {
-                    case Point_type::Empty:    c = COLOR_EMPTY;    break;
-                    case Point_type::Road:     c = COLOR_ROAD;     break;
-                    case Point_type::Boundary: c = COLOR_BOUNDARY; break;
-                    case Point_type::Rotation: c = COLOR_ROAD;     break;
-                }
-            }
-
-            drawPoint(x, y, c);
-        }
-    }
+    SDL_RenderCopy(renderer, mapTexture, nullptr, nullptr);
 
     SDL_RenderPresent(renderer);
 }

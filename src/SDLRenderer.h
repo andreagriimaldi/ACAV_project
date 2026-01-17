@@ -8,18 +8,17 @@ class SDLRenderer {
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Texture* mapTexture;
     int windowSize;
-    double scale;
+    int currentMapDim;
 
-    // Colors
-    struct Color { Uint8 r, g, b; };
-    static constexpr Color COLOR_EMPTY     = {40, 40, 40};
-    static constexpr Color COLOR_ROAD      = {80, 80, 80};
-    static constexpr Color COLOR_BOUNDARY  = {200, 200, 200};
-    static constexpr Color COLOR_EGO       = {0, 200, 100};
-    static constexpr Color COLOR_CPU       = {200, 50, 50};
+    static constexpr Uint32 COLOR_EMPTY     = 0xFF282828;
+    static constexpr Uint32 COLOR_ROAD      = 0xFF505050;
+    static constexpr Uint32 COLOR_BOUNDARY  = 0xFFC8C8C8;
+    static constexpr Uint32 COLOR_EGO       = 0xFF00C864;
+    static constexpr Uint32 COLOR_CPU       = 0xFFC83232;
 
-    void drawPoint(int x, int y, Color c);
+    void recreateTexture(int mapDim);
 
 public:
     explicit SDLRenderer(int guiSize);

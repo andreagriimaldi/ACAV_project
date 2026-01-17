@@ -6,7 +6,7 @@
 int main(int argc, char* argv[]) {
     constexpr int GUI_SIZE = 800;
 
-    Map m = Map(90);
+    Map m = Map(270);
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
