@@ -28,6 +28,7 @@ public:
     const vector<std::shared_ptr<Point>>& updateMap() const;
     virtual void move() = 0;
     void updateSurface();
+    void changeHeading(int);
 };
 
 

@@ -25,14 +25,14 @@ void Map::initialize() {
             bool center = (i > dim/3 and i < (2*dim)/3 and j > 0 and j < dim);
             bool east = (i >= (2*dim)/3 and i < dim) and (j > dim/3 and j < (2*dim)/3);
             bool bound = i == 0 or i == dim or j == 0 or j == dim;
-            bool rot1 = (i == dim/3 + (3*dim)/30) and (j == dim/3 + dim/30);
-            bool rot2 = (i == dim/3 + (3*dim)/30) and (j == dim/3 + dim/9);
-            bool rot3 = (i == (2*dim)/3 - dim/30) and (j == dim/3 + 3*dim/30);
-            bool rot4 = (i == (2*dim)/3 - dim/9) and (j == dim/3 + 3*dim/30);
-            bool rot5 = (i == 2*dim/3 - 3*dim/30) and (j == (2*dim)/3 - dim/30);
-            bool rot6 = (i == 2*dim/3 - 3*dim/30) and (j == (2*dim)/3 - dim/9);
-            bool rot7 = (i == dim/3 + dim/30) and (j == 2*dim/3 - 3*dim/30);
-            bool rot8 = (i == dim/3 + dim/9) and (j == 2*dim/3 - 3*dim/30);
+            bool rot1 = (i == dim/3 + dim/10) and (j == dim/3 + dim/30);
+            bool rot2 = (i == dim/3 + dim/10) and (j == dim/3 + dim/9);
+            bool rot3 = (i == (2*dim)/3 - dim/30) and (j == dim/3 + dim/10);
+            bool rot4 = (i == (2*dim)/3 - dim/9) and (j == dim/3 + dim/10);
+            bool rot5 = (i == 2*dim/3 - dim/10) and (j == (2*dim)/3 - dim/30);
+            bool rot6 = (i == 2*dim/3 - dim/10) and (j == (2*dim)/3 - dim/9);
+            bool rot7 = (i == dim/3 + dim/30) and (j == 2*dim/3 - dim/10);
+            bool rot8 = (i == dim/3 + dim/9) and (j == 2*dim/3 - dim/10);
 
             if (west or center or east) {
                 grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Road));
@@ -83,7 +83,7 @@ void Map::updatePositions() {
 
 //ego is true when the ego vehicle is being generated
 //int represents the spawn point (0 N, 1 E, 2 S, 3 W)
-void Map::generateVehicle(bool ego, int spawn, double speed) {
+void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
     vector<std::shared_ptr<Point>> spawnPosition;
     switch (spawn) {
         case 0: {

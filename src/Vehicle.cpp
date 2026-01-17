@@ -24,3 +24,7 @@ const vector<std::shared_ptr<Point>>& Vehicle::updateMap() const {
 void Vehicle::updateSurface() {
     surface = updatedPosition;
 }
+
+void Vehicle::changeHeading(int newh) {
+    heading = newh;
+}
