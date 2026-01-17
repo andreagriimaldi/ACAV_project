@@ -25,6 +25,14 @@ void Map::initialize() {
             bool center = (i > dim/3 and i < (2*dim)/3 and j > 0 and j < dim);
             bool east = (i >= (2*dim)/3 and i < dim) and (j > dim/3 and j < (2*dim)/3);
             bool bound = i == 0 or i == dim or j == 0 or j == dim;
+            bool rot1 = (i == dim/3 + (3*dim)/30) and (j == dim/3 + dim/30);
+            bool rot2 = (i == dim/3 + (3*dim)/30) and (j == dim/3 + dim/9);
+            bool rot3 = (i == (2*dim)/3 - dim/30) and (j == dim/3 + 3*dim/30);
+            bool rot4 = (i == (2*dim)/3 - dim/9) and (j == dim/3 + 3*dim/30);
+            bool rot5 = (i == 2*dim/3 - 3*dim/30) and (j == (2*dim)/3 - dim/30);
+            bool rot6 = (i == 2*dim/3 - 3*dim/30) and (j == (2*dim)/3 - dim/9);
+            bool rot7 = (i == dim/3 + dim/30) and (j == 2*dim/3 - 3*dim/30);
+            bool rot8 = (i == dim/3 + dim/9) and (j == 2*dim/3 - 3*dim/30);
 
             if (west or center or east) {
                 grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Road));
@@ -33,10 +41,12 @@ void Map::initialize() {
             if (bound) {
                 grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Boundary));
             }
+
+            if (rot1 or rot2 or rot3 or rot4 or rot5 or rot6 or rot7 or rot8) {
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Rotation));
+            }
         }
     }
-
-    //TO DO LATER: MANAGE POINT_TYPE INTERSECTION
 }
 
 bool Map::crash() const {

@@ -69,7 +69,6 @@ void SDLRenderer::draw(const Map& map) {
 
     const auto& grid = map.getGrid();
 
-    // Lock texture for direct pixel access
     void* pixels;
     int pitch;
     if (SDL_LockTexture(mapTexture, nullptr, &pixels, &pitch) < 0) {
@@ -81,7 +80,7 @@ void SDLRenderer::draw(const Map& map) {
 
     for (int y = 0; y < mapDim; y++) {
         for (int x = 0; x < mapDim; x++) {
-            const auto& point = grid[x][y];
+            const auto& point = grid.at(x).at(y);
             Uint32 color;
 
             if (point->occupied()) {
@@ -91,7 +90,7 @@ void SDLRenderer::draw(const Map& map) {
                     case Point_type::Empty:    color = COLOR_EMPTY;    break;
                     case Point_type::Road:     color = COLOR_ROAD;     break;
                     case Point_type::Boundary: color = COLOR_BOUNDARY; break;
-                    case Point_type::Rotation: color = COLOR_ROAD;     break;
+                    case Point_type::Rotation: color = COLOR_ROAD;     break; //CHANGE THIS TO SEE ROTATION
                     default:                   color = COLOR_EMPTY;    break;
                 }
             }
