@@ -36,6 +36,7 @@ public:
     void changeHeading(int);
     void computeNewPosition(int, int, int);
     double computeSteering() const;
+    void updateBicycle(double, double);
 };
 
 

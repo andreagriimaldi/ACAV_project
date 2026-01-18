@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include "Map.h"
 #include "SDLRenderer.h"
@@ -12,10 +13,10 @@ int main(int argc, char* argv[]) {
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
-    m.generateVehicle(true, 3, 0, 0);
-    m.generateVehicle(false, 0, 0, 1);
-    m.generateVehicle(false, 1, 0, 2);
-    m.generateVehicle(false, 2, 0, 3);
+    //m.generateVehicle(true, 3, m.getDim()/30, 0);
+    m.generateVehicle(false, 0, m.getDim()/30, 0);
+    //m.generateVehicle(false, 1, 0, 2);
+    //m.generateVehicle(false, 2, 0, 3);
 
     m.FakeUpdate();
 
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
     }
 
-    m.moveVehicles();
+    //m.moveVehicles();
 
     /*
     std::cout << std::endl;
@@ -81,9 +82,11 @@ int main(int argc, char* argv[]) {
 
     bool running = true;
     while (running) {
+        m.moveVehicles();
         running = renderer.pollEvents();
         renderer.draw(m);
         SDL_Delay(16);  // ~60 FPS cap
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     return 0;
 }

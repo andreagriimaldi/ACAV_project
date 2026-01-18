@@ -13,7 +13,7 @@ class GlobalPlan {
         int type;
     public:
         explicit GlobalPlan(const Map &m, int t): map(m), type(t) {
-            points.resize(5);
+            points.reserve(5);
             initialize();
         };
 

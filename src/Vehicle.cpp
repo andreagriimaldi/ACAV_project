@@ -1,4 +1,7 @@
 #include "Vehicle.h"
+
+#include <iostream>
+
 #include "Map.h"
 
 string Vehicle::getID() const {
@@ -59,8 +62,6 @@ void Vehicle::changeHeading(int newh) {
 }
 
 void Vehicle::computeNewPosition(int newh, int new_x, int new_y) {
-    changeHeading(newh);
-
     int dim = map.getDim();
     const vector<vector<std::shared_ptr<Point>>>& grid = map.getGrid();
     updatedPosition.clear();
@@ -100,25 +101,66 @@ double Vehicle::computeSteering() const {
         double dist1 = std::sqrt(d_next_x*d_next_x + d_next_y*d_next_y);
         double dist2 = std::sqrt(d_nextnext_x*d_nextnext_x + d_nextnext_y*d_nextnext_y);
 
-        double alpha1 = std::atan2(d_next_y, d_next_x) - (heading * M_PI)/180;
-        double alpha2 = std::atan2(d_nextnext_y, d_nextnext_x) - (heading * M_PI)/180;
+        double alpha1 = std::atan2(-d_next_y, d_next_x) - (heading * M_PI)/180;
+        double alpha2 = std::atan2(-d_nextnext_y, d_nextnext_x) - (heading * M_PI)/180;
 
         double delta1 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha1), dist1);
         double delta2 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha2), dist2);
 
-        return delta1 * (dist1/(dist1 + dist2)) + delta2* (dist2/(dist1 + dist2));
+        return delta1 * (dist1/(dist1 + dist2)) + delta2 * (dist2/(dist1 + dist2));
     }
-    else if (p.countToVisit() == 1){
-        double d_next_x = p.nextPoint()->getX();
-        double d_next_y = p.nextPoint()->getY();
+    if (p.countToVisit() == 1){
+        double d_next_x = p.nextPoint()->getX() - getCOGx();
+        double d_next_y = p.nextPoint()->getY() - getCOGy();
 
         double dist1 = std::sqrt(d_next_x*d_next_x + d_next_y*d_next_y);
 
-        double alpha1 = std::atan2(d_next_y, d_next_x) - (heading * M_PI)/180;
+        double alpha1 = std::atan2(-d_next_y, d_next_x) - (heading * M_PI)/180;
 
         double delta1 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha1), dist1);
 
         return delta1;
     }
-    else return 0; //LAST WAYPOINT REACHED, SIMULATION MUST END
+    return 0; //LAST WAYPOINT REACHED, SIMULATION MUST END
+}
+
+void Vehicle::updateBicycle(double v, double steering) {
+
+    std::cout << "=== UPDATE ===" << std::endl;
+    std::cout << "COG: (" << getCOGx() << ", " << getCOGy() << ")" << std::endl;
+    std::cout << "Heading: " << heading << std::endl;
+    std::cout << "Steering: " << steering << std::endl;
+    std::cout << "Velocity: " << v << std::endl;
+
+    if (p.countToVisit() > 0) {
+        double dx = p.nextPoint()->getX() - getCOGx();
+        double dy = p.nextPoint()->getY() - getCOGy();
+        double dist = std::sqrt(dx*dx + dy*dy);
+
+        if (dist < map.getDim() / 30) {  // threshold to consider "reached"
+            p.popCurrent();
+        }
+    }
+
+    double theta = (heading * M_PI) / 180;
+    double L = (map.getDim() / 9) * 0.65;
+
+    double new_x = getCOGx() + v * std::cos(theta);
+    double new_y = getCOGy() - v * std::sin(theta);
+
+    double new_heading = heading + (v * std::tan(steering) / L) * 180.0 / M_PI;
+
+    if (new_heading >= 360) {
+        new_heading -= 360;
+    }
+    else if (new_heading < 0) {
+        new_heading += 360;
+    }
+
+    new_heading = static_cast<int>(std::round(new_heading));
+
+    speed = v;
+    changeHeading(new_heading);
+
+    computeNewPosition(new_heading, static_cast<int>(std::round(new_x)), static_cast<int>(std::round(new_y)));
 }
