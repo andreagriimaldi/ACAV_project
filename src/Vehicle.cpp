@@ -13,6 +13,34 @@ double Vehicle::getSpeed() const {
     return speed;
 }
 
+int Vehicle::getCOGx() const {
+    int x_max = -1;
+    int x_min = map.getDim() + 2;
+    for (size_t i = 0; i < surface.size(); i++) {
+        if (surface.at(i)->getX() > x_max) {
+            x_max = surface.at(i)->getX();
+        }
+        if (surface.at(i)->getX() < x_min) {
+            x_min = surface.at(i)->getX();
+        }
+    }
+    return (x_max + x_min)/2;
+}
+
+int Vehicle::getCOGy() const {
+    int y_max = -1;
+    int y_min = map.getDim() + 2;
+    for (size_t i = 0; i < surface.size(); i++) {
+        if (surface.at(i)->getY() > y_max) {
+            y_max = surface.at(i)->getY();
+        }
+        if (surface.at(i)->getY() < y_min) {
+            y_min = surface.at(i)->getY();
+        }
+    }
+    return (y_max + y_min)/2;
+}
+
 const vector<std::shared_ptr<Point>>& Vehicle::getOldPosition() const {
     return surface;
 }
@@ -37,8 +65,8 @@ void Vehicle::computeNewPosition(int newh, int new_x, int new_y) {
     const vector<vector<std::shared_ptr<Point>>>& grid = map.getGrid();
     updatedPosition.clear();
 
-    int half_w = dim / 18;  // half of dim/9
-    int half_h = dim / 30;  // half of dim/15
+    int half_w = dim / 18;
+    int half_h = dim / 30;
 
     double angle_rad = -newh * M_PI / 180.0;
     double cos_a = std::cos(angle_rad);

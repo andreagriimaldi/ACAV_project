@@ -1,5 +1,13 @@
 #include "Point.h"
 
+int Point::getX() const {
+    return x;
+}
+
+int Point::getY() const {
+    return y;
+}
+
 string Point::getVehicle() const {
     return vehicleID;
 }

@@ -27,6 +27,8 @@ public:
     string getID() const;
     int getHeading() const;
     double getSpeed() const;
+    int getCOGx() const;
+    int getCOGy() const;
     const vector<std::shared_ptr<Point>>& getOldPosition() const;
     const vector<std::shared_ptr<Point>>& updateMap() const;
     virtual void move() = 0;

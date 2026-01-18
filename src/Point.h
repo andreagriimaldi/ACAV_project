@@ -11,8 +11,11 @@ private:
     bool isOccupied;
     Point_type type;
     int count;
+    int x,y;
 public:
-    explicit Point(Point_type t) : vehicleID(""), isOccupied(false), type(t), count(0){};
+    explicit Point(Point_type t, int x, int y) : vehicleID(""), isOccupied(false), type(t), count(0), x(x), y(y) {};
+    int getX() const;
+    int getY() const;
     string getVehicle() const;
     void setVehicle(string);
     bool occupied() const;

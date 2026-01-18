@@ -10,7 +10,7 @@
 Map::Map(int d): dim(d) {
     grid.resize(dim + 1);
     for (int i = 0; i < dim + 1; i++) {
-        grid.at(i).resize(dim + 1, std::make_shared<Point>(Point(Point_type::Empty)));
+        grid.at(i).resize(dim + 1, std::make_shared<Point>(Point(Point_type::Empty, 0, 0)));
     }
     vehicles.reserve(10);
 }
@@ -35,15 +35,15 @@ void Map::initialize() {
             bool rot8 = (i == dim/3 + dim/9) and (j == 2*dim/3 - dim/10);
 
             if (west or center or east) {
-                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Road));
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Road, i, j));
             }
 
             if (bound) {
-                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Boundary));
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Boundary, i, j));
             }
 
             if (rot1 or rot2 or rot3 or rot4 or rot5 or rot6 or rot7 or rot8) {
-                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Rotation));
+                grid.at(i).at(j) = std::make_shared<Point>(Point(Point_type::Rotation, i, j));
             }
         }
     }
