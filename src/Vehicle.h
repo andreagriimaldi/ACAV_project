@@ -35,6 +35,7 @@ public:
     void updateSurface();
     void changeHeading(int);
     void computeNewPosition(int, int, int);
+    double computeSteering() const;
 };
 
 

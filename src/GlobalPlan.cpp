@@ -88,6 +88,7 @@ void GlobalPlan::initialize() {
             points.push_back(grid.at(static_cast<int>(std::round(dim - dim/10))).at(static_cast<int>(std::round(2*dim/3 - dim/10))));
             break;
         }
+        default: std::cerr << "GlobalPlan not defined" << std::endl;
     }
 }
 
@@ -100,6 +101,14 @@ const std::shared_ptr<Point>& GlobalPlan::nextPoint() const {
         return points.front();
     }
     std::cerr << "There are no points left in the Global Plan" << std::endl;
+    return nullptr;
+}
+
+const std::shared_ptr<Point>& GlobalPlan::nextNextPoint() const {
+    if (points.size() >= 2) {
+        return points.at(1);
+    }
+    std::cerr << "There is just a point left in the Global Plan" << std::endl;
     return nullptr;
 }
 

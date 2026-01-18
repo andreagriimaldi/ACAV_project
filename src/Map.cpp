@@ -120,7 +120,7 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
             heading = 0;
             break;
         }
-        default:
+        default: std::cerr << "Vehicle not initialized correctly" << std::endl;
             return;
     }
 
