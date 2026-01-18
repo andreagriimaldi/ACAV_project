@@ -46,11 +46,16 @@ void Vehicle::computeNewPosition(int newh, int new_x, int new_y) {
 
     for (int di = -half_w; di <= half_w; di++) {
         for (int dj = -half_h; dj <= half_h; dj++) {
-            int new_i = static_cast<int>(std::round(new_x + di * cos_a - dj * sin_a));
-            int new_j = static_cast<int>(std::round(new_y + di * sin_a + dj * cos_a));
+            int new_i_l = static_cast<int>(std::floor(new_x + di * cos_a - dj * sin_a));
+            int new_j_l = static_cast<int>(std::floor(new_y + di * sin_a + dj * cos_a));
+            int new_i_h = static_cast<int>(std::ceil(new_x + di * cos_a - dj * sin_a));
+            int new_j_h = static_cast<int>(std::ceil(new_y + di * sin_a + dj * cos_a));
 
-            if (new_i >= 0 && new_i <= dim && new_j >= 0 && new_j <= dim) {
-                updatedPosition.push_back(grid.at(new_i).at(new_j));
+            if (new_i_l >= 0 && new_i_l <= dim && new_j_l >= 0 && new_j_l <= dim && new_i_h >= 0 && new_i_h <= dim && new_j_h >= 0 && new_j_h <= dim ) {
+                updatedPosition.push_back(grid.at(new_i_l).at(new_j_l));
+                updatedPosition.push_back(grid.at(new_i_h).at(new_j_h));
+                updatedPosition.push_back(grid.at(new_i_l).at(new_j_h));
+                updatedPosition.push_back(grid.at(new_i_h).at(new_j_l));
             }
         }
     }
