@@ -9,6 +9,7 @@ public:
         : Vehicle(m, surf, h, s, id, gplan) {
     }
     void move() override;
+    double computeNewSpeed(double) const;
 };
 
 

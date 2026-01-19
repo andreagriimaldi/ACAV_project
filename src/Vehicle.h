@@ -19,8 +19,9 @@ protected:
     vector<std::shared_ptr<Point>> surface;
     vector<std::shared_ptr<Point>> updatedPosition;
     GlobalPlan p;
+    const double maxspeed; //TUNING PARAMETER
 public:
-    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan): ID(id), map(m), heading(h), speed(s), p(m, gplan) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(map.getDim()/300) {
         surface = surf;
     };
     virtual ~Vehicle() = default;

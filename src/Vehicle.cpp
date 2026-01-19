@@ -107,7 +107,10 @@ double Vehicle::computeSteering() const {
         double delta1 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha1), dist1);
         double delta2 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha2), dist2);
 
-        return delta1 * (dist1/(dist1 + dist2)) + delta2 * (dist2/(dist1 + dist2));
+        double w2 = 1.0 / (1.0 + dist1);
+        double w1 = 1.0 - w2;
+
+        return delta1 * w1 + delta2 * w2;
     }
     if (p.countToVisit() == 1){
         double d_next_x = p.nextPoint()->getX() - getCOGx();
@@ -137,7 +140,7 @@ void Vehicle::updateBicycle(double v, double steering) {
         double dy = p.nextPoint()->getY() - getCOGy();
         double dist = std::sqrt(dx*dx + dy*dy);
 
-        if (dist < map.getDim() / 30) {  // threshold to consider "reached"
+        if (dist < map.getDim() / 30) { //TUNING PARAMETER
             p.popCurrent();
         }
     }
@@ -157,10 +160,10 @@ void Vehicle::updateBicycle(double v, double steering) {
         new_heading += 360;
     }
 
-    new_heading = static_cast<int>(std::round(new_heading));
+    int new_head = static_cast<int>(std::round(new_heading));
 
     speed = v;
-    changeHeading(new_heading);
+    changeHeading(new_head);
 
-    computeNewPosition(new_heading, static_cast<int>(std::round(new_x)), static_cast<int>(std::round(new_y)));
+    computeNewPosition(new_head, static_cast<int>(std::round(new_x)), static_cast<int>(std::round(new_y)));
 }

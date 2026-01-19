@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     SDLRenderer renderer(GUI_SIZE);
 
     //m.generateVehicle(true, 3, m.getDim()/30, 0);
-    m.generateVehicle(false, 0, m.getDim()/30, 0);
+    m.generateVehicle(false, 0, m.getDim()/300, 0);
     //m.generateVehicle(false, 1, 0, 2);
     //m.generateVehicle(false, 2, 0, 3);
 
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         running = renderer.pollEvents();
         renderer.draw(m);
         SDL_Delay(16);  // ~60 FPS cap
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     return 0;
 }
