@@ -101,7 +101,7 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
             x_max = dim - dim/15;
             y_min = dim/3 + dim/15;
             y_max = dim/3 + 2*(dim/15);
-            heading = 0;
+            heading = 180;
             break;
         }
         case 2: {
