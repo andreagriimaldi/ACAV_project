@@ -9,10 +9,11 @@ void GlobalPlan::initialize() {
     int dim = map.getDim();
     switch (type) {
         case 0: {
-            points.push_back(grid.at(dim/3 + dim/10).at(dim/3 + dim/30));
-            points.push_back(grid.at(static_cast<int>(std::round(dim/3 + dim/20))).at(static_cast<int>(std::round(dim/3 + dim/5))));
-            points.push_back(grid.at(static_cast<int>(std::round(dim/3 - dim/20))).at(static_cast<int>(std::round(dim/3 + dim/5 + dim/10))));
-            points.push_back(grid.at(static_cast<int>(std::round(dim/10))).at(static_cast<int>(std::round(dim/3 + dim/5))));
+            points.push_back(grid.at(dim/3 + dim/10).at(dim/3 - dim/30));
+            points.push_back(grid.at(static_cast<int>(std::round(dim/3))).at(static_cast<int>(std::round(dim/3 + dim/15))));
+            points.push_back(grid.at(static_cast<int>(std::round(dim/3 - dim/7))).at(static_cast<int>(std::round(dim/3 + dim/9 - dim/28))));
+            points.push_back(grid.at(static_cast<int>(std::round(dim/3 - dim/5))).at(static_cast<int>(std::round(dim/3 + dim/9 - dim/29))));
+            points.push_back(grid.at(static_cast<int>(std::round(dim/30))).at(static_cast<int>(std::round(dim/3 + dim/9 - dim/29))));
             break;
         }
         case 1: {

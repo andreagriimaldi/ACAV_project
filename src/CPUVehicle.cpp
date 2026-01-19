@@ -15,7 +15,7 @@ void CPUVehicle::move() {
 double CPUVehicle::computeNewSpeed(double steer) const {
     double L = (map.getDim()/9) * 0.65;
 
-    double a_lat_max = 0.1; //TUNING PARAMETER
+    double a_lat_max = 0.05; //TUNING PARAMETER
 
     double v_max = maxspeed;
 
