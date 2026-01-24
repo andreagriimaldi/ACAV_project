@@ -91,28 +91,7 @@ void Vehicle::computeNewPosition(int newh, int new_x, int new_y) {
 }
 
 double Vehicle::computeSteering() const {
-    if (p.countToVisit() >= 2) {
-        double d_next_x = p.nextPoint()->getX() - getCOGx();
-        double d_next_y = p.nextPoint()->getY() - getCOGy();
-
-        double d_nextnext_x = p.nextNextPoint()->getX() - getCOGx();
-        double d_nextnext_y = p.nextNextPoint()->getY() - getCOGy();
-
-        double dist1 = std::sqrt(d_next_x*d_next_x + d_next_y*d_next_y);
-        double dist2 = std::sqrt(d_nextnext_x*d_nextnext_x + d_nextnext_y*d_nextnext_y);
-
-        double alpha1 = std::atan2(-d_next_y, d_next_x) - (heading * M_PI)/180;
-        double alpha2 = std::atan2(-d_nextnext_y, d_nextnext_x) - (heading * M_PI)/180;
-
-        double delta1 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha1), dist1);
-        double delta2 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha2), dist2);
-
-        double w2 = 1.0 / (1.0 + dist1);
-        double w1 = 1.0 - w2;
-
-        return delta1 * w1 + delta2 * w2;
-    }
-    if (p.countToVisit() == 1){
+    if (p.countToVisit() > 0){
         double d_next_x = p.nextPoint()->getX() - getCOGx();
         double d_next_y = p.nextPoint()->getY() - getCOGy();
 

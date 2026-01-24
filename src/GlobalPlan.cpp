@@ -108,14 +108,6 @@ const std::shared_ptr<Point>& GlobalPlan::nextPoint() const {
     return nullptr;
 }
 
-const std::shared_ptr<Point>& GlobalPlan::nextNextPoint() const {
-    if (points.size() >= 2) {
-        return points.at(1);
-    }
-    std::cerr << "There is just a point left in the Global Plan" << std::endl;
-    return nullptr;
-}
-
 void GlobalPlan::popCurrent() {
     if (!points.empty()) {
         points.erase(points.begin());
