@@ -22,7 +22,6 @@ class GlobalPlan {
         const std::shared_ptr<Point>& nextPoint() const;
         const std::shared_ptr<Point>& nextNextPoint() const;
         void popCurrent();
-
 };
 
 
