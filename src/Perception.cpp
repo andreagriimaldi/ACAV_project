@@ -1,5 +1,6 @@
 #include "Perception.h"
 
+//getPerc.at(0) is the ego vehicle
 std::vector<std::vector<int>> Perception::getPerc(int egoX, int egoY, int egoHeading) const {
     std::vector<std::pair<int, int>> COGs = m.getCOGs();
     std::vector<std::vector<int>> per;
@@ -8,6 +9,7 @@ std::vector<std::vector<int>> Perception::getPerc(int egoX, int egoY, int egoHea
     for (const auto& pair: COGs) {
         if (pair.first == egoX and pair.second == egoY) {
             per.push_back({computeState(pair.first, pair.second), 0, 0});
+            break;
         }
     }
 

@@ -39,7 +39,8 @@ public:
     void changeHeading(int);
     void computeNewPosition(int, int, int);
     double computeSteering() const;
-    void updateBicycle(double, double);
+    void updateBicycle(double);
+    double computeSteeringFrom(double x, double y, double hdg) const;
 };
 
 

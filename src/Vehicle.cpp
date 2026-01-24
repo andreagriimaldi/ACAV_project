@@ -91,58 +91,73 @@ void Vehicle::computeNewPosition(int newh, int new_x, int new_y) {
 }
 
 double Vehicle::computeSteering() const {
-    if (p.countToVisit() > 0){
-        double d_next_x = p.nextPoint()->getX() - getCOGx();
-        double d_next_y = p.nextPoint()->getY() - getCOGy();
-
-        double dist1 = std::sqrt(d_next_x*d_next_x + d_next_y*d_next_y);
-
-        double alpha1 = std::atan2(-d_next_y, d_next_x) - (heading * M_PI)/180;
-
-        double delta1 = std::atan2(2 * (map.getDim()/9)*0.65 * std::sin(alpha1), dist1);
-
-        return delta1;
-    }
-    return 0; //LAST WAYPOINT REACHED, SIMULATION MUST END
+    return computeSteeringFrom(getCOGx(), getCOGy(), heading);
 }
 
-void Vehicle::updateBicycle(double v, double steering) {
+void Vehicle::updateBicycle(double v) {
 
     std::cout << "=== UPDATE ===" << std::endl;
     std::cout << "COG: (" << getCOGx() << ", " << getCOGy() << ")" << std::endl;
     std::cout << "Heading: " << heading << std::endl;
-    std::cout << "Steering: " << steering << std::endl;
     std::cout << "Velocity: " << v << std::endl;
 
-    if (p.countToVisit() > 0) {
-        double dx = p.nextPoint()->getX() - getCOGx();
-        double dy = p.nextPoint()->getY() - getCOGy();
-        double dist = std::sqrt(dx*dx + dy*dy);
-
-        if (dist < map.getDim() / 30) { //TUNING PARAMETER
-            p.popCurrent();
-        }
-    }
-
-    double theta = (heading * M_PI) / 180;
     double L = (map.getDim() / 9) * 0.65;
 
-    double new_x = getCOGx() + v * std::cos(theta);
-    double new_y = getCOGy() - v * std::sin(theta);
+    const double max_disp_per_substep = 2.0;
+    int substeps = std::max(1, static_cast<int>(std::ceil(v / max_disp_per_substep)));
+    double dt = 1.0 / substeps;
 
-    double new_heading = heading + (v * std::tan(steering) / L) * 180.0 / M_PI;
+    double current_x = getCOGx();
+    double current_y = getCOGy();
+    double current_heading = heading;
 
-    if (new_heading >= 360) {
-        new_heading -= 360;
+    for (int i = 0; i < substeps; ++i) {
+        if (p.countToVisit() > 0) {
+            double dx = p.nextPoint()->getX() - current_x;
+            double dy = p.nextPoint()->getY() - current_y;
+            double dist = std::sqrt(dx * dx + dy * dy);
+
+            if (dist < map.getDim() / 30) {
+                p.popCurrent();
+            }
+        }
+
+        double current_steering = computeSteeringFrom(current_x, current_y, current_heading);
+
+        double theta_rad = (current_heading * M_PI) / 180.0;
+
+        double displacement = v * dt;
+        current_x += displacement * std::cos(theta_rad);
+        current_y -= displacement * std::sin(theta_rad);
+
+        double d_heading = (v / L) * std::tan(current_steering) * dt * (180.0 / M_PI);
+        current_heading += d_heading;
+
+        while (current_heading >= 360.0) current_heading -= 360.0;
+        while (current_heading < 0.0) current_heading += 360.0;
     }
-    else if (new_heading < 0) {
-        new_heading += 360;
-    }
 
-    int new_head = static_cast<int>(std::round(new_heading));
+    int new_head = static_cast<int>(std::round(current_heading));
 
     speed = v;
     changeHeading(new_head);
 
-    computeNewPosition(new_head, static_cast<int>(std::round(new_x)), static_cast<int>(std::round(new_y)));
+    computeNewPosition(new_head, static_cast<int>(std::round(current_x)), static_cast<int>(std::round(current_y)));
+}
+
+double Vehicle::computeSteeringFrom(double x, double y, double hdg) const {
+    if (p.countToVisit() > 0) {
+        double d_next_x = p.nextPoint()->getX() - x;
+        double d_next_y = p.nextPoint()->getY() - y;
+
+        double dist = std::sqrt(d_next_x * d_next_x + d_next_y * d_next_y);
+
+        double alpha = std::atan2(-d_next_y, d_next_x) - (hdg * M_PI) / 180.0;
+
+        double L = (map.getDim() / 9) * 0.65;
+        double delta = std::atan2(2 * L * std::sin(alpha), dist);
+
+        return delta;
+    }
+    return 0;
 }

@@ -9,7 +9,7 @@ void CPUVehicle::move() {
 
     //HERE I NEED TO COMPUTE THE NEW SPEED
     double steer = computeSteering();
-    updateBicycle(computeNewSpeed(steer), steer);
+    updateBicycle(computeNewSpeed(steer));
 }
 
 double CPUVehicle::computeNewSpeed(double steer) const {
