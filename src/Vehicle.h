@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "GlobalPlan.h"
+#include "Perception.h"
 #include "Point.h"
 
 using std::vector;
@@ -20,8 +21,9 @@ protected:
     vector<std::shared_ptr<Point>> updatedPosition;
     GlobalPlan p;
     const double maxspeed; //TUNING PARAMETER (IT WILL BE PASSED AS A PARAMETER)
+    Perception per;
 public:
-    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(map.getDim()/300) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(map.getDim()/300), per(m) {
         surface = surf;
     };
     virtual ~Vehicle() = default;

@@ -51,7 +51,7 @@ void Map::initialize() {
 
 bool Map::crash() const {
     //The check is performed with the updated positions
-    for (const std::unique_ptr<Vehicle>& v: vehicles) {
+    for (const std::shared_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->updateMap()) {
             if (p->incident())
                 return true;
@@ -70,7 +70,7 @@ int Map::getDim() const {
 }
 
 void Map::updatePositions() {
-    for (const std::unique_ptr<Vehicle>& v: vehicles) {
+    for (const std::shared_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             p->setNotOccupied();
         }
@@ -131,25 +131,34 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
     }
 
     if (ego) {
-        vehicles.push_back(std::make_unique<EgoVehicle>(*this, spawnPosition, heading, speed, "ego", gplan));
+        vehicles.push_back(std::make_shared<EgoVehicle>(*this, spawnPosition, heading, speed, "ego", gplan));
     }
     else {
         auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-        vehicles.push_back(std::make_unique<CPUVehicle>(*this, spawnPosition, heading, speed, s, gplan));
+        vehicles.push_back(std::make_shared<CPUVehicle>(*this, spawnPosition, heading, speed, s, gplan));
     }
 }
 
 void Map::moveVehicles() {
     //TO BE REFINED
-    for (const std::unique_ptr<Vehicle> &v: vehicles) {
+    for (const std::shared_ptr<Vehicle> &v: vehicles) {
         v->move();
     }
     updatePositions();
 }
 
+vector<std::pair<int, int>> Map::getCOGs() const {
+    vector<std::pair<int, int>> ret;
+    ret.reserve(vehicles.size());
+    for (const std::shared_ptr<Vehicle>& v: vehicles) {
+        ret.emplace_back(v->getCOGx(), v->getCOGy());
+    }
+    return ret;
+}
+
 
 void Map::FakeUpdate() {
-    for (const std::unique_ptr<Vehicle>& v: vehicles) {
+    for (const std::shared_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             p->setVehicle(v->getID());
         }

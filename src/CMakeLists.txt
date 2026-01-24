@@ -23,6 +23,8 @@ add_executable(ACAV main.cpp
         SDLRenderer.h
         GlobalPlan.cpp
         GlobalPlan.h
+        Perception.cpp
+        Perception.h
 )
 
 target_include_directories(ACAV PRIVATE ${SDL2_INCLUDE_DIRS})

@@ -11,7 +11,7 @@ class Map {
 private:
     vector<vector<std::shared_ptr<Point>>> grid;
     const int dim;
-    vector<std::unique_ptr<Vehicle>> vehicles;
+    vector<std::shared_ptr<Vehicle>> vehicles;
 public:
     explicit Map(int d);
     ~Map();
@@ -22,7 +22,7 @@ public:
     void updatePositions();
     void generateVehicle(bool, int, double, int);
     void moveVehicles();
-
+    vector<std::pair<int, int>> getCOGs() const;
     void FakeUpdate();
 };
 
