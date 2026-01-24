@@ -8,8 +8,8 @@ class Perception {
         Map& m;
     public:
         explicit Perception(Map& map): m(map){};
-        std::vector<std::vector<int>> getPerc(int, int, int) const;
-        int computeState(int, int) const;
+        std::vector<std::vector<double>> getPerc(int, int, int) const;
+        double computeState(int, int) const;
 };
 
 

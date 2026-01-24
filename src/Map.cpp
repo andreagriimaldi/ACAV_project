@@ -91,14 +91,14 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
         case 0: {
             x_min = dim/3 + dim/15;
             x_max = dim/3 + 2*(dim/15);
-            y_min = dim/15;
-            y_max = dim/15 + dim/9;
+            y_min = 0;
+            y_max = dim/9;
             heading = 270;
             break;
         }
         case 1: {
-            x_min = dim - dim/15 - dim/9;
-            x_max = dim - dim/15;
+            x_min = dim - dim/9;
+            x_max = dim;
             y_min = dim/3 + dim/15;
             y_max = dim/3 + 2*(dim/15);
             heading = 180;
@@ -107,14 +107,14 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
         case 2: {
             x_min = 2*(dim/3 - dim/15);
             x_max = 2*(dim/3) - dim/15;
-            y_min = dim - dim/15 - dim/9;
-            y_max = dim - dim/15;
+            y_min = dim - dim/9;
+            y_max = dim;
             heading = 90;
             break;
         }
         case 3: {
-            x_min = dim/15;
-            x_max = dim/15 + dim/9;
+            x_min = 0;
+            x_max = dim/9;
             y_min = 2*(dim/3 - dim/15);
             y_max = 2*(dim/3) - dim/15;
             heading = 0;

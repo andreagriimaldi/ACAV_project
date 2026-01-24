@@ -103,7 +103,7 @@ void Vehicle::updateBicycle(double v) {
 
     double L = (map.getDim() / 9) * 0.65;
 
-    const double max_disp_per_substep = 2.0;
+    const double max_disp_per_substep = 0.05; //Integration accuracy (tuning parameter)
     int substeps = std::max(1, static_cast<int>(std::ceil(v / max_disp_per_substep)));
     double dt = 1.0 / substeps;
 
