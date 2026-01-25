@@ -83,7 +83,7 @@ void Map::updatePositions() {
 
 //ego is true when the ego vehicle is being generated
 //int represents the spawn point (0 N, 1 E, 2 S, 3 W)
-void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
+void Map::generateVehicle(bool ego, int spawn, double speed, int gplan, int maxs) {
     vector<std::shared_ptr<Point>> spawnPosition;
     int x_min, x_max, y_min, y_max, heading;
 
@@ -131,11 +131,11 @@ void Map::generateVehicle(bool ego, int spawn, double speed, int gplan) {
     }
 
     if (ego) {
-        vehicles.push_back(std::make_shared<EgoVehicle>(*this, spawnPosition, heading, speed, "ego", gplan));
+        vehicles.push_back(std::make_shared<EgoVehicle>(*this, spawnPosition, heading, speed, "ego", gplan, maxs));
     }
     else {
         auto s = [&]{ std::string r(8,'\0'); static std::mt19937 g{std::random_device{}()}; static std::uniform_int_distribution<int>d('a','z'); for(char& c:r) c=d(g); return r; }();
-        vehicles.push_back(std::make_shared<CPUVehicle>(*this, spawnPosition, heading, speed, s, gplan));
+        vehicles.push_back(std::make_shared<CPUVehicle>(*this, spawnPosition, heading, speed, s, gplan, maxs));
     }
 }
 

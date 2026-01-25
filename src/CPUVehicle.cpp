@@ -9,7 +9,14 @@ void CPUVehicle::move() {
 
     //HERE I NEED TO COMPUTE THE NEW SPEED
     double steer = computeSteering();
-    updateBicycle(computeNewSpeed(steer));
+    double s = computeNewSpeed(steer);
+
+    std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);
+    if (perc.size() > 1) {
+        avoidObstacles(s, perc);
+    }
+
+    updateBicycle(s);
 }
 
 double CPUVehicle::computeNewSpeed(double steer) const {
@@ -33,4 +40,47 @@ double CPUVehicle::computeNewSpeed(double steer) const {
     }
 
     return v_max;
+}
+
+void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per) const {
+    std::vector<std::vector<double>> perc = per;
+    int state = static_cast<int>(perc.at(0).at(1));
+    perc.erase(perc.begin());
+
+    double dist = map.getDim()/6;
+    double close_dist = map.getDim()/10;
+
+    switch (state) {
+        case 0: {
+            //Straight
+            for (const auto& obs: perc) {
+                if (obs.at(2) < dist && std::abs(obs.at(1)) < 45) {
+                    s = s/2;
+                    break;
+                }
+            }
+            break;
+        }
+        case 1: {
+            //Approaching/exiting
+            for (const auto& obs: perc) {
+                if (obs.at(2) < dist && std::abs(obs.at(1)) < 45) {
+                    s = 0;
+                    break;
+                }
+            }
+            break;
+        }
+        case 2: {
+            //Middle
+            for (const auto& obs: perc) {
+                if (obs.at(2) < close_dist && std::abs(obs.at(1)) < 30) {
+                    s = s/5;
+                    break;
+                }
+            }
+            break;
+        }
+        default: std::cerr << "Error in ego vehicle localization" << std::endl;
+    }
 }

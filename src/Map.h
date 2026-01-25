@@ -20,7 +20,7 @@ public:
     const vector<vector<std::shared_ptr<Point>>>& getGrid() const;
     int getDim() const;
     void updatePositions();
-    void generateVehicle(bool, int, double, int);
+    void generateVehicle(bool, int, double, int, int);
     void moveVehicles();
     vector<std::pair<int, int>> getCOGs() const;
     void FakeUpdate();
