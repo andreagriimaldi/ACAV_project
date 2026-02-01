@@ -7,7 +7,7 @@
 #include "EgoVehicle.h"
 #include "Vehicle.h"
 
-Map::Map(int d): dim(d) {
+Map::Map(int d): dim(d), coordinator(*this) {
     grid.resize(dim + 1);
     for (int i = 0; i < dim + 1; i++) {
         grid.at(i).resize(dim + 1, std::make_shared<Point>(Point(Point_type::Empty, 0, 0)));
@@ -50,7 +50,6 @@ void Map::initialize() {
 }
 
 bool Map::crash() const {
-    //The check is performed with the updated positions
     for (const std::shared_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             if (p->incident())
@@ -145,6 +144,7 @@ void Map::moveVehicles() {
         v->move();
     }
     updatePositions();
+    coordinator.updateStatus();
 }
 
 vector<std::pair<int, int>> Map::getCOGs() const {
@@ -154,6 +154,14 @@ vector<std::pair<int, int>> Map::getCOGs() const {
         ret.emplace_back(v->getCOGx(), v->getCOGy());
     }
     return ret;
+}
+
+IntersectionCoordinator& Map::getCoordinator() {
+    return coordinator;
+}
+
+const vector<std::shared_ptr<Vehicle>> & Map::getVehicles() const {
+    return vehicles;
 }
 
 

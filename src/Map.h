@@ -1,6 +1,8 @@
 #ifndef ACAV_MAP_H
 #define ACAV_MAP_H
 #include <vector>
+
+#include "IntersectionCoordinator.h"
 #include "Point.h"
 
 using std::vector;
@@ -12,6 +14,7 @@ private:
     vector<vector<std::shared_ptr<Point>>> grid;
     const int dim;
     vector<std::shared_ptr<Vehicle>> vehicles;
+    IntersectionCoordinator coordinator;
 public:
     explicit Map(int d);
     ~Map();
@@ -23,6 +26,9 @@ public:
     void generateVehicle(bool, int, double, int, int);
     void moveVehicles();
     vector<std::pair<int, int>> getCOGs() const;
+    IntersectionCoordinator& getCoordinator();
+    const vector<std::shared_ptr<Vehicle>>& getVehicles() const;
+
     void FakeUpdate();
 };
 

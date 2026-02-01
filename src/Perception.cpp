@@ -38,7 +38,7 @@ double Perception::computeState(int x, int y) const {
     if (x <= (2*dim)/9 or x >= (7*dim)/9 or y <= (2*dim)/9 or y >= (7*dim)/9) {
         return 0;
     }
-    if ((x < (2*dim)/3 + dim/50 and x > dim/3 - dim/50) and (y < (2*dim)/3 + dim/50 and y > dim/3 - dim/50)) {
+    if ((x < (2*dim)/3 + dim/16 and x > dim/3 - dim/16) and (y < (2*dim)/3 + dim/16 and y > dim/3 - dim/16)) {
         return 2;
     }
 

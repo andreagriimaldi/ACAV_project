@@ -161,3 +161,8 @@ double Vehicle::computeSteeringFrom(double x, double y, double hdg) const {
     }
     return 0;
 }
+
+int Vehicle::getPercState() const {
+    std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);;
+    return static_cast<int>(perc.at(0).at(0));
+}

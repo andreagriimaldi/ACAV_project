@@ -10,7 +10,7 @@ public:
     }
     void move() override;
     double computeNewSpeed(double) const;
-    void avoidObstacles(double&, std::vector<std::vector<double>>&) const;
+    void avoidObstacles(double&, std::vector<std::vector<double>>&);
 };
 
 

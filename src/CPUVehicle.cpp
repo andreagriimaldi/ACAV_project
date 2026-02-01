@@ -38,7 +38,7 @@ double CPUVehicle::computeNewSpeed(double steer) const {
     return v_max;
 }
 
-void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per) const {
+void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per) {
     std::vector<std::vector<double>> perc = per;
     int state = static_cast<int>(perc.at(0).at(0));
     perc.erase(perc.begin());
@@ -50,7 +50,7 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
         case 0: {
             //Straight
             for (const auto& obs: perc) {
-                if (obs.at(2) < dist/2 && std::abs(obs.at(1)) < 45) {
+                if (obs.at(2) < close_dist && std::abs(obs.at(1)) < 45) {
                     s = s/2;
                     break;
                 }
@@ -59,31 +59,23 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
         }
         case 1: {
             //Approaching
-            for (const auto& obs: perc) {
-                int obsState = static_cast<int>(obs.at(0));
-                if (obsState == 2) {
-                    if (obs.at(2) < close_dist) {
-                        s = s/3;
-                    }
-                    else if (obs.at(2) < dist) {
-                        s = s/2;
-                    }
-                    else {
-                        s = s/1.5;
-                    }
-                    break;
-                }
+
+            //Here i have to check if i have permission to approach the intersection
+            //I need to introduce a distance in which i check, so that if permission denied i can stop
+            //using askPermission()
+
+            bool permission = coord.askPermission(ID);
+            if (!permission) {
+                s = s/3; //MAYBE TO CHANGE (JUST THE VALUE)
             }
+
             break;
         }
         case 2: {
             //Middle
-            for (const auto& obs: perc) {
-                if (obs.at(2) < close_dist && std::abs(obs.at(1)) < 60) {
-                    s = s/5;
-                    break;
-                }
-            }
+
+            //Here i need to check if i have to slow down for some reasons
+
             break;
         }
         case 3: {

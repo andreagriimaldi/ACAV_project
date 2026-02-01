@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-int GlobalPlan::getType() {
+int GlobalPlan::getType() const {
     return type;
 }
 

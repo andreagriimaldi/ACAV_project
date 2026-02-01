@@ -13,10 +13,10 @@ int main(int argc, char* argv[]) {
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
-    m.generateVehicle(false, 0, 0, 0, m.getDim()/300);
-    m.generateVehicle(false, 1, 0, 3, m.getDim()/300);
-    m.generateVehicle(false, 2, 0, 5, m.getDim()/250);
-    m.generateVehicle(false, 3, 0, 11, m.getDim()/300);
+    m.generateVehicle(false, 0, 0, 0, m.getDim()/220);
+    m.generateVehicle(false, 1, 0, 3, m.getDim()/220);
+    m.generateVehicle(false, 2, 0, 5, m.getDim()/200);
+    m.generateVehicle(false, 3, 0, 11, m.getDim()/220);
 
     m.FakeUpdate();
 
