@@ -58,15 +58,19 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
             break;
         }
         case 1: {
-            //Approaching/exiting
+            //Approaching
             for (const auto& obs: perc) {
                 int obsState = static_cast<int>(obs.at(0));
-                if (obsState == 2 && std::abs(obs.at(1)) < 90) {
-                    s = s/3;
-                    break;
-                }
-                if (obs.at(2) < dist && std::abs(obs.at(1)) < 30) {
-                    s = 0;
+                if (obsState == 2) {
+                    if (obs.at(2) < close_dist) {
+                        s = s/3;
+                    }
+                    else if (obs.at(2) < dist) {
+                        s = s/2;
+                    }
+                    else {
+                        s = s/1.5;
+                    }
                     break;
                 }
             }
@@ -83,7 +87,14 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
             break;
         }
         case 3: {
-
+            //Exiting
+            for (const auto& obs: perc) {
+                if (obs.at(2) < dist && std::abs(obs.at(1)) < 45) {
+                    s = s/3;
+                    break;
+                }
+            }
+            break;
         }
         default: std::cerr << "Error in ego vehicle localization" << std::endl;
     }

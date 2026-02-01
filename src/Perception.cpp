@@ -43,25 +43,25 @@ double Perception::computeState(int x, int y) const {
     }
 
     if (gplan == 0 or gplan == 1 or gplan == 8) {
-        if (y < dim/2) {
+        if (y < dim/3) {
             return 1;
         }
         return 3;
     }
     if (gplan == 2 or gplan == 3 or gplan == 9) {
-        if (x > dim/2) {
+        if (x > (2*dim)/3) {
             return 1;
         }
         return 3;
     }
     if (gplan == 4 or gplan == 5 or gplan == 10) {
-        if (y > dim/2) {
+        if (y > (2*dim)/3) {
             return 1;
         }
         return 3;
     }
     if (gplan == 6 or gplan == 7 or gplan == 11) {
-        if (x < dim/2) {
+        if (x < dim/3) {
             return 1;
         }
         return 3;
