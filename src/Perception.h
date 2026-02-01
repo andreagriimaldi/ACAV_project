@@ -6,8 +6,9 @@
 class Perception {
     private:
         Map& m;
+        int gplan;
     public:
-        explicit Perception(Map& map): m(map){};
+        explicit Perception(Map& map, int g): m(map), gplan(g){};
         std::vector<std::vector<double>> getPerc(int, int, int) const;
         double computeState(int, int) const;
 };

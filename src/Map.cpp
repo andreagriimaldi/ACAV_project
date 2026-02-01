@@ -52,7 +52,7 @@ void Map::initialize() {
 bool Map::crash() const {
     //The check is performed with the updated positions
     for (const std::shared_ptr<Vehicle>& v: vehicles) {
-        for (const std::shared_ptr<Point>& p: v->updateMap()) {
+        for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             if (p->incident())
                 return true;
         }

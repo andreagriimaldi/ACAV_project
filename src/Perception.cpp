@@ -1,5 +1,7 @@
 #include "Perception.h"
 
+#include <iostream>
+
 //getPerc.at(0) is the ego vehicle
 std::vector<std::vector<double>> Perception::getPerc(int egoX, int egoY, int egoHeading) const {
     std::vector<std::pair<int, int>> COGs = m.getCOGs();
@@ -36,8 +38,36 @@ double Perception::computeState(int x, int y) const {
     if (x <= (2*dim)/9 or x >= (7*dim)/9 or y <= (2*dim)/9 or y >= (7*dim)/9) {
         return 0;
     }
-    if ((x < (2*dim)/3 - dim/15 and x > dim/3 + dim/15) and (y < (2*dim)/3 - dim/15 and y > dim/3 + dim/15)) {
+    if ((x < (2*dim)/3 + dim/50 and x > dim/3 - dim/50) and (y < (2*dim)/3 + dim/50 and y > dim/3 - dim/50)) {
         return 2;
     }
-    return 1;
+
+    if (gplan == 0 or gplan == 1 or gplan == 8) {
+        if (y < dim/2) {
+            return 1;
+        }
+        return 3;
+    }
+    if (gplan == 2 or gplan == 3 or gplan == 9) {
+        if (x > dim/2) {
+            return 1;
+        }
+        return 3;
+    }
+    if (gplan == 4 or gplan == 5 or gplan == 10) {
+        if (y > dim/2) {
+            return 1;
+        }
+        return 3;
+    }
+    if (gplan == 6 or gplan == 7 or gplan == 11) {
+        if (x < dim/2) {
+            return 1;
+        }
+        return 3;
+    }
+
+    std::cerr << "GlobalPlan not initialized correctly" << std::endl;
+    std::cerr << "GLOBAL PLAN: " << gplan << std::endl;
+    return -1;
 }

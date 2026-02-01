@@ -16,7 +16,7 @@ class GlobalPlan {
             points.reserve(5);
             initialize();
         };
-
+        int getType();
         void initialize();
         int countToVisit() const;
         const std::shared_ptr<Point>& nextPoint() const;

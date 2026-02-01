@@ -4,10 +4,6 @@
 #include <ostream>
 
 void CPUVehicle::move() {
-    //THE FINAL VERSION WILL DECIDE NEW COG AND HEADING AND WILL CALL COMPUTENEWPOSITION()
-    //REMEMBER THAT THE NEW COG AND HEADING WILL BE AFFECTED BY CURRENT SPEED (NO ACC HERE, JUST COMPUTE THE SPEED)
-
-    //HERE I NEED TO COMPUTE THE NEW SPEED
     double steer = computeSteering();
     double s = computeNewSpeed(steer);
 
@@ -44,17 +40,17 @@ double CPUVehicle::computeNewSpeed(double steer) const {
 
 void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per) const {
     std::vector<std::vector<double>> perc = per;
-    int state = static_cast<int>(perc.at(0).at(1));
+    int state = static_cast<int>(perc.at(0).at(0));
     perc.erase(perc.begin());
 
-    double dist = map.getDim()/6;
-    double close_dist = map.getDim()/10;
+    double dist = map.getDim()/5;
+    double close_dist = map.getDim()/8;
 
     switch (state) {
         case 0: {
             //Straight
             for (const auto& obs: perc) {
-                if (obs.at(2) < dist && std::abs(obs.at(1)) < 45) {
+                if (obs.at(2) < dist/2 && std::abs(obs.at(1)) < 45) {
                     s = s/2;
                     break;
                 }
@@ -64,7 +60,12 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
         case 1: {
             //Approaching/exiting
             for (const auto& obs: perc) {
-                if (obs.at(2) < dist && std::abs(obs.at(1)) < 45) {
+                int obsState = static_cast<int>(obs.at(0));
+                if (obsState == 2 && std::abs(obs.at(1)) < 90) {
+                    s = s/3;
+                    break;
+                }
+                if (obs.at(2) < dist && std::abs(obs.at(1)) < 30) {
                     s = 0;
                     break;
                 }
@@ -74,12 +75,15 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
         case 2: {
             //Middle
             for (const auto& obs: perc) {
-                if (obs.at(2) < close_dist && std::abs(obs.at(1)) < 30) {
+                if (obs.at(2) < close_dist && std::abs(obs.at(1)) < 60) {
                     s = s/5;
                     break;
                 }
             }
             break;
+        }
+        case 3: {
+
         }
         default: std::cerr << "Error in ego vehicle localization" << std::endl;
     }

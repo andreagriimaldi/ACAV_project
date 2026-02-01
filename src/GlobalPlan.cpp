@@ -2,6 +2,10 @@
 
 #include <iostream>
 
+int GlobalPlan::getType() {
+    return type;
+}
+
 void GlobalPlan::initialize() {
     //0 = N short, 1 = N long, 2 = E short, 3 = E long, 4 = S short, 5 = S long, 6 = W short, 7 = W long, 8 = N straight, 9 = E straight
     //10 = S straight, 11 = W straight

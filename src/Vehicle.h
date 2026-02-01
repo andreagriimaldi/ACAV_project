@@ -23,7 +23,7 @@ protected:
     const double maxspeed; //TUNING PARAMETER (IT WILL BE PASSED AS A PARAMETER)
     Perception per;
 public:
-    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan, int maxs): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(maxs), per(m) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan, int maxs): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(maxs), per(m, p.getType()) {
         surface = surf;
     };
     virtual ~Vehicle() = default;

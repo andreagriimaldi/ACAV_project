@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 
     m.generateVehicle(false, 0, 0, 0, m.getDim()/300);
     m.generateVehicle(false, 1, 0, 3, m.getDim()/300);
-    m.generateVehicle(false, 2, 0, 4, m.getDim()/300);
+    m.generateVehicle(false, 2, 0, 5, m.getDim()/250);
     m.generateVehicle(false, 3, 0, 11, m.getDim()/300);
 
     m.FakeUpdate();
@@ -85,6 +85,11 @@ int main(int argc, char* argv[]) {
     bool running = true;
     while (running) {
         m.moveVehicles();
+        /*if (m.crash()) {
+            std::cerr << "A crash has occured" << std::endl;
+            break;
+        }
+        */
         running = renderer.pollEvents();
         renderer.draw(m);
         SDL_Delay(16);  // ~60 FPS cap
