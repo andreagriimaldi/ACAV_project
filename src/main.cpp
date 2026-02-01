@@ -85,11 +85,10 @@ int main(int argc, char* argv[]) {
     bool running = true;
     while (running) {
         m.moveVehicles();
-        /*if (m.crash()) {
+        if (m.crash()) {
             std::cerr << "A crash has occured" << std::endl;
             break;
         }
-        */
         running = renderer.pollEvents();
         renderer.draw(m);
         SDL_Delay(16);  // ~60 FPS cap

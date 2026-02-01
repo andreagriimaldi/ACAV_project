@@ -13,26 +13,22 @@ string Point::getVehicle() const {
 }
 
 void Point::setVehicle(string id) {
-    if (!occupied()) {
+    if (count == 0) {
         vehicleID = id;
         count++;
-        setOccupied();
     }
     else {
-        count++;
+        if (vehicleID != id) {
+            count++;
+        }
     }
 }
 
 bool Point::occupied() const {
-    return isOccupied;
-}
-
-void Point::setOccupied() {
-    isOccupied = true;
+    return count;
 }
 
 void Point::setNotOccupied() {
-    isOccupied = false;
     count = 0;
     vehicleID = "";
     //MAYBE TO FIX
