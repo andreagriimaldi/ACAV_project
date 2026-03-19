@@ -4,6 +4,7 @@
 #include <vector>
 
 class Map;
+class Vehicle;
 
 class IntersectionCoordinator {
     private:
@@ -16,9 +17,13 @@ class IntersectionCoordinator {
             currents.reserve(4);
             currentlyGranted.reserve(4);
         };
-        bool askPermission(std::string);
-        int suggestedSpeed(std::string) const;
+        bool askPermission(const std::string&);
+        int suggestedSpeed(const std::string&) const;
         void updateStatus();
+        bool isEgoInTheMiddle() const;
+        bool inTheMiddle(const std::string&) const;
+        std::shared_ptr<Vehicle> idVehicleMiddle(const std::string &id) const;
+        std::shared_ptr<Vehicle> otherVehicleMiddle(const std::string &id) const;
 };
 
 

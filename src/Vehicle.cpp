@@ -166,3 +166,20 @@ int Vehicle::getPercState() const {
     std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);;
     return static_cast<int>(perc.at(0).at(0));
 }
+
+const Perception& Vehicle::getPerception() const {
+    return per;
+}
+
+int Vehicle::getGlobalPlan() const {
+    return p.getType();
+}
+
+double Vehicle::getDistanceFromEnd() const {
+    int egoX = getCOGx();
+    int egoY = getCOGy();
+    int endX = p.lastPoint()->getX();
+    int endY = p.lastPoint()->getY();
+
+    return std::sqrt((egoX - endX)*(egoX - endX) + (egoY - endY)*(egoY - endY));
+}

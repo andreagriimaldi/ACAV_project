@@ -74,7 +74,22 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
         case 2: {
             //Middle
 
-            //Here i need to check if i have to slow down for some reasons
+            //Here i need to check if i have to slow down for some reason
+            //I guess calling suggestedSpeed() (?)
+
+            int suggested = coord.suggestedSpeed(ID);
+            if (suggested == 0) {
+                //STOP
+                s = s/3; //TO CHANGE
+            }
+            else if (suggested == 1) {
+                //SLOW DOWN
+                s = s/1.3; //TO CHANGE
+            }
+            else if (suggested == 2) {
+                //do nothing
+            }
+            else std::cerr << "suggestedSpeed() must return the value 0, 1 or 2" << std::endl;
 
             break;
         }

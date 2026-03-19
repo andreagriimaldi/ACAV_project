@@ -43,6 +43,9 @@ public:
     void updateBicycle(double);
     double computeSteeringFrom(double x, double y, double hdg) const;
     int getPercState() const;
+    const Perception& getPerception() const;
+    int getGlobalPlan() const;
+    double getDistanceFromEnd() const;
 };
 
 
