@@ -44,13 +44,13 @@ int IntersectionCoordinator::suggestedSpeed(const std::string& id) const {
     }
 
     //Let's find which vehicles are in the middle and save them in a shared pointer
-    std::shared_ptr<Vehicle> vehicle1 = idVehicleMiddle(id);
-    std::shared_ptr<Vehicle> vehicle2 = otherVehicleMiddle(id);
+    std::shared_ptr<Vehicle> vehicle1 = idVehicleMiddle(currents.at(0));
+    std::shared_ptr<Vehicle> vehicle2 = otherVehicleMiddle(currents.at(1));
 
     //For both cars we calculate a score between 0 and 1, weighted by the three criterias
     double w_right = 0.5;
-    double w_progress = 0.4;
-    double w_straight = 0.1;
+    double w_progress = 0.2;
+    double w_velocity = 0.3;
 
     double weight1 = 0.0, weight2 = 0.0;
 
@@ -95,19 +95,15 @@ int IntersectionCoordinator::suggestedSpeed(const std::string& id) const {
     }
 
     //THIRD CRITERIUM: If vehicle 1 is going straight
-    int gplan1 = vehicle1->getGlobalPlan();
-    int gplan2 = vehicle2->getGlobalPlan();
-    if (gplan1 == 8 or gplan1 == 9 or gplan1 == 10 or gplan1 == 11) {
-        if (gplan2 != 8 and gplan2 != 9 and gplan2 != 10 and gplan2 != 11) {
-            //1 goes straight and 2 does not
-            weight1 += w_straight*1;
-        }
+    if (vehicle1->getSpeed() > vehicle2->getSpeed()) {
+        weight1 += w_velocity*1;
     }
-    if (gplan2 == 8 or gplan2 == 9 or gplan2 == 10 or gplan2 == 11) {
-        if (gplan1 != 8 and gplan1 != 9 and gplan1 != 10 and gplan1 != 11) {
-            //2 goes straight and 1 does not
-            weight2 += w_straight*1;
-        }
+    else if (vehicle1->getSpeed() < vehicle2->getSpeed()) {
+        weight2 += w_velocity*1;
+    }
+    else {
+        weight1 += w_velocity*0.5;
+        weight2 += w_velocity*0.5;
     }
 
     //FINAL DECISION
@@ -117,6 +113,8 @@ int IntersectionCoordinator::suggestedSpeed(const std::string& id) const {
         }
         else weight1 = 0;
     }
+
+    std::cerr << "w1: " << weight1 << " w2: " << weight2 << " id1: " << vehicle1->getID() << " id2: " << vehicle2->getID() << std::endl; //DEBUG 2
 
     if (weight1 > weight2) {
         return 2; //Vehicle 1 can proceeds if it has an higher value
@@ -170,7 +168,7 @@ bool IntersectionCoordinator::inTheMiddle(const std::string &id) const {
 std::shared_ptr<Vehicle> IntersectionCoordinator::idVehicleMiddle(const std::string &id) const {
     std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
     for (auto& v: vehicles) {
-        if (v->getID() == "ego" && v->getPercState() == 2) {
+        if (v->getID() == id && v->getPercState() == 2) {
             return v;
         }
     }
@@ -181,7 +179,7 @@ std::shared_ptr<Vehicle> IntersectionCoordinator::idVehicleMiddle(const std::str
 std::shared_ptr<Vehicle> IntersectionCoordinator::otherVehicleMiddle(const std::string &id) const {
     std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
     for (auto& v: vehicles) {
-        if (v->getID() != "ego" && v->getPercState() == 2) {
+        if (v->getID() != id && v->getPercState() == 2) {
             return v;
         }
     }

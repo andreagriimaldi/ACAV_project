@@ -78,6 +78,7 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
             //I guess calling suggestedSpeed() (?)
 
             int suggested = coord.suggestedSpeed(ID);
+            std::cerr << "Vehicle " << ID << " suggested: " << suggested << " speed before: " << s << std::endl; //DEBUG 1
             if (suggested == 0) {
                 //STOP
                 s = s/3; //TO CHANGE
