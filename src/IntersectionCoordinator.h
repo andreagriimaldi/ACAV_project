@@ -18,7 +18,7 @@ class IntersectionCoordinator {
             currentlyGranted.reserve(4);
         };
         bool askPermission(const std::string&);
-        int suggestedSpeed(const std::string&) const;
+        int suggestedSpeed(const std::string&, double) const;
         void updateStatus();
         bool isEgoInTheMiddle() const;
         bool inTheMiddle(const std::string&) const;
