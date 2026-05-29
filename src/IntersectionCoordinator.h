@@ -19,6 +19,7 @@ class IntersectionCoordinator {
         };
         bool askPermission(const std::string&);
         int suggestedSpeed(const std::string&, double) const;
+        const std::vector<int> pathCollisionFinder(int, int) const;
         void updateStatus();
         bool isEgoInTheMiddle() const;
         bool inTheMiddle(const std::string&) const;

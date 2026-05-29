@@ -44,10 +44,21 @@ int IntersectionCoordinator::suggestedSpeed(const std::string& id, double speed)
     }
 
     //Let's find which vehicles are in the middle and save them in a shared pointer
-    std::shared_ptr<Vehicle> vehicle1 = idVehicleMiddle(id);
-    std::shared_ptr<Vehicle> vehicle2 = otherVehicleMiddle(id);
+    std::shared_ptr<Vehicle> vehicle1 = idVehicleMiddle(id); //CURRENT
+    std::shared_ptr<Vehicle> vehicle2 = otherVehicleMiddle(id); //OTHER
 
+    int glob1 = vehicle1->getGlobalPlan();
+    int glob2 = vehicle2->getGlobalPlan();
 
+    std::vector<int> pathCollisionFinder(glob1, glob2);
+    //Here it will be decided how to act on the speed of vehicle1
+}
+
+// res[0] = 0 if NO collision, 1 if collision, res[1] = x of collision, res[2] = y of collision
+const std::vector<int> IntersectionCoordinator::pathCollisionFinder(int glob1, int glob2) const {
+    std::vector<int> res(3);
+
+    return res;
 }
 
 void IntersectionCoordinator::updateStatus() {
