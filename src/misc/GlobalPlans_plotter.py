@@ -28,34 +28,38 @@ def build_routes(dim):
         return (A, B)
 
     return {
-        0:  [g(dim/3+dim/10, dim/3-dim/30), g(dim/3, dim/3+dim/15),
-             g(dim/3-dim/7, dim/3+dim/9-dim/28), g(dim/3-dim/5, dim/3+dim/9-dim/29),
-             g(dim/30, dim/3+dim/9-dim/29)],
-        1:  [g(dim/3+dim/10, dim/3+dim/9), g(dim/2, dim/3+dim/4.5-dim/30),
-             g(2*dim/3, 2*dim/3-dim/15-dim/30), g(2*dim/3+dim/20, 2*dim/3-dim/14.2-dim/30),
-             g(dim-dim/50, 2*dim/3-dim/14.2-dim/30)],
-        2:  [g(2*dim/3+dim/30, dim/3+dim/10), g(2*dim/3-dim/15, dim/3),
-             g(2*dim/3-dim/9+dim/28, dim/3-dim/7), g(2*dim/3-dim/9+dim/29, dim/3-dim/5),
-             g(2*dim/3-dim/9+dim/30, dim/30)],
-        3:  [g(2*dim/3-dim/9, dim/3+dim/10), g(2*dim/3-dim/4.5+dim/25, dim/2),
-             g(dim/3+dim/15+dim/30, 2*dim/3), g(dim/3+dim/14.2+dim/30, 2*dim/3+dim/20),
-             g(dim/3+dim/14.2+dim/30, dim-dim/50)],
-        4:  [g(2*dim/3-dim/10, 2*dim/3+dim/30), g(2*dim/3, 2*dim/3-dim/15),
-             g(2*dim/3+dim/7, 2*dim/3-dim/9+dim/28), g(2*dim/3+dim/5, 2*dim/3-dim/9+dim/29),
-             g(dim-dim/30, 2*dim/3-dim/9+dim/29)],
-        5:  [g(2*dim/3-dim/10, 2*dim/3-dim/9), g(dim/2, 2*dim/3-dim/4.5+dim/30),
-             g(dim/3, dim/3+dim/15+dim/30), g(dim/3-dim/20, dim/3+dim/14.2+dim/30),
-             g(dim/50, dim/3+dim/14.2+dim/30)],
-        6:  [g(dim/3-dim/30, 2*dim/3-dim/10), g(dim/3+dim/15, 2*dim/3),
-             g(dim/3+dim/9-dim/28, 2*dim/3+dim/7), g(dim/3+dim/9-dim/29, 2*dim/3+dim/5),
-             g(dim/3+dim/9-dim/29, dim-dim/30)],
-        7:  [g(dim/3+dim/9, 2*dim/3-dim/10), g(dim/3+dim/4.5-dim/30, dim/2),
-             g(2*dim/3-dim/15-dim/30, dim/3), g(2*dim/3-dim/14.2-dim/30, dim/3-dim/20),
-             g(2*dim/3-dim/14.2-dim/30, dim/50)],
-        8:  [g(dim/3+dim/10, dim/3+dim/30), g(dim/3+dim/10, dim-dim/10)],
-        9:  [g(2*dim/3-dim/30, dim/3+dim/10), g(dim/10, dim/3+dim/10)],
-        10: [g(2*dim/3-dim/10, 2*dim/3-dim/30), g(2*dim/3-dim/10, dim/10)],
-        11: [g(dim/3+dim/30, 2*dim/3-dim/10), g(dim-dim/10, 2*dim/3-dim/10)],
+        0: [g(dim / 3 + dim / 10, dim / 3 - dim / 30), g(dim / 3, dim / 3 + dim / 15),
+            g(dim / 3 - dim / 7, dim / 3 + dim / 9 - dim / 28), g(dim / 3 - dim / 5, dim / 3 + dim / 9 - dim / 29),
+            g(dim / 30, dim / 3 + dim / 9 - dim / 29)],
+        1: [g(dim / 3 + dim / 10, dim / 3 + dim / 9), g(dim / 2, dim / 3 + dim / 4.5 - dim / 30),
+            g(2 * dim / 3, 2 * dim / 3 - dim / 15 - dim / 30),
+            g(2 * dim / 3 + dim / 20, 2 * dim / 3 - dim / 14.2 - dim / 30),
+            g(dim - dim / 50, 2 * dim / 3 - dim / 14.2 - dim / 30)],
+        2: [g(2 * dim / 3 + dim / 30, dim / 3 + dim / 10), g(2 * dim / 3 - dim / 15, dim / 3),
+            g(2 * dim / 3 - dim / 9 + dim / 28, dim / 3 - dim / 7),
+            g(2 * dim / 3 - dim / 9 + dim / 29, dim / 3 - dim / 5),
+            g(2 * dim / 3 - dim / 9 + dim / 30, dim / 30)],
+        3: [g(2 * dim / 3 - dim / 9, dim / 3 + dim / 10), g(2 * dim / 3 - dim / 4.5 + dim / 25, dim / 2),
+            g(dim / 3 + dim / 15 + dim / 30, 2 * dim / 3), g(dim / 3 + dim / 14.2 + dim / 30, 2 * dim / 3 + dim / 20),
+            g(dim / 3 + dim / 14.2 + dim / 30, dim - dim / 50)],
+        4: [g(2 * dim / 3 - dim / 10, 2 * dim / 3 + dim / 30), g(2 * dim / 3, 2 * dim / 3 - dim / 15),
+            g(2 * dim / 3 + dim / 7, 2 * dim / 3 - dim / 9 + dim / 28),
+            g(2 * dim / 3 + dim / 5, 2 * dim / 3 - dim / 9 + dim / 29),
+            g(dim - dim / 30, 2 * dim / 3 - dim / 9 + dim / 29)],
+        5: [g(2 * dim / 3 - dim / 10, 2 * dim / 3 - dim / 9), g(dim / 2, 2 * dim / 3 - dim / 4.5 + dim / 30),
+            g(dim / 3, dim / 3 + dim / 15 + dim / 30), g(dim / 3 - dim / 20, dim / 3 + dim / 14.2 + dim / 30),
+            g(dim / 50, dim / 3 + dim / 14.2 + dim / 30)],
+        6: [g(dim / 3 - dim / 30, 2 * dim / 3 - dim / 10), g(dim / 3 + dim / 15, 2 * dim / 3),
+            g(dim / 3 + dim / 9 - dim / 28, 2 * dim / 3 + dim / 7),
+            g(dim / 3 + dim / 9 - dim / 29, 2 * dim / 3 + dim / 5),
+            g(dim / 3 + dim / 9 - dim / 29, dim - dim / 30)],
+        7: [g(dim / 3 + dim / 9, 2 * dim / 3 - dim / 10), g(dim / 3 + dim / 4.5 - dim / 30, dim / 2),
+            g(2 * dim / 3 - dim / 15 - dim / 30, dim / 3), g(2 * dim / 3 - dim / 14.2 - dim / 30, dim / 3 - dim / 20),
+            g(2 * dim / 3 - dim / 14.2 - dim / 30, dim / 50)],
+        8: [g(dim / 3 + dim / 10, dim / 3 + dim / 30), g(dim / 3 + dim / 10, dim - dim / 10)],
+        9: [g(2 * dim / 3 - dim / 30, dim / 3 + dim / 10), g(dim / 10, dim / 3 + dim / 10)],
+        10: [g(2 * dim / 3 - dim / 10, 2 * dim / 3 - dim / 30), g(2 * dim / 3 - dim / 10, dim / 10)],
+        11: [g(dim / 3 + dim / 30, 2 * dim / 3 - dim / 10), g(dim - dim / 10, 2 * dim / 3 - dim / 10)],
     }
 
 
@@ -78,8 +82,50 @@ def polyline_length(pts):
     return total, cum
 
 
+def seg_intersect(p1, p2, p3, p4):
+    """Intersection of segment p1-p2 with p3-p4.
+    Returns (x, y, t, u) where t,u in [0,1] are the parametric positions
+    along the first and second segment, or None if they don't cross.
+    """
+    (x1, y1), (x2, y2) = p1, p2
+    (x3, y3), (x4, y4) = p3, p4
+    rx, ry = x2 - x1, y2 - y1
+    sx, sy = x4 - x3, y4 - y3
+    denom = rx * sy - ry * sx
+    if abs(denom) < 1e-12:
+        return None  # parallel or degenerate
+    t = ((x3 - x1) * sy - (y3 - y1) * sx) / denom
+    u = ((x3 - x1) * ry - (y3 - y1) * rx) / denom
+    if 0.0 <= t <= 1.0 and 0.0 <= u <= 1.0:
+        return (x1 + t * rx, y1 + t * ry, t, u)
+    return None
 
 
+def path_intersections(pts_a, pts_b):
+    """All crossings between two polylines.
+    Returns a list of dicts: point (x,y), arc length along A and along B
+    from each route's first (approach) waypoint to the crossing.
+    Arc length is the distance_to_conflict input for suggestedSpeed.
+    """
+    _, cum_a = polyline_length(pts_a)
+    _, cum_b = polyline_length(pts_b)
+    out = []
+    for i in range(len(pts_a) - 1):
+        a0, a1 = pts_a[i], pts_a[i + 1]
+        seg_a_len = ((a1[0] - a0[0]) ** 2 + (a1[1] - a0[1]) ** 2) ** 0.5
+        for j in range(len(pts_b) - 1):
+            b0, b1 = pts_b[j], pts_b[j + 1]
+            hit = seg_intersect(a0, a1, b0, b1)
+            if hit is None:
+                continue
+            x, y, t, u = hit
+            seg_b_len = ((b1[0] - b0[0]) ** 2 + (b1[1] - b0[1]) ** 2) ** 0.5
+            out.append({
+                "point": (x, y),
+                "dist_a": cum_a[i] + t * seg_a_len,  # arc length along A
+                "dist_b": cum_b[j] + u * seg_b_len,  # arc length along B
+            })
+    return out
 
 
 def parse_args(argv):
@@ -89,8 +135,11 @@ def parse_args(argv):
     while i < len(argv):
         a = argv[i]
         if a == "--dim":
-            dim = float(argv[i + 1]); i += 2; continue
-        selected.append(int(a)); i += 1
+            dim = float(argv[i + 1]);
+            i += 2;
+            continue
+        selected.append(int(a));
+        i += 1
     return dim, selected
 
 
@@ -112,10 +161,10 @@ def main():
         print(f"{k:2d}: {label[k]}")
 
     fig, ax = plt.subplots(figsize=(8, 8))
-    for v in (0, dim/3, 2*dim/3, dim):
+    for v in (0, dim / 3, 2 * dim / 3, dim):
         ax.axvline(v, color="lightgray", lw=1)
         ax.axhline(v, color="lightgray", lw=1)
-    for v in (dim/3, 2*dim/3):
+    for v in (dim / 3, 2 * dim / 3):
         ax.axvline(v, color="gray", ls="--", lw=1)
         ax.axhline(v, color="gray", ls="--", lw=1)
 
@@ -126,17 +175,33 @@ def main():
         length, cum = polyline_length(pts)
         color = cmap(idx % 20)
         ax.plot(xs, ys, "-o", color=color, label=f"{k}: {label[k]}  (L={length:.1f})")
-        ax.plot(*pts[0], "s", color=color, ms=10)   # approach
-        ax.plot(*pts[-1], "*", color=color, ms=14)   # exit
+        ax.plot(*pts[0], "s", color=color, ms=10)  # approach
+        ax.plot(*pts[-1], "*", color=color, ms=14)  # exit
         ax.annotate(f"{k} app", pts[0], color=color, fontsize=8,
                     xytext=(5, 5), textcoords="offset points")
         for (x, y), d in zip(pts, cum):
             ax.annotate(f"{d:.0f}", (x, y), color=color, fontsize=7,
                         xytext=(3, -8), textcoords="offset points")
 
-    ax.set_xlim(-dim*0.05, dim*1.05)
-    ax.set_ylim(-dim*0.05, dim*1.05)
-    ax.invert_yaxis()                 # y=row: N(0) at top, S(dim) at bottom
+    ax.set_xlim(-dim * 0.05, dim * 1.05)
+    ax.set_ylim(-dim * 0.05, dim * 1.05)
+
+    # When exactly two routes are selected, report and mark their crossings.
+    if len(selected) == 2:
+        ka, kb = selected
+        hits = path_intersections(routes[ka], routes[kb])
+        if not hits:
+            print(f"routes {ka} and {kb} do not cross")
+        for h in hits:
+            x, y = h["point"]
+            print(f"cross at ({x:.1f}, {y:.1f})  "
+                  f"dist along {ka}={h['dist_a']:.1f}  "
+                  f"dist along {kb}={h['dist_b']:.1f}")
+            ax.plot(x, y, "X", color="red", ms=14, mew=2, zorder=5)
+            ax.annotate("X", (x, y), color="red", fontsize=10, fontweight="bold",
+                        xytext=(6, 6), textcoords="offset points")
+
+    ax.invert_yaxis()  # y=row: N(0) at top, S(dim) at bottom
     ax.set_aspect("equal")
     ax.set_xlabel("x = col   (W=0  ->  E=dim)")
     ax.set_ylabel("y = row   (N=0  ->  S=dim)")
