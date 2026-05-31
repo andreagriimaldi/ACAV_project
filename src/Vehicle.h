@@ -41,11 +41,13 @@ public:
     void computeNewPosition(int, int, int);
     double computeSteering() const;
     void updateBicycle(double);
-    double computeSteeringFrom(double x, double y, double hdg) const;
+    double computeSteeringFrom(double, double, double) const;
     int getPercState() const;
     const Perception& getPerception() const;
     int getGlobalPlan() const;
     double getDistanceFromEnd() const;
+    double getDistanceFromPoint(int, int) const;
+    std::pair<int, int> getEndPoint() const;
 };
 
 

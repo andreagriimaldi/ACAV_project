@@ -183,3 +183,14 @@ double Vehicle::getDistanceFromEnd() const {
 
     return std::sqrt((egoX - endX)*(egoX - endX) + (egoY - endY)*(egoY - endY));
 }
+
+double Vehicle::getDistanceFromPoint(int x, int y) const {
+    int egoX = getCOGx();
+    int egoY = getCOGy();
+
+    return std::sqrt((egoX - x)*(egoX - x) + (egoY - y)*(egoY - y));
+}
+
+std::pair<int, int> Vehicle::getEndPoint() const {
+    return {p.lastPoint()->getX(), p.lastPoint()->getY()};
+}
