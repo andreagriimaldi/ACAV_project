@@ -29,7 +29,7 @@ class IntersectionCoordinator {
         bool inTheMiddle(const std::string&) const;
         std::shared_ptr<Vehicle> idVehicleMiddle(const std::string &) const;
         std::shared_ptr<Vehicle> otherVehicleMiddle(const std::string &) const;
-        bool pastPoint(int, int, int, int, int) const;
+        bool pastPoint(int, int, int, int, int, double) const;
         double distance(int, int, int, int) const;
 };
 

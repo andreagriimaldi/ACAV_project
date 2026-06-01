@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     m.generateVehicle(false, 0, 0, 0, m.getDim()/220);
     m.generateVehicle(false, 1, 0, 3, m.getDim()/220);
     m.generateVehicle(false, 2, 0, 5, m.getDim()/200);
-    m.generateVehicle(false, 3, 0, 11, m.getDim()/220);
+    m.generateVehicle(false, 3, 0, 11, m.getDim()/200);
 
     m.FakeUpdate();
 

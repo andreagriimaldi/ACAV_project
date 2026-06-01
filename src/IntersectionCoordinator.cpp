@@ -65,19 +65,22 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
     if (collision.at(3) == 0) {
         //This is the case where the paths intersect in just a point
 
-        if (pastPoint(x1, y1, h1, collision.at(1), collision.at(2))) {
+        if (pastPoint(x1, y1, h1, collision.at(1), collision.at(2), 0)) {
             //Vehicle1 already past the crash point
             return speed;
         }
         else {
-            if (pastPoint(x2, y2, h2, collision.at(1), collision.at(2))) {
+            if (pastPoint(x2, y2, h2, collision.at(1), collision.at(2), 0)) {
                 //Vehicle2 already past the point
                 double gap = distance(x1, y1, x2, y2);
-                bool v2_ahead = !pastPoint(x1, y1, h1, x2, y2);
-                if (v2_ahead) {
+                if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15)) { //toll is a tuning parameter
                     double bodyLen = m.getDim() / 9.0;
-                    if (gap < bodyLen + m.getDim()/30.0) return speed / 3;
-                    if (gap < m.getDim() / 5.0)          return speed / 1.2;
+                    if (gap < bodyLen + m.getDim()/30.0) {
+                        return speed / 3;
+                    }
+                    if (gap < m.getDim() / 5.0) {
+                        return speed / 1.2;
+                    }
                 }
                 return speed;
             }
@@ -201,14 +204,14 @@ std::shared_ptr<Vehicle> IntersectionCoordinator::otherVehicleMiddle(const std::
     return {nullptr};
 }
 
-bool IntersectionCoordinator::pastPoint(int vx, int vy, int heading, int px, int py) const {
+bool IntersectionCoordinator::pastPoint(int vx, int vy, int heading, int px, int py, double toll) const {
     double dx = px - vx;
     double dy = py - vy;
 
     double hx = std::cos(heading * M_PI / 180.0);
     double hy = -std::sin(heading * M_PI / 180.0);
 
-    return (dx * hx + dy * hy) < 0.0;
+    return (dx * hx + dy * hy) < toll;
 }
 
 double IntersectionCoordinator::distance(int x1, int y1, int x2, int y2) const {
