@@ -5,7 +5,7 @@
 
 void CPUVehicle::move() {
     double steer = computeSteering();
-    double s = computeNewSpeed(steer);
+    double s = computeNewSpeed(steer, maxspeed);
 
     std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);
     if (perc.size() > 1) {
@@ -15,13 +15,11 @@ void CPUVehicle::move() {
     updateBicycle(s);
 }
 
-double CPUVehicle::computeNewSpeed(double steer) const {
+double CPUVehicle::computeNewSpeed(double steer, double v_max) const {
     double L = (map.getDim()/9) * 0.65;
 
     double a_lat_max = 0.05; //TUNING PARAMETER
     double a_str_max = 0.3; //TUNING PARAMETER
-
-    double v_max = maxspeed;
 
     if (std::abs(steer) > 0.001) {
         double v_lat = std::sqrt(a_lat_max * L / std::abs(std::tan(steer)));
@@ -80,7 +78,7 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
             double suggested = coord.suggestedSpeed(ID, s);
             std::cerr << "Vehicle " << ID << " suggested: " << suggested << " speed before: " << s << std::endl; //DEBUG 1
             if (suggested < 2 * maxspeed) {
-                s = suggested;
+                s = computeNewSpeed(0, suggested);
             }
             else std::cerr << "suggestedSpeed() must be reasonable" << std::endl;
 

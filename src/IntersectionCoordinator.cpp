@@ -32,8 +32,6 @@ bool IntersectionCoordinator::askPermission(const std::string& id) {
 
 //This directly returns the speed for CPUVehicle::avoidObstacles()
 double IntersectionCoordinator::suggestedSpeed(const std::string& id, double speed) const {
-    std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
-
     if (!inTheMiddle(id)) {
         std::cerr << "suggestedSpeed() should be called by vehicles in the middle" << std::endl;
         return speed;
@@ -50,14 +48,13 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
     int glob1 = vehicle1->getGlobalPlan();
     int glob2 = vehicle2->getGlobalPlan();
 
-    int x1 = oldCOGs.at(vehicle1->getID()).first;
-    int y1 = oldCOGs.at(vehicle1->getID()).second;
+    int x1 = oldCOGs.at(vehicle1->getID()).x;
+    int y1 = oldCOGs.at(vehicle1->getID()).y;
+    int h1 = oldCOGs.at(vehicle1->getID()).heading;
 
-    int x2 = oldCOGs.at(vehicle2->getID()).first;
-    int y2 = oldCOGs.at(vehicle2->getID()).second;
-
-    std::pair<int, int> end1 = vehicle1->getEndPoint();
-    std::pair<int, int> end2 = vehicle2->getEndPoint();
+    int x2 = oldCOGs.at(vehicle2->getID()).x;
+    int y2 = oldCOGs.at(vehicle2->getID()).y;
+    int h2 = oldCOGs.at(vehicle2->getID()).heading;
 
     std::vector<int> collision = pathCollisionFinder(glob1, glob2);
 
@@ -67,28 +64,31 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
 
     if (collision.at(3) == 0) {
         //This is the case where the paths intersect in just a point
-        if (distance(end1.first, end1.second, x1, y1) < distance(x1, y1, collision.at(1), collision.at(2))) {
-            return speed; //Vehicle1 already past the crash point
+        if (pastPoint(x1, y1, h1, collision.at(1), collision.at(2))) {
+            //Vehicle1 already past the crash point
+            return speed;
         }
         else {
-            if (distance(end2.first, end2.second, x2, y2) < distance(x2, y2, collision.at(1), collision.at(2))) {
+            if (pastPoint(x2, y2, h2, collision.at(1), collision.at(2))) {
                 //Vehicle2 already past the point
                 return speed;
             }
             else {
                 //Both vehicles still have to cross the point (the closest one goes)
-                if (distance(x1, y1, collision.at(1), collision.at(2)) < distance(x2, y2, collision.at(1), collision.at(2))) {
+                double d1 = distance(x1, y1, collision.at(1), collision.at(2));
+                double d2 = distance(x2, y2, collision.at(1), collision.at(2));
+                if (d1 < d2 or (d1 == d2 && id < vehicle2->getID())) {
                     return speed; //Vehicle1 is closer to the point so it's the one who goes
                 }
                 else {
                     //Vehicle1 is not the closest to the crash point
                     double dist = distance(x1, y1, x2, y2);
-                    double eps = 1.0;
+                    double eps = 2.0;
                     if (dist < m.getDim()/(9 - eps)) {
-                        return speed/3;
+                        return speed/3; //TO CHANGE MAYBE
                     }
                     if (dist < m.getDim()/(5)) {
-                        return speed/1.2;
+                        return speed/1.2; //TO CHANGE MAYBE
                     }
                     return speed;
                 }
@@ -107,7 +107,7 @@ const std::vector<int> IntersectionCoordinator::pathCollisionFinder(int glob1, i
 
     int DIM = m.getDim();
 
-    const std::vector<std::vector<std::array<double, 5>>> collisionMatrix = {
+    static const std::vector<std::vector<std::array<double, 5>>> collisionMatrix = {
     {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}},
     {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {1, 0.483524*DIM, 0.503001*DIM, 0, 0}, {0, 0, 0, 0, 0}, {1, 0.450617*DIM, 0.464609*DIM, 0.549383*DIM, 0.535391*DIM}, {0, 0, 0, 0, 0}, {1, 0.498431*DIM, 0.520392*DIM, 0, 0}, {1, 0.433333*DIM, 0.444444*DIM, 0, 0}, {0, 0, 0, 0, 0}, {1, 0.566667*DIM, 0.540000*DIM, 0, 0}, {0, 0, 0, 0, 0}},
     {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}},
@@ -137,7 +137,7 @@ void IntersectionCoordinator::updateStatus() {
     currents.clear();
     oldCOGs.clear();
     for (const auto& v: vehicles) {
-        oldCOGs[v->getID()] = {v->getCOGx(), v->getCOGy()};
+        oldCOGs[v->getID()] = {v->getCOGx(), v->getCOGy(), v->getHeading()};
         if (v->getPercState() == 2) {
             currents.push_back(v->getID());
             auto it = std::find(currentlyGranted.begin(), currentlyGranted.end(), v->getID());
@@ -193,6 +193,16 @@ std::shared_ptr<Vehicle> IntersectionCoordinator::otherVehicleMiddle(const std::
     return {nullptr};
 }
 
+bool IntersectionCoordinator::pastPoint(int vx, int vy, int heading, int px, int py) const {
+    double dx = px - vx;
+    double dy = py - vy;
+
+    double hx = std::cos(heading * M_PI / 180.0);
+    double hy = -std::sin(heading * M_PI / 180.0);
+
+    return (dx * hx + dy * hy) < 0.0;
+}
+
 double IntersectionCoordinator::distance(int x1, int y1, int x2, int y2) const {
-    return std::sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+    return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
 }

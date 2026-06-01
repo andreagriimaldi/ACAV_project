@@ -1,11 +1,13 @@
 #ifndef ACAV_INTERSECTIONCOORDINATOR_H
 #define ACAV_INTERSECTIONCOORDINATOR_H
-#include <map>
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 class Map;
 class Vehicle;
+
+struct snapshot { int x, y, heading; };
 
 class IntersectionCoordinator {
     private:
@@ -13,7 +15,7 @@ class IntersectionCoordinator {
         std::queue<std::string> queue;
         std::vector<std::string> currents;
         std::vector<std::string> currentlyGranted;
-        std::map<std::string, std::pair<int, int>> oldCOGs;
+        std::unordered_map<std::string, snapshot> oldCOGs;
     public:
         IntersectionCoordinator(Map& map): m(map) {
             currents.reserve(4);
@@ -25,10 +27,10 @@ class IntersectionCoordinator {
         void updateStatus();
         bool isEgoInTheMiddle() const;
         bool inTheMiddle(const std::string&) const;
-        std::shared_ptr<Vehicle> idVehicleMiddle(const std::string &id) const;
-        std::shared_ptr<Vehicle> otherVehicleMiddle(const std::string &id) const;
-
-        double distance(int x1, int y1, int x2, int y2) const;
+        std::shared_ptr<Vehicle> idVehicleMiddle(const std::string &) const;
+        std::shared_ptr<Vehicle> otherVehicleMiddle(const std::string &) const;
+        bool pastPoint(int, int, int, int, int) const;
+        double distance(int, int, int, int) const;
 };
 
 

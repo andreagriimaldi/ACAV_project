@@ -9,7 +9,7 @@ public:
         : Vehicle(m, surf, h, s, id, gplan, maxs) {
     }
     void move() override;
-    double computeNewSpeed(double) const;
+    double computeNewSpeed(double, double) const;
     void avoidObstacles(double&, std::vector<std::vector<double>>&);
 };
 
