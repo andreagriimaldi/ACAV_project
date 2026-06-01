@@ -64,6 +64,7 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
 
     if (collision.at(3) == 0) {
         //This is the case where the paths intersect in just a point
+
         if (pastPoint(x1, y1, h1, collision.at(1), collision.at(2))) {
             //Vehicle1 already past the crash point
             return speed;
@@ -71,6 +72,13 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
         else {
             if (pastPoint(x2, y2, h2, collision.at(1), collision.at(2))) {
                 //Vehicle2 already past the point
+                double gap = distance(x1, y1, x2, y2);
+                bool v2_ahead = !pastPoint(x1, y1, h1, x2, y2);
+                if (v2_ahead) {
+                    double bodyLen = m.getDim() / 9.0;
+                    if (gap < bodyLen + m.getDim()/30.0) return speed / 3;
+                    if (gap < m.getDim() / 5.0)          return speed / 1.2;
+                }
                 return speed;
             }
             else {
