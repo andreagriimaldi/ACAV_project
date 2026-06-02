@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
     SDLRenderer renderer(GUI_SIZE);
 
     m.generateVehicle(false, 0, 0, 1, m.getDim()/200);
-    m.generateVehicle(false, 1, 0, 3, m.getDim()/220);
-    m.generateVehicle(false, 2, 0, 5, m.getDim()/200);
-    m.generateVehicle(false, 3, 0, 7, m.getDim()/220);
+    m.generateVehicle(false, 1, 0, 3, m.getDim()/240);
+    m.generateVehicle(false, 2, 0, 5, m.getDim()/190);
+    m.generateVehicle(false, 3, 0, 7, m.getDim()/230);
 
     m.FakeUpdate();
 
