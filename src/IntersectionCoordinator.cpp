@@ -64,56 +64,19 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
 
     if (collision.at(3) == 0) {
         //This is the case where the paths intersect in just a point
-
-        if (pastPoint(x1, y1, h1, collision.at(1), collision.at(2), 0)) {
-            //Vehicle1 already past the crash point
-            return speed;
-        }
-        else {
-            if (pastPoint(x2, y2, h2, collision.at(1), collision.at(2), 0)) {
-                //Vehicle2 already past the point
-                double gap = distance(x1, y1, x2, y2);
-                if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15)) { //toll is a tuning parameter
-                    double bodyLen = m.getDim() / 9.0;
-                    if (gap < bodyLen + m.getDim()/30.0) {
-                        return speed / 3;
-                    }
-                    if (gap < m.getDim() / 5.0) {
-                        return speed / 1.2;
-                    }
-                }
-                return speed;
-            }
-            else {
-                //Both vehicles still have to cross the point (the closest one goes)
-                double d1 = distance(x1, y1, collision.at(1), collision.at(2));
-                double d2 = distance(x2, y2, collision.at(1), collision.at(2));
-                if (d1 < d2 or (d1 == d2 && id < vehicle2->getID())) {
-                    return speed; //Vehicle1 is closer to the point so it's the one who goes
-                }
-                else {
-                    //Vehicle1 is not the closest to the crash point
-                    double dist = distance(x1, y1, x2, y2);
-                    double eps = 2.0;
-                    if (dist < m.getDim()/(9 - eps)) {
-                        return speed/3; //TO CHANGE MAYBE
-                    }
-                    if (dist < m.getDim()/(5)) {
-                        return speed/1.2; //TO CHANGE MAYBE
-                    }
-                    return speed;
-                }
-            }
-        }
+        return speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(1), collision.at(2), id, vehicle2->getID(), speed);
     }
     else {
-        //This is the case where the paths intersect in two points
+        //This is the case where the paths intersect in two points (true just for GlobalPlans 1-5 and 3-7)
+        double s1 = speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(1), collision.at(2), id, vehicle2->getID(), speed);
+        double s2 = speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(3), collision.at(4), id, vehicle2->getID(), speed);
+        return std::min(s1, s2);
     }
 
 }
 
 // res[0] = 0 if NO collision, 1 if collision, res[1] = x of collision 1, res[2] = y of collision 1, res[3] = x of collision 2, res[4] = y of collision 2
-const std::vector<int> IntersectionCoordinator::pathCollisionFinder(int glob1, int glob2) const {
+std::vector<int> IntersectionCoordinator::pathCollisionFinder(int glob1, int glob2) const {
     std::vector<int> res(5);
 
     int DIM = m.getDim();
@@ -216,4 +179,47 @@ bool IntersectionCoordinator::pastPoint(int vx, int vy, int heading, int px, int
 
 double IntersectionCoordinator::distance(int x1, int y1, int x2, int y2) const {
     return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+}
+
+double IntersectionCoordinator::speedForPoint(int x1, int y1, int h1, int x2, int y2, int h2, int cx, int cy, const std::string& id, const std::string& id2, double speed) const {
+    if (pastPoint(x1, y1, h1, cx, cy, 0)) {
+        //Vehicle1 already past the crash point
+        return speed;
+    }
+    else {
+        if (pastPoint(x2, y2, h2, cx, cy, 0)) {
+            //Vehicle2 already past the point (Vehicle1 goes but carefully)
+            double gap = distance(x1, y1, x2, y2);
+            if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15)) { //toll is a tuning parameter
+                double bodyLen = m.getDim() / 9.0;
+                if (gap < bodyLen + m.getDim()/30.0) {
+                    return speed / 3;
+                }
+                if (gap < m.getDim() / 5.0) {
+                    return speed / 1.2;
+                }
+            }
+            return speed;
+        }
+        else {
+            //Both vehicles still have to cross the point (the closest one goes)
+            double d1 = distance(x1, y1, cx, cy);
+            double d2 = distance(x2, y2, cx, cy);
+            if (d1 < d2 or (d1 == d2 && id < id2)) {
+                return speed; //Vehicle1 is closer to the point so it's the one who goes
+            }
+            else {
+                //Vehicle1 is not the closest to the crash point
+                double dist = distance(x1, y1, x2, y2);
+                double eps = 2.0;
+                if (dist < m.getDim()/(9 - eps)) {
+                    return speed/3; //TO CHANGE MAYBE
+                }
+                if (dist < m.getDim()/(5)) {
+                    return speed/1.2; //TO CHANGE MAYBE
+                }
+                return speed;
+            }
+        }
+    }
 }
