@@ -68,9 +68,35 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
     }
     else {
         //This is the case where the paths intersect in two points (true just for GlobalPlans 1-5 and 3-7)
-        double s1 = speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(1), collision.at(2), id, vehicle2->getID(), speed);
-        double s2 = speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(3), collision.at(4), id, vehicle2->getID(), speed);
-        return std::min(s1, s2);
+        int centerX = (collision.at(1) + collision.at(3))/2;
+        int centerY = (collision.at(2) + collision.at(4))/2;
+        double dist1 = distance(x1, y1, centerX, centerY);
+        double dist2 = distance(x2, y2, centerX, centerY);
+
+        if (dist1 < dist2 or (dist1 == dist2 and id < vehicle2->getID())) {
+            return speed;
+        }
+        else {
+            if (!pastPoint(x1, y1, h1, centerX, centerY, 0.0)) {
+                if (pastPoint(x2, y2, h2, centerX, centerY, 0.0)) {
+                    double dist = distance(x1, y1, x2, y2);
+                    double eps = 2.0;
+                    if (dist < m.getDim()/(9 - eps)) {
+                        return speed/3; //TO CHANGE MAYBE
+                    }
+                    if (dist < m.getDim()/(5)) {
+                        return speed/1.2; //TO CHANGE MAYBE
+                    }
+                    return speed;
+                }
+                else {
+                    return speed/3;
+                }
+            }
+            else {
+                return speed;
+            }
+        }
     }
 
 }
