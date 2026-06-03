@@ -96,10 +96,10 @@ double Vehicle::computeSteering() const {
 
 void Vehicle::updateBicycle(double v) {
 
-    std::cout << "=== UPDATE ===" << std::endl;
-    std::cout << "COG: (" << getCOGx() << ", " << getCOGy() << ")" << std::endl;
-    std::cout << "Heading: " << heading << std::endl;
-    std::cout << "Velocity: " << v << std::endl;
+    //std::cout << "=== UPDATE ===" << std::endl;
+    //std::cout << "COG: (" << getCOGx() << ", " << getCOGy() << ")" << std::endl;
+    //std::cout << "Heading: " << heading << std::endl;
+    //std::cout << "Velocity: " << v << std::endl;
 
     double L = (map.getDim() / 9) * 0.65;
 

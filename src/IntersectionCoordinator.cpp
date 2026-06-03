@@ -15,7 +15,7 @@ bool IntersectionCoordinator::askPermission(const std::string& id) {
     std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
     for (const auto& v: vehicles) {
         if (v->getID() == "ego") {
-            if (v->getPercState() == 1 && currents.size() > 0) {
+            if (v->getPercState() == 1 && !currents.empty()) {
                 return false;
             }
         }
@@ -74,14 +74,31 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
         double dist2 = distance(x2, y2, centerX, centerY);
 
         if (dist1 < dist2 or (dist1 == dist2 and id < vehicle2->getID())) {
+            //Vehicle1 is closer to the center and so it goes on
             return speed;
         }
         else {
             if (!pastPoint(x1, y1, h1, centerX, centerY, 0.0)) {
+                //Vehicle1 is not past the center
                 if (pastPoint(x2, y2, h2, centerX, centerY, 0.0)) {
+                    //Vehicle2 is past the center, but Vehicle1 is not
+                    double gap = distance(x1, y1, x2, y2);
+                    if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15.0)) {
+                        double bodyLen = m.getDim()/9.0;
+                        if (gap < bodyLen + m.getDim()/30.0) {
+                            return speed/3;
+                        }
+                        if (gap < m.getDim()/5.0) {
+                            return speed/1.2;
+                        }
+                    }
+                    return speed;
+                }
+                else {
+                    //Vehicle2 is not past the center
                     double dToCenter = distance(x1, y1, centerX, centerY);
-                    double bodyLen  = m.getDim()/9;
-                    double stopBand = bodyLen + m.getDim()/12;
+                    double bodyLen  = m.getDim()/9.0;
+                    double stopBand = bodyLen + m.getDim()/12.0;
                     double slowBand = 2*stopBand;
 
                     if (dToCenter < stopBand) {
@@ -91,9 +108,6 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
                         return speed / 1.5;
                     }
                     return speed;
-                }
-                else {
-                    return speed/3;
                 }
             }
             else {
@@ -219,13 +233,13 @@ double IntersectionCoordinator::speedForPoint(int x1, int y1, int h1, int x2, in
         if (pastPoint(x2, y2, h2, cx, cy, 0)) {
             //Vehicle2 already past the point (Vehicle1 goes but carefully)
             double gap = distance(x1, y1, x2, y2);
-            if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15)) { //toll is a tuning parameter
-                double bodyLen = m.getDim() / 9;
-                if (gap < bodyLen + m.getDim()/30) {
-                    return speed / 3;
+            if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15.0)) { //toll is a tuning parameter
+                double bodyLen = m.getDim()/9.0;
+                if (gap < bodyLen + m.getDim()/30.0) {
+                    return speed/3;
                 }
-                if (gap < m.getDim() / 5) {
-                    return speed / 1.2;
+                if (gap < m.getDim()/5.0) {
+                    return speed/1.2;
                 }
             }
             return speed;
@@ -240,8 +254,8 @@ double IntersectionCoordinator::speedForPoint(int x1, int y1, int h1, int x2, in
             else {
                 //Vehicle1 is not the closest to the crash point
                 double dToCenter = distance(x1, y1, cx, cy);
-                double bodyLen  = m.getDim()/9;
-                double stopBand = bodyLen + m.getDim()/12;
+                double bodyLen  = m.getDim()/9.0;
+                double stopBand = bodyLen + m.getDim()/12.0;
                 double slowBand = 2*stopBand;
 
                 if (dToCenter < stopBand) {

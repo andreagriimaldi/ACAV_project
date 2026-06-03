@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <thread>
 
 #include "Map.h"
@@ -13,10 +14,19 @@ int main(int argc, char* argv[]) {
     m.initialize();
     SDLRenderer renderer(GUI_SIZE);
 
-    m.generateVehicle(false, 0, 0, 1, m.getDim()/200);
-    m.generateVehicle(false, 1, 0, 3, m.getDim()/240);
-    m.generateVehicle(false, 2, 0, 5, m.getDim()/190);
-    m.generateVehicle(false, 3, 0, 7, m.getDim()/230);
+    //TEST START
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(180, 240);
+
+    //m.getDim()/(dist(gen))
+
+    m.generateVehicle(false, 0, 0, 8,  m.getDim()/(dist(gen)));   // N straight
+    m.generateVehicle(false, 1, 0, 9,  m.getDim()/(dist(gen)));   // E straight
+    m.generateVehicle(false, 2, 0, 5, m.getDim()/(dist(gen)));   // S straight
+    m.generateVehicle(false, 3, 0, 7, m.getDim()/(dist(gen)));   // W straight
+
+    //TEST END
 
     m.FakeUpdate();
 
