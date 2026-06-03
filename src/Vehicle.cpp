@@ -194,3 +194,21 @@ double Vehicle::getDistanceFromPoint(int x, int y) const {
 std::pair<int, int> Vehicle::getEndPoint() const {
     return {p.lastPoint()->getX(), p.lastPoint()->getY()};
 }
+
+int Vehicle::getSpawnPoint() const {
+    if (getGlobalPlan() == 0 or getGlobalPlan() == 1 or getGlobalPlan() == 8) {
+        return 0;
+    }
+    if (getGlobalPlan() == 2 or getGlobalPlan() == 3 or getGlobalPlan() == 9) {
+        return 1;
+    }
+    if (getGlobalPlan() == 4 or getGlobalPlan() == 5 or getGlobalPlan() == 10) {
+        return 2;
+    }
+    if (getGlobalPlan() == 6 or getGlobalPlan() == 7 or getGlobalPlan() == 11) {
+        return 3;
+    }
+
+    std::cerr << "Spawn point not correctly returned" << std::endl;
+    return -1;
+}

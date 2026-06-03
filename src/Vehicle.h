@@ -48,6 +48,7 @@ public:
     double getDistanceFromEnd() const;
     double getDistanceFromPoint(int, int) const;
     std::pair<int, int> getEndPoint() const;
+    int getSpawnPoint() const;
 };
 
 

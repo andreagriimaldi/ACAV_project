@@ -12,6 +12,34 @@ bool IntersectionCoordinator::askPermission(const std::string& id) {
         }
     }
 
+    addToQueue(id);
+
+    //return false if there are vehicles in queue at the right (TO IMPLEMENT)
+    if (queue.size() < 4 and queue.size() > 1) {
+        if (queue.size() == 2) {
+            std::shared_ptr<Vehicle> vehicle1 = findVehicle(id);
+            std::shared_ptr<Vehicle> vehicle2 = findVehicle(othersInQueue(id).at(0));
+            int spawn1 = vehicle1->getSpawnPoint();
+            int spawn2 = vehicle2->getSpawnPoint();
+
+            if (!rightFree(spawn1, spawn2)) {
+                return false;
+            }
+        }
+        else {
+            std::shared_ptr<Vehicle> vehicle1 = findVehicle(id);
+            std::shared_ptr<Vehicle> vehicle2 = findVehicle(othersInQueue(id).at(0));
+            std::shared_ptr<Vehicle> vehicle3 = findVehicle(othersInQueue(id).at(1));
+            int spawn1 = vehicle1->getSpawnPoint();
+            int spawn2 = vehicle2->getSpawnPoint();
+            int spawn3 = vehicle3->getSpawnPoint();
+
+            if (!rightFree(spawn1, spawn2) or !rightFree(spawn1, spawn3)) {
+                return false;
+            }
+        }
+    }
+
     std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
     for (const auto& v: vehicles) {
         if (v->getID() == "ego") {
@@ -26,6 +54,8 @@ bool IntersectionCoordinator::askPermission(const std::string& id) {
     }
 
     currentlyGranted.push_back(id);
+
+    removeFromQueue(id);
 
     return true;
 }
@@ -268,4 +298,52 @@ double IntersectionCoordinator::speedForPoint(int x1, int y1, int h1, int x2, in
             }
         }
     }
+}
+
+void IntersectionCoordinator::addToQueue(const std::string& id) {
+    if (std::find(queue.begin(), queue.end(), id) == queue.end()) {
+        queue.push_back(id);
+    }
+}
+
+void IntersectionCoordinator::removeFromQueue(const std::string& id) {
+    auto it = std::find(queue.begin(), queue.end(), id);
+
+    if (it != queue.end()) {
+        queue.erase(it);
+    }
+}
+
+std::shared_ptr<Vehicle> IntersectionCoordinator::findVehicle(const std::string& id) const{
+    for (const auto& vehicle : m.getVehicles()) {
+        if (vehicle->getID() == id){
+            return vehicle;
+        }
+    }
+    std::cerr << "NULLPTR in findVehicle, id: " << id << std::endl;
+    return nullptr;
+}
+
+std::vector<std::string> IntersectionCoordinator::othersInQueue(const std::string& id) const{
+    std::vector<std::string> others;
+    others.reserve(2);
+
+    for (const auto& s: queue) {
+        if (s != id) {
+            others.push_back(s);
+        }
+    }
+
+    return others;
+}
+
+bool IntersectionCoordinator::rightFree(int plan1, int plan2) const {
+    static const std::vector<std::vector<bool>> matrix = {
+        {{false, true, true, false}},
+        {{false, false, true, true}},
+        {{true, false, false, true}},
+        {{true, true, false, false}},
+    };
+
+    return matrix.at(plan1).at(plan2);
 }
