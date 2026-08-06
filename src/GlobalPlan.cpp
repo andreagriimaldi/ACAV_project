@@ -125,3 +125,24 @@ void GlobalPlan::popCurrent() {
         points.erase(points.begin());
     }
 }
+
+int GlobalPlan::planToSpawn(int gplan){
+    if (gplan == 0 or gplan == 1 or gplan == 8) {
+        return 0;
+    }
+    if (gplan == 2 or gplan == 3 or gplan == 9) {
+        return 1;
+    }
+    if (gplan == 4 or gplan == 5 or gplan == 10) {
+        return 2;
+    }
+    if (gplan == 6 or gplan == 7 or gplan == 11) {
+        return 3;
+    }
+    std::cerr << "gplan must be between 0 and 11" << std::endl;
+    return -1;
+}
+
+std::pair<int, int> GlobalPlan::planToEnd(int gplan){
+
+}
