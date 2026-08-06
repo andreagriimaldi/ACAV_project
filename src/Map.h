@@ -28,8 +28,7 @@ public:
     vector<std::pair<int, int>> getCOGs() const;
     IntersectionCoordinator& getCoordinator();
     const vector<std::shared_ptr<Vehicle>>& getVehicles() const;
-
-    void FakeUpdate();
+    void firstUpdate();
 };
 
 

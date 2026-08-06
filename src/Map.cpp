@@ -165,7 +165,7 @@ const vector<std::shared_ptr<Vehicle>> & Map::getVehicles() const {
 }
 
 
-void Map::FakeUpdate() {
+void Map::firstUpdate() {
     for (const std::shared_ptr<Vehicle>& v: vehicles) {
         for (const std::shared_ptr<Point>& p: v->getOldPosition()) {
             p->setVehicle(v->getID());

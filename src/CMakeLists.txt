@@ -27,6 +27,8 @@ add_executable(ACAV main.cpp
         Perception.h
         IntersectionCoordinator.cpp
         IntersectionCoordinator.h
+        Simulator.cpp
+        Simulator.h
 )
 
 target_include_directories(ACAV PRIVATE ${SDL2_INCLUDE_DIRS})

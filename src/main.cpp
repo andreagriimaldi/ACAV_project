@@ -19,16 +19,13 @@ int main(int argc, char* argv[]) {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(180, 240);
 
-    //m.getDim()/(dist(gen))
-
     m.generateVehicle(false, 0, 0, 8,  m.getDim()/(dist(gen)));   // N straight
     m.generateVehicle(false, 1, 0, 9,  m.getDim()/(dist(gen)));   // E straight
     m.generateVehicle(false, 2, 0, 5, m.getDim()/(dist(gen)));   // S straight
     m.generateVehicle(false, 3, 0, 7, m.getDim()/(dist(gen)));   // W straight
-
     //TEST END
 
-    m.FakeUpdate();
+    m.firstUpdate();
 
     /*
     std::cout << std::endl;
