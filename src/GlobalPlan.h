@@ -1,5 +1,6 @@
 #ifndef ACAV_GLOBALPLAN_H
 #define ACAV_GLOBALPLAN_H
+#include <memory>
 #include <vector>
 
 #include "Map.h"

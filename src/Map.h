@@ -1,7 +1,7 @@
 #ifndef ACAV_MAP_H
 #define ACAV_MAP_H
+#include <memory>
 #include <vector>
-
 #include "IntersectionCoordinator.h"
 #include "Point.h"
 

@@ -1,7 +1,7 @@
 #ifndef ACAV_VEHICLE_H
 #define ACAV_VEHICLE_H
+#include <memory>
 #include <vector>
-
 #include "GlobalPlan.h"
 #include "Perception.h"
 #include "Point.h"
