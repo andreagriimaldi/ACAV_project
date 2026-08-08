@@ -165,10 +165,10 @@ int GlobalPlan::planToEnd(int gplan, int mapDim){
 // 0 N, 1 E, 2 S, 3 W
 int GlobalPlan::spawnToRandomPlan(int spawn) {
     static const int plans[4][3] = {
-        {0, 1, 8},   // N
-        {2, 3, 9},   // E
-        {4, 5, 10},  // S
-        {6, 7, 11}   // W
+        {0, 1, 8},
+        {2, 3, 9},
+        {4, 5, 10},
+        {6, 7, 11}
     };
 
     if (spawn < 0 or spawn > 3) {

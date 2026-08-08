@@ -173,7 +173,7 @@ void Map::firstUpdate() {
     }
 }
 
-void Map::removeVehicle(std::shared_ptr<Vehicle>& vehicle) {
+void Map::removeVehicle(const std::shared_ptr<Vehicle>& vehicle) {
     const std::vector<std::shared_ptr<Point>>& points = vehicle->getOldPosition();
     for (const std::shared_ptr<Point>& p: points) {
         p->setNotOccupied();

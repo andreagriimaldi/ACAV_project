@@ -1,20 +1,28 @@
 #include "Simulator.h"
 #include <iostream>
 #include <random>
-#include <thread>
 
 #include "Vehicle.h"
 
 void Simulator::init() {
     bool running = true;
+    bool paused = false;
 
     while (running) {
-        loop();
+        int cmd = renderer.pollEvents();
+        if (cmd == 1) {
+            running = false;
+        }
+        else if (cmd == 2) {
+            paused = !paused;
+        }
 
-        renderer.pollEvents();
+        if (!paused) {
+            loop();
+        }
+
         renderer.draw(map);
-        SDL_Delay(16);  // ~60 FPS cap
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        SDL_Delay(16);
 
         if (crash()) {
             running = false;
@@ -35,8 +43,9 @@ void Simulator::loop() {
     removeVehicles();
 }
 
-void Simulator::terminate() {
-    //present statistics and terminate program
+void Simulator::terminate() const {
+    std::cout << "CPU Vehicle generated: " << cpuGenerated << std::endl;
+    std::cout << "Ego Vehicle generated: " << egoGenerated << std::endl;
 }
 
 bool Simulator::crash() {
@@ -52,18 +61,18 @@ bool Simulator::isSpawnPointFree(int direction) const{
     int x, y;
     if (direction == 0) {
         x = mapDim/3 + mapDim/10;
-        y = mapDim/3 - mapDim/30;
+        y = mapDim/18;
     }
     else if (direction == 1) {
-        x = (2*mapDim)/3 + mapDim/30;
+        x = mapDim - mapDim/18;
         y = mapDim/3 + mapDim/10;
     }
     else if (direction == 2) {
         x = (2*mapDim)/3 - mapDim/10;
-        y = (2*mapDim)/3 + mapDim/30;
+        y = mapDim - mapDim/18;
     }
     else if (direction == 3) {
-        x = mapDim/3 - mapDim/30;
+        x = mapDim/18;
         y = (2*mapDim)/3 - mapDim/10;
     }
     else {
@@ -143,7 +152,7 @@ bool Simulator::isVehicleAtTheEnd(std::pair<int, int> cog, int gplan) const{
         c = cog.second;
     }
 
-    if (std::abs(end - c) < (mapDim/18 + mapDim/50)) {
+    if (std::abs(end - c) < (mapDim/18 + mapDim/80)) {
         return true;
     }
 

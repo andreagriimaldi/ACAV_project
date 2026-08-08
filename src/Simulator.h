@@ -23,7 +23,7 @@ class Simulator {
         };
         void init();
         void loop();
-        void terminate();
+        void terminate() const;
         bool crash();
         bool isSpawnPointFree(int direction) const;
         int vehicleSpawnedFromHere(int direction) const;

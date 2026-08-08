@@ -1,5 +1,6 @@
 #include "SDLRenderer.h"
-#include <stdexcept>
+
+#include <iostream>
 #include <vector>
 
 SDLRenderer::SDLRenderer(int guiSize)
@@ -109,12 +110,15 @@ void SDLRenderer::draw(const Map& map) {
     SDL_RenderPresent(renderer);
 }
 
-bool SDLRenderer::pollEvents() {
+int SDLRenderer::pollEvents() {
     SDL_Event e;
+    int cmd = 0;
     while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
-            return false;
+        if (e.type == SDL_QUIT) cmd = 1;
+        else if (e.type == SDL_KEYDOWN) {
+            if (e.key.keysym.sym == SDLK_ESCAPE) cmd = 1;
+            else if (e.key.keysym.sym == SDLK_SPACE) cmd = 2;  // pause toggle
         }
     }
-    return true;
+    return cmd;
 }

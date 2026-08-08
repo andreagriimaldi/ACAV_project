@@ -29,7 +29,7 @@ public:
     IntersectionCoordinator& getCoordinator();
     const vector<std::shared_ptr<Vehicle>>& getVehicles() const;
     void firstUpdate();
-    void removeVehicle(std::shared_ptr<Vehicle>&);
+    void removeVehicle(const std::shared_ptr<Vehicle>&);
 };
 
 

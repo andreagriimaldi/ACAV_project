@@ -25,7 +25,7 @@ public:
     ~SDLRenderer();
 
     void draw(const Map& map);
-    bool pollEvents();
+    int pollEvents();
 };
 
 #endif //ACAV_SDLRENDERER_H
