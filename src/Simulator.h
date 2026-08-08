@@ -18,7 +18,6 @@ class Simulator {
         SDLRenderer renderer;
     public:
         explicit Simulator(int sizeGUI, int mDim, const bool ego): GUI_SIZE(sizeGUI), mapDim(mDim), map(Map(mapDim)), egoPresence(ego), renderer(GUI_SIZE) {
-            map.initialize();
             init();
         };
         void init();

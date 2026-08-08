@@ -13,6 +13,7 @@ Map::Map(int d): dim(d), coordinator(*this) {
         grid.at(i).resize(dim + 1, std::make_shared<Point>(Point(Point_type::Empty, 0, 0)));
     }
     vehicles.reserve(10);
+    initialize();
 }
 
 Map::~Map() = default;

@@ -34,6 +34,10 @@ void Simulator::init() {
 void Simulator::loop() {
     time++;
 
+    if (time % 500 == 0) {
+        std::cout << "Time instant " << time << ", CPU Vehicles generated: " << cpuGenerated << ", Ego Vehicles generated: " << egoGenerated << std::endl;
+    }
+
     static std::mt19937 gen{std::random_device{}()};
     std::uniform_real_distribution<double> chance(0.0, 1.0);
 
