@@ -33,12 +33,31 @@ void Simulator::init() {
 
 void Simulator::loop() {
     time++;
+
+    static std::mt19937 gen{std::random_device{}()};
+    std::uniform_real_distribution<double> chance(0.0, 1.0);
+
     for (int i = 0; i < 4; i++) {
-        //BETA VERSION
         if (isSpawnPointFree(i) && vehicleSpawnedFromHere(i) < 2) {
-            generateCPUVehicle(i, 0, GlobalPlan::spawnToRandomPlan(i));
+            if (chance(gen) < 0.05) {
+                generateCPUVehicle(i, 0, GlobalPlan::spawnToRandomPlan(i));
+            }
         }
     }
+
+    if (egoPresence && egoActual == 0) {
+        static std::mt19937 genr{std::random_device{}()};
+        std::uniform_int_distribution<int> legPick(0, 3);
+        int start = legPick(genr);
+        for (int k = 0; k < 4; k++) {
+            int i = (start + k) % 4;
+            if (isSpawnPointFree(i) && vehicleSpawnedFromHere(i) < 2) {
+                generateEgoVehicle(i, 0, GlobalPlan::spawnToRandomPlan(i));
+                break;
+            }
+        }
+    }
+
     map.moveVehicles();
     removeVehicles();
 }
