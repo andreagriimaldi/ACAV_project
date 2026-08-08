@@ -1,24 +1,30 @@
 #ifndef ACAV_SIMULATOR_H
 #define ACAV_SIMULATOR_H
 #include "Map.h"
+#include "SDLRenderer.h"
 
 
 class Simulator {
     private:
+        const int GUI_SIZE;
         const int mapDim;
-        const Map map;
+        Map map;
         const bool egoPresence;
         int cpuGenerated = 0;
         int egoGenerated = 0;
         int time = 0;
         int cpuActual = 0;
         int egoActual = 0;
+        SDLRenderer renderer;
     public:
-        explicit Simulator(const int mDim, const bool ego): mapDim(mDim), map(Map(mapDim)), egoPresence(ego) {};
+        explicit Simulator(int sizeGUI, int mDim, const bool ego): GUI_SIZE(sizeGUI), mapDim(mDim), map(Map(mapDim)), egoPresence(ego), renderer(GUI_SIZE) {
+            map.initialize();
+            init();
+        };
         void init();
         void loop();
         void terminate();
-        void crash();
+        bool crash();
         bool isSpawnPointFree(int direction) const;
         int vehicleSpawnedFromHere(int direction) const;
         void generateCPUVehicle(int spawn, double speed, int gplan);

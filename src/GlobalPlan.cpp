@@ -1,6 +1,7 @@
 #include "GlobalPlan.h"
 
 #include <iostream>
+#include <random>
 
 int GlobalPlan::getType() const {
     return type;
@@ -159,4 +160,23 @@ int GlobalPlan::planToEnd(int gplan, int mapDim){
     }
     std::cerr << "gplan must be a number between 0 and 11" << std::endl;
     return -1;
+}
+
+// 0 N, 1 E, 2 S, 3 W
+int GlobalPlan::spawnToRandomPlan(int spawn) {
+    static const int plans[4][3] = {
+        {0, 1, 8},   // N
+        {2, 3, 9},   // E
+        {4, 5, 10},  // S
+        {6, 7, 11}   // W
+    };
+
+    if (spawn < 0 or spawn > 3) {
+        std::cerr << "spawn must be between 0 and 3" << std::endl;
+        return -1;
+    }
+
+    static std::mt19937 gen{std::random_device{}()};
+    std::uniform_int_distribution<int> dist(0, 2);
+    return plans[spawn][dist(gen)];
 }

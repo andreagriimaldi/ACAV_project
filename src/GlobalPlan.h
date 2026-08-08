@@ -24,6 +24,7 @@ class GlobalPlan {
         void popCurrent();
         static int planToSpawn(int);
         static int planToEnd(int, int);
+        static int spawnToRandomPlan(int);
 };
 
 

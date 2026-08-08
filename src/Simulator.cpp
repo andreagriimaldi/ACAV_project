@@ -1,22 +1,50 @@
 #include "Simulator.h"
-
 #include <iostream>
+#include <random>
+#include <thread>
 
 #include "Vehicle.h"
 
 void Simulator::init() {
+    bool running = true;
 
+    while (running) {
+        loop();
+
+        renderer.pollEvents();
+        renderer.draw(map);
+        SDL_Delay(16);  // ~60 FPS cap
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        if (crash()) {
+            running = false;
+        }
+    }
+    terminate();
 }
 
 void Simulator::loop() {
-
+    time++;
+    for (int i = 0; i < 4; i++) {
+        //BETA VERSION
+        if (isSpawnPointFree(i) && vehicleSpawnedFromHere(i) < 2) {
+            generateCPUVehicle(i, 0, GlobalPlan::spawnToRandomPlan(i));
+        }
+    }
+    map.moveVehicles();
+    removeVehicles();
 }
 
 void Simulator::terminate() {
+    //present statistics and terminate program
 }
 
-void Simulator::crash() {
-    //call Map::crash() and save the screenshot and statistics
+bool Simulator::crash() {
+    if (map.crash()) {
+        //save screenshot
+        return true;
+    }
+    return false;
 }
 
 // 0 N, 1 E, 2 S, 3 W
@@ -54,6 +82,7 @@ bool Simulator::isSpawnPointFree(int direction) const{
     return true;
 }
 
+//returns the actual number
 int Simulator::vehicleSpawnedFromHere(int direction) const{
     int count = 0;
     const vector<std::shared_ptr<Vehicle>>& vehicles = map.getVehicles();
@@ -69,18 +98,44 @@ int Simulator::vehicleSpawnedFromHere(int direction) const{
 
 
 void Simulator::generateCPUVehicle(int spawn, double speed, int gplan) {
-
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(180, 240);
+    map.generateVehicle(false, spawn, speed, gplan,  map.getDim()/(dist(gen)));
+    cpuActual++;
+    cpuGenerated++;
 }
 
 void Simulator::generateEgoVehicle(int spawn, double speed, int gplan) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(180, 240);
+    map.generateVehicle(true, spawn, speed, gplan,  map.getDim()/(dist(gen)));
+    egoActual++;
+    egoGenerated++;
 }
 
 void Simulator::removeVehicles() {
+    std::vector<std::shared_ptr<Vehicle>> toRemove;
+    for (const std::shared_ptr<Vehicle>& v : map.getVehicles()) {
+        if (isVehicleAtTheEnd({v->getCOGx(), v->getCOGy()}, v->getGlobalPlan())) {
+            toRemove.push_back(v);
+        }
+    }
+    for (std::shared_ptr<Vehicle>& v : toRemove) {
+        if (v->getID() == "ego") {
+            egoActual--;
+        }
+        else {
+            cpuActual--;
+        }
+        map.removeVehicle(v);
+    }
 }
 
 bool Simulator::isVehicleAtTheEnd(std::pair<int, int> cog, int gplan) const{
     int end = GlobalPlan::planToEnd(gplan, mapDim);
-    int c = -1;
+    int c;
     if (gplan == 0 or gplan == 5 or gplan == 9 or gplan == 1 or gplan == 4 or gplan == 11) {
         c = cog.first;
     }
