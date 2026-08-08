@@ -16,6 +16,7 @@ class Simulator {
     public:
         explicit Simulator(const int mDim, const bool ego): mapDim(mDim), map(Map(mapDim)), egoPresence(ego) {};
         void init();
+        void loop();
         void terminate();
         void crash();
         bool isSpawnPointFree(int direction) const;

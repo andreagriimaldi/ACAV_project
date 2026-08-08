@@ -8,10 +8,15 @@ void Simulator::init() {
 
 }
 
+void Simulator::loop() {
+
+}
+
 void Simulator::terminate() {
 }
 
 void Simulator::crash() {
+    //call Map::crash() and save the screenshot and statistics
 }
 
 // 0 N, 1 E, 2 S, 3 W
@@ -33,7 +38,10 @@ bool Simulator::isSpawnPointFree(int direction) const{
         x = mapDim/3 - mapDim/30;
         y = (2*mapDim)/3 - mapDim/10;
     }
-    else std::cerr << "Direction must be a number between 0 and 3" << std::endl;
+    else {
+        std::cerr << "Direction must be a number between 0 and 3" << std::endl;
+        return false;
+    }
 
     vector<std::pair<int, int>> COGs = map.getCOGs();
 
@@ -71,13 +79,20 @@ void Simulator::removeVehicles() {
 }
 
 bool Simulator::isVehicleAtTheEnd(std::pair<int, int> cog, int gplan) const{
-    int x, y;
-    x = GlobalPlan::planToEnd(gplan).first;
-    y = GlobalPlan::planToEnd(gplan).second;
-
-    if (std::sqrt((x - cog.first)*(x - cog.first) + (y - cog.second)*(y - cog.second) ) < ) {
-
+    int end = GlobalPlan::planToEnd(gplan, mapDim);
+    int c = -1;
+    if (gplan == 0 or gplan == 5 or gplan == 9 or gplan == 1 or gplan == 4 or gplan == 11) {
+        c = cog.first;
     }
+    else {
+        c = cog.second;
+    }
+
+    if (std::abs(end - c) < (mapDim/18 + mapDim/50)) {
+        return true;
+    }
+
+    return false;
 }
 
 

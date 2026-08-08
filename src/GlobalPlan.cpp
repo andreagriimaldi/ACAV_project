@@ -143,6 +143,20 @@ int GlobalPlan::planToSpawn(int gplan){
     return -1;
 }
 
-std::pair<int, int> GlobalPlan::planToEnd(int gplan){
-
+//returns just the right coordinate for the calculation
+int GlobalPlan::planToEnd(int gplan, int mapDim){
+    if (gplan == 0 or gplan == 5 or gplan == 9) {
+        return 0; //x axis
+    }
+    if (gplan == 7 or gplan == 2 or gplan == 10) {
+        return 0; //y axis
+    }
+    if (gplan == 1 or gplan == 4 or gplan == 11) {
+        return mapDim; // x axis
+    }
+    if (gplan == 3 or gplan == 6 or gplan == 8) {
+        return mapDim; // y axis
+    }
+    std::cerr << "gplan must be a number between 0 and 11" << std::endl;
+    return -1;
 }

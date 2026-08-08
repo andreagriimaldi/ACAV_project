@@ -23,7 +23,7 @@ class GlobalPlan {
         const std::shared_ptr<Point>& lastPoint() const;
         void popCurrent();
         static int planToSpawn(int);
-        static std::pair<int, int> planToEnd(int);
+        static int planToEnd(int, int);
 };
 
 
