@@ -44,13 +44,18 @@ void Simulator::loop() {
 }
 
 void Simulator::terminate() const {
+    if (map.crash()) {
+        std::cerr << "A crash has happened" << std::endl;
+    }
+    std::cout << "The simulation lasted " << time << " time instants" << std::endl;
     std::cout << "CPU Vehicle generated: " << cpuGenerated << std::endl;
     std::cout << "Ego Vehicle generated: " << egoGenerated << std::endl;
 }
 
 bool Simulator::crash() {
     if (map.crash()) {
-        //save screenshot
+        std::string path = "crash_t" + std::to_string(time) + ".png";
+        renderer.draw(map, &path);
         return true;
     }
     return false;

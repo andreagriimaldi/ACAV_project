@@ -31,8 +31,9 @@ add_executable(ACAV main.cpp
         Simulator.h
 )
 
-target_include_directories(ACAV PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(ACAV ${SDL2_LIBRARIES})
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 
+target_link_libraries(ACAV PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
 
 

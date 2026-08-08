@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include "Map.h"
+#include <SDL_image.h>   // or <SDL_image.h> if your include dirs point into SDL2/
 
 class SDLRenderer {
 private:
@@ -24,7 +25,7 @@ public:
     explicit SDLRenderer(int guiSize);
     ~SDLRenderer();
 
-    void draw(const Map& map);
+    void draw(const Map& map, const std::string* savePath = nullptr);
     int pollEvents();
 };
 

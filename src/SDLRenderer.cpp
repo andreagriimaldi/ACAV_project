@@ -10,6 +10,10 @@ SDLRenderer::SDLRenderer(int guiSize)
         throw std::runtime_error(std::string("SDL init failed: ") + SDL_GetError());
     }
 
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        throw std::runtime_error(std::string("IMG_Init failed: ") + IMG_GetError());
+    }
+
     window = SDL_CreateWindow(
         "ACAV",
         SDL_WINDOWPOS_CENTERED,
@@ -38,6 +42,7 @@ SDLRenderer::~SDLRenderer() {
     if (mapTexture) SDL_DestroyTexture(mapTexture);
     if (renderer) SDL_DestroyRenderer(renderer);
     if (window) SDL_DestroyWindow(window);
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -61,7 +66,7 @@ void SDLRenderer::recreateTexture(int mapDim) {
     currentMapDim = mapDim;
 }
 
-void SDLRenderer::draw(const Map& map) {
+void SDLRenderer::draw(const Map& map, const std::string* savePath) {
     int mapDim = map.getDim() + 1;
 
     if (mapDim != currentMapDim) {
@@ -106,6 +111,21 @@ void SDLRenderer::draw(const Map& map) {
     SDL_RenderClear(renderer);
 
     SDL_RenderCopy(renderer, mapTexture, nullptr, nullptr);
+
+    if (savePath) {                       // read BEFORE present
+        int w, h;
+        SDL_GetRendererOutputSize(renderer, &w, &h);
+        SDL_Surface* s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ARGB8888);
+        if (s) {
+            if (SDL_RenderReadPixels(renderer, nullptr, SDL_PIXELFORMAT_ARGB8888,
+                                     s->pixels, s->pitch) == 0) {
+                IMG_SavePNG(s, savePath->c_str());
+                                     } else {
+                                         std::cerr << "read pixels: " << SDL_GetError() << std::endl;
+                                     }
+            SDL_FreeSurface(s);
+        }
+    }
 
     SDL_RenderPresent(renderer);
 }
