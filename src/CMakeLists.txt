@@ -31,6 +31,17 @@ add_executable(ACAV main.cpp
         Simulator.h
 )
 
+set(CORE_SOURCES
+        Map.cpp Vehicle.cpp CPUVehicle.cpp EgoVehicle.cpp
+        GlobalPlan.cpp Perception.cpp Point.cpp
+        IntersectionCoordinator.cpp)
+
+add_executable(ACAV_mc
+        test/mc_main.cpp
+        test/MonteCarloSimulator.cpp
+        ${CORE_SOURCES})
+target_include_directories(ACAV_mc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
