@@ -10,7 +10,7 @@ class Perception {
     public:
         explicit Perception(Map& map, int g): m(map), gplan(g){};
         std::vector<std::vector<double>> getPerc(int, int, int) const;
-        double computeState(int, int) const;
+        static double computeState(int, int, int, int);
 };
 
 

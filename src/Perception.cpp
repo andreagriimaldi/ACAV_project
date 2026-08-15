@@ -10,7 +10,7 @@ std::vector<std::vector<double>> Perception::getPerc(int egoX, int egoY, int ego
 
     for (const auto& pair: COGs) {
         if (pair.first == egoX and pair.second == egoY) {
-            per.push_back({computeState(pair.first, pair.second), 0, 0});
+            per.push_back({computeState(pair.first, pair.second, gplan, m.getDim()), 0, 0});
             break;
         }
     }
@@ -26,15 +26,14 @@ std::vector<std::vector<double>> Perception::getPerc(int egoX, int egoY, int ego
 
             double dist = std::sqrt((pair.first - egoX)*(pair.first - egoX) + (pair.second - egoY)*(pair.second - egoY));
 
-            per.push_back({computeState(pair.first, pair.second), difference, dist});
+            per.push_back({computeState(pair.first, pair.second, gplan, m.getDim()), difference, dist});
         }
     }
 
     return per;
 }
 
-double Perception::computeState(int x, int y) const {
-    int dim = m.getDim();
+double Perception::computeState(int x, int y, int gplan, int dim) {
     if (x <= (2*dim)/9 or x >= (7*dim)/9 or y <= (2*dim)/9 or y >= (7*dim)/9) {
         return 0;
     }

@@ -17,15 +17,17 @@ protected:
     Map& map;
     int heading;
     double speed;
+    int COGx, COGy;
     vector<std::shared_ptr<Point>> surface;
     vector<std::shared_ptr<Point>> updatedPosition;
     GlobalPlan p;
     const double maxspeed; //TUNING PARAMETER (IT WILL BE PASSED AS A PARAMETER)
     Perception per;
-    IntersectionCoordinator& coord;
 public:
-    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan, int maxs): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(maxs), per(m, p.getType()), coord(map.getCoordinator()) {
+    explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan, int maxs): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(maxs), per(m, p.getType()) {
         surface = surf;
+        recomputeCOGx();
+        recomputeCOGy();
     };
     virtual ~Vehicle() = default;
     string getID() const;
@@ -35,6 +37,8 @@ public:
     int getCOGy() const;
     const vector<std::shared_ptr<Point>>& getOldPosition() const;
     const vector<std::shared_ptr<Point>>& updateMap() const;
+    void recomputeCOGx();
+    void recomputeCOGy();
     virtual void move() = 0;
     void updateSurface();
     void changeHeading(int);

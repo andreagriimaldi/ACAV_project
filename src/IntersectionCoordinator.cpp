@@ -1,7 +1,5 @@
 #include "IntersectionCoordinator.h"
-
 #include <iostream>
-
 #include "Vehicle.h"
 
 bool IntersectionCoordinator::askPermission(const std::string& id) {

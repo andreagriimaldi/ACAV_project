@@ -29,12 +29,16 @@ add_executable(ACAV main.cpp
         IntersectionCoordinator.h
         Simulator.cpp
         Simulator.h
+        MotionPrediction.cpp
+        MotionPrediction.h
 )
 
 set(CORE_SOURCES
         Map.cpp Vehicle.cpp CPUVehicle.cpp EgoVehicle.cpp
         GlobalPlan.cpp Perception.cpp Point.cpp
-        IntersectionCoordinator.cpp)
+        IntersectionCoordinator.cpp
+        MotionPrediction.cpp
+        MotionPrediction.h)
 
 add_executable(ACAV_mc
         test/mc_main.cpp

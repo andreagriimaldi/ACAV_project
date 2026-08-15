@@ -17,31 +17,11 @@ double Vehicle::getSpeed() const {
 }
 
 int Vehicle::getCOGx() const {
-    int x_max = -1;
-    int x_min = map.getDim() + 2;
-    for (size_t i = 0; i < surface.size(); i++) {
-        if (surface.at(i)->getX() > x_max) {
-            x_max = surface.at(i)->getX();
-        }
-        if (surface.at(i)->getX() < x_min) {
-            x_min = surface.at(i)->getX();
-        }
-    }
-    return (x_max + x_min)/2;
+    return COGx;
 }
 
 int Vehicle::getCOGy() const {
-    int y_max = -1;
-    int y_min = map.getDim() + 2;
-    for (size_t i = 0; i < surface.size(); i++) {
-        if (surface.at(i)->getY() > y_max) {
-            y_max = surface.at(i)->getY();
-        }
-        if (surface.at(i)->getY() < y_min) {
-            y_min = surface.at(i)->getY();
-        }
-    }
-    return (y_max + y_min)/2;
+    return COGy;
 }
 
 const vector<std::shared_ptr<Point>>& Vehicle::getOldPosition() const {
@@ -52,9 +32,40 @@ const vector<std::shared_ptr<Point>>& Vehicle::updateMap() const {
     return updatedPosition;
 }
 
+void Vehicle::recomputeCOGx() {
+    int x_max = -1;
+    int x_min = map.getDim() + 2;
+    for (size_t i = 0; i < surface.size(); i++) {
+        if (surface.at(i)->getX() > x_max) {
+            x_max = surface.at(i)->getX();
+        }
+        if (surface.at(i)->getX() < x_min) {
+            x_min = surface.at(i)->getX();
+        }
+    }
+    COGx = (x_max + x_min)/2;
+}
+
+void Vehicle::recomputeCOGy() {
+    int y_max = -1;
+    int y_min = map.getDim() + 2;
+    for (size_t i = 0; i < surface.size(); i++) {
+        if (surface.at(i)->getY() > y_max) {
+            y_max = surface.at(i)->getY();
+        }
+        if (surface.at(i)->getY() < y_min) {
+            y_min = surface.at(i)->getY();
+        }
+    }
+    COGy = (y_max + y_min)/2;
+}
+
 void Vehicle::updateSurface() {
     surface = updatedPosition;
     updatedPosition.clear();
+
+    recomputeCOGx();
+    recomputeCOGy();
 }
 
 void Vehicle::changeHeading(int newh) {
