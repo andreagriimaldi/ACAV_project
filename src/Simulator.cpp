@@ -22,7 +22,7 @@ void Simulator::init() {
         }
 
         renderer.draw(map);
-        SDL_Delay(16);
+        SDL_Delay(8);
 
         if (crash()) {
             running = false;
