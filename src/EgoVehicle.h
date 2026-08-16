@@ -12,6 +12,7 @@ public:
         : Vehicle(m, surf, h, s, id, gplan, maxs), mp(m, id) {
     }
     void move() override;
+    std::vector<std::vector<double>> computeFuture();
 };
 
 

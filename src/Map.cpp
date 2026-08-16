@@ -161,7 +161,7 @@ IntersectionCoordinator& Map::getCoordinator() {
     return coordinator;
 }
 
-const vector<std::shared_ptr<Vehicle>> & Map::getVehicles() const {
+const vector<std::shared_ptr<Vehicle>>& Map::getVehicles() const {
     return vehicles;
 }
 

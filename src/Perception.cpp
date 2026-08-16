@@ -26,7 +26,7 @@ std::vector<std::vector<double>> Perception::getPerc(int egoX, int egoY, int ego
 
             double dist = std::sqrt((pair.first - egoX)*(pair.first - egoX) + (pair.second - egoY)*(pair.second - egoY));
 
-            per.push_back({computeState(pair.first, pair.second, gplan, m.getDim()), difference, dist});
+            per.push_back({-1, difference, dist});
         }
     }
 
@@ -69,4 +69,33 @@ double Perception::computeState(int x, int y, int gplan, int dim) {
     std::cerr << "GlobalPlan not initialized correctly" << std::endl;
     std::cerr << "GLOBAL PLAN: " << gplan << std::endl;
     return -1;
+}
+
+std::vector<std::vector<double>> Perception::getFuturePerc(int egoX, int egoY, int egoHeading, const std::unordered_map<std::string, std::pair<int, int>> & future) const {
+    std::vector<std::vector<double>> futurePer;
+    futurePer.reserve(future.size());
+
+    for (const auto& entry: future) {
+        if (entry.first == "ego") {
+            futurePer.push_back({computeState(egoX, egoY, gplan, m.getDim()), 0, 0}); //these egoX and egoY are obtained from mp in EgoVehicle
+            break;
+        }
+    }
+
+    for (const auto& entry: future) {
+        if (entry.first != "ego") {
+            double dx = entry.second.first - egoX;
+            double dy = egoY - entry.second.second;
+            double theta = std::atan2(dy, dx) * 180.0 / M_PI;
+            double difference = egoHeading - theta;
+            while (difference > 180.0)  difference -= 360.0;
+            while (difference < -180.0) difference += 360.0;
+
+            double dist = std::sqrt((entry.second.first - egoX)*(entry.second.first - egoX) + (entry.second.second - egoY)*(entry.second.second - egoY));
+
+            futurePer.push_back({-1, difference, dist});
+        }
+    }
+
+    return futurePer;
 }

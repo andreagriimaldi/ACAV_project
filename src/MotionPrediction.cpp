@@ -18,14 +18,12 @@ void MotionPrediction::update() {
 
 void MotionPrediction::updateVehicles() {
     for (const auto& v: vehicles) {
-        if (v->getID() != id) {
-            double state = Perception::computeState(v->getCOGx(), v->getCOGy(), v->getGlobalPlan(), m.getDim());
-            if ((state == 1 or state == 2) and vehiclesSpeed.count(v->getID()) == 0) {
-                vehiclesSpeed[v->getID()];
-            }
-            if (!(state == 1 or state == 2)) {
-                vehiclesSpeed.erase(v->getID());
-            }
+        double state = Perception::computeState(v->getCOGx(), v->getCOGy(), v->getGlobalPlan(), m.getDim());
+        if ((state == 1 or state == 2) and vehiclesSpeed.count(v->getID()) == 0) {
+            vehiclesSpeed[v->getID()];
+        }
+        if (!(state == 1 or state == 2)) {
+            vehiclesSpeed.erase(v->getID());
         }
     }
 }
@@ -72,7 +70,10 @@ void MotionPrediction::computeMotionPrediction() {
             double speed = v->getSpeed();
             double vmax = v->getMaxSpeed();
 
-            for (int k = 1; k <= timespan; k++) {
+            const double DEG = M_PI / 180.0;
+            double lastdx = std::cos(v->getHeading() * DEG);
+            double lastdy = -std::sin(v->getHeading() * DEG);
+            for (int k = 0; k < timespan; k++) {
                 speed = std::clamp(speed + a, 0.0, vmax);
 
                 if (!onSecond && !justOnePoint) {
@@ -89,9 +90,15 @@ void MotionPrediction::computeMotionPrediction() {
                 if (d > 1e-9) {
                     dx /= d;
                     dy /= d;
+                    lastdx = dx;
+                    lastdy = dy;
                 }
                 x += dx * speed;
                 y += dy * speed;
+            }
+
+            if (v->getID() == "ego") {
+                predHeading = std::atan2(-lastdy, lastdx) * 180.0 / M_PI;
             }
 
             mpred[v->getID()] = {std::round(x), std::round(y)};
@@ -110,3 +117,6 @@ double MotionPrediction::dist(double x1, double y1, double x2, double y2) const 
     return std::sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
 }
 
+double MotionPrediction::getPredHeading() const {
+    return predHeading;
+}
