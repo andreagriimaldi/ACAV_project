@@ -11,7 +11,6 @@ public:
         : Vehicle(m, surf, h, s, id, gplan, maxs), coord(map.getCoordinator()) {
     }
     void move() override;
-    double computeNewSpeed(double, double) const;
     void avoidObstacles(double&, std::vector<std::vector<double>>&);
 };
 

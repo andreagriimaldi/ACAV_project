@@ -3,14 +3,17 @@
 #include <iostream>
 
 void EgoVehicle::move() {
-    //TEMP
-    //computeNewPosition(82, map.getDim()/2, map.getDim()/2);
+    double steer = computeSteering();
+    double speed = computeNewSpeed(steer, maxspeed);
 
-    //THE FINAL VERSION WILL DECIDE NEW COG AND HEADING AND WILL CALL COMPUTENEWPOSITION()
-    //REMEMBER THAT THE NEW COG AND HEADING WILL BE AFFECTED BY CURRENT SPEED (AND RELY ON ACC FOR THAT)
+    std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);
 
-    //Decide new speed
-    updateBicycle(0);
+    if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
+        std::vector<std::vector<double>> futurePerc = computeFuture();
+        speed = std::min(adaptiveCruiseControl(speed, perc), optimizer(speed, futurePerc));
+    }
+
+    updateBicycle(speed);
 }
 
 std::vector<std::vector<double>> EgoVehicle::computeFuture() {
@@ -27,4 +30,11 @@ std::vector<std::vector<double>> EgoVehicle::computeFuture() {
 
     std::cerr << "ego vehicle not in the prediction" << std::endl;
     return vector<vector<double>>({{0}});
+}
+
+double EgoVehicle::adaptiveCruiseControl(double oldspeed, std::vector<std::vector<double>> per) const {
+
+}
+
+double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer) {
 }

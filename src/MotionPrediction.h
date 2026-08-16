@@ -23,7 +23,7 @@ public:
     void updateVehicles();
     void appendTimeInstants();
     void computeMotionPrediction();
-    const std::unordered_map<std::string, std::pair<int, int>>& getMotionPrediction() const;
+    const std::unordered_map<std::string, std::pair<int, int>>& getMotionPrediction();
     double dist(double, double, double, double) const;
     double getPredHeading() const;
 };

@@ -55,6 +55,10 @@ public:
     std::pair<int, int> getEndPoint() const;
     int getSpawnPoint() const;
     const std::pair<std::pair<int, int>, std::pair<int, int>> twoNextPoints() const;
+    double computeNewSpeed(double, double) const;
+
+    static constexpr double a_lat_max = 0.05; //TUNING PARAMETER
+    static constexpr double a_str_max = 0.3; //TUNING PARAMETER
 };
 
 

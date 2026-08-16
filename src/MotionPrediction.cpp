@@ -1,8 +1,6 @@
 #include "MotionPrediction.h"
-
 #include <algorithm>
 #include <complex>
-
 #include "Perception.h"
 #include "Vehicle.h"
 
@@ -58,7 +56,7 @@ void MotionPrediction::computeMotionPrediction() {
             }
             double a = (den > 0) ? num / den : 0.0;
 
-            a = std::clamp(a, -0.3, 0.3);
+            a = std::clamp(a, -Vehicle::a_str_max, Vehicle::a_str_max);
 
             double x = COGx, y = COGy;
             auto [wp0, wp1] = v->twoNextPoints();
@@ -109,7 +107,8 @@ void MotionPrediction::computeMotionPrediction() {
 }
 
 //This is the method used by EgoVehicle
-const std::unordered_map<std::string, std::pair<int, int>>& MotionPrediction::getMotionPrediction() const {
+const std::unordered_map<std::string, std::pair<int, int>>& MotionPrediction::getMotionPrediction() {
+    update();
     return actualMP;
 }
 

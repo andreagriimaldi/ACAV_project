@@ -15,27 +15,6 @@ void CPUVehicle::move() {
     updateBicycle(s);
 }
 
-double CPUVehicle::computeNewSpeed(double steer, double v_max) const {
-    double L = (map.getDim()/9) * 0.65;
-
-    double a_lat_max = 0.05; //TUNING PARAMETER
-    double a_str_max = 0.3; //TUNING PARAMETER
-
-    if (std::abs(steer) > 0.001) {
-        double v_lat = std::sqrt(a_lat_max * L / std::abs(std::tan(steer)));
-        v_max = std::min(v_max, v_lat);
-    }
-
-    if (v_max > speed + a_str_max) {
-        v_max = speed + a_str_max;
-    }
-    else if (v_max < speed - a_str_max) {
-        v_max = speed - a_str_max;
-    }
-
-    return v_max;
-}
-
 void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per) {
     std::vector<std::vector<double>> perc = per;
     int state = static_cast<int>(perc.at(0).at(0));

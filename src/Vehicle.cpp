@@ -234,3 +234,21 @@ const std::pair<std::pair<int, int>, std::pair<int, int>> Vehicle::twoNextPoints
     }
     return {{p.nextPoint()->getX(), p.nextPoint()->getY()}, {-1, -1}};
 }
+
+double Vehicle::computeNewSpeed(double steer, double v_max) const {
+    double L = (map.getDim()/9) * 0.65;
+
+    if (std::abs(steer) > 0.001) {
+        double v_lat = std::sqrt(a_lat_max * L / std::abs(std::tan(steer)));
+        v_max = std::min(v_max, v_lat);
+    }
+
+    if (v_max > speed + a_str_max) {
+        v_max = speed + a_str_max;
+    }
+    else if (v_max < speed - a_str_max) {
+        v_max = speed - a_str_max;
+    }
+
+    return v_max;
+}

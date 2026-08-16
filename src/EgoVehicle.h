@@ -13,6 +13,8 @@ public:
     }
     void move() override;
     std::vector<std::vector<double>> computeFuture();
+    double adaptiveCruiseControl(double, std::vector<std::vector<double>>) const;
+    double optimizer(double, std::vector<std::vector<double>>);
 };
 
 
