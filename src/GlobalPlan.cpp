@@ -113,6 +113,14 @@ const std::shared_ptr<Point>& GlobalPlan::nextPoint() const {
     return nullptr;
 }
 
+const std::shared_ptr<Point>& GlobalPlan::nextNextPoint() const {
+    if (countToVisit() > 1) {
+        return points.at(1);
+    }
+    std::cerr << "There are not two points left in the Global Plan" << std::endl;
+    return nullptr;
+}
+
 const std::shared_ptr<Point> & GlobalPlan::lastPoint() const {
     if (!points.empty()) {
         return points.back();

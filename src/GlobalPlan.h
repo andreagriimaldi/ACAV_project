@@ -21,6 +21,7 @@ class GlobalPlan {
         void initialize();
         int countToVisit() const;
         const std::shared_ptr<Point>& nextPoint() const;
+        const std::shared_ptr<Point>& nextNextPoint() const;
         const std::shared_ptr<Point>& lastPoint() const;
         void popCurrent();
         static int planToSpawn(int);

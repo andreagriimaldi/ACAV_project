@@ -16,6 +16,10 @@ double Vehicle::getSpeed() const {
     return speed;
 }
 
+double Vehicle::getMaxSpeed() const {
+    return maxspeed;
+}
+
 int Vehicle::getCOGx() const {
     return COGx;
 }
@@ -114,7 +118,7 @@ void Vehicle::updateBicycle(double v) {
 
     double L = (map.getDim() / 9) * 0.65;
 
-    const double max_disp_per_substep = 0.2; //Integration accuracy (tuning parameter)
+    const double max_disp_per_substep = 0.05; //Integration accuracy (tuning parameter)
     int substeps = std::max(1, static_cast<int>(std::ceil(v / max_disp_per_substep)));
     double dt = 1.0 / substeps;
 
@@ -222,4 +226,11 @@ int Vehicle::getSpawnPoint() const {
 
     std::cerr << "Spawn point not correctly returned" << std::endl;
     return -1;
+}
+
+const std::pair<std::pair<int, int>, std::pair<int, int>> Vehicle::twoNextPoints() const {
+    if (p.countToVisit() > 1) {
+        return {{p.nextPoint()->getX(), p.nextPoint()->getY()}, {p.nextNextPoint()->getX(), p.nextNextPoint()->getY()}};
+    }
+    return {{p.nextPoint()->getX(), p.nextPoint()->getY()}, {-1, -1}};
 }

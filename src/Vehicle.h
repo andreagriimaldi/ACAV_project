@@ -33,6 +33,7 @@ public:
     string getID() const;
     int getHeading() const;
     double getSpeed() const;
+    double getMaxSpeed() const;
     int getCOGx() const;
     int getCOGy() const;
     const vector<std::shared_ptr<Point>>& getOldPosition() const;
@@ -53,6 +54,7 @@ public:
     double getDistanceFromPoint(int, int) const;
     std::pair<int, int> getEndPoint() const;
     int getSpawnPoint() const;
+    const std::pair<std::pair<int, int>, std::pair<int, int>> twoNextPoints() const;
 };
 
 
