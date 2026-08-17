@@ -31,6 +31,8 @@ add_executable(ACAV main.cpp
         Simulator.h
         MotionPrediction.cpp
         MotionPrediction.h
+        AdaptiveCruiseControl.cpp
+        AdaptiveCruiseControl.h
 )
 
 set(CORE_SOURCES
@@ -38,7 +40,9 @@ set(CORE_SOURCES
         GlobalPlan.cpp Perception.cpp Point.cpp
         IntersectionCoordinator.cpp
         MotionPrediction.cpp
-        MotionPrediction.h)
+        MotionPrediction.h
+        AdaptiveCruiseControl.cpp
+        AdaptiveCruiseControl.h)
 
 add_executable(ACAV_mc
         test/mc_main.cpp

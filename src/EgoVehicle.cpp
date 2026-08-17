@@ -32,8 +32,8 @@ std::vector<std::vector<double>> EgoVehicle::computeFuture() {
     return vector<vector<double>>({{0}});
 }
 
-double EgoVehicle::adaptiveCruiseControl(double oldspeed, std::vector<std::vector<double>> per) const {
-
+double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std::vector<double>>& per) {
+    return acc.update(oldspeed, per);
 }
 
 double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer) {
