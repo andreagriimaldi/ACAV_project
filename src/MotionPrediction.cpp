@@ -56,7 +56,7 @@ void MotionPrediction::computeMotionPrediction() {
             }
             double a = (den > 0) ? num / den : 0.0;
 
-            a = std::clamp(a, -Vehicle::a_str_max, Vehicle::a_str_max);
+            a = std::clamp(a, -Vehicle::a_str_max, Vehicle::a_str_max); //maybe clamp 0 for deceleration
 
             double x = COGx, y = COGy;
             auto [wp0, wp1] = v->twoNextPoints();

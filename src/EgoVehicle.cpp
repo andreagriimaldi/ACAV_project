@@ -37,4 +37,5 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
 }
 
 double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer) {
+    return oldspeed; //TO CHANGE
 }

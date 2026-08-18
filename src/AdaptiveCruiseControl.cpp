@@ -1,14 +1,16 @@
-//
-// Created by Andrea Grimaldi on 17/08/2026.
-//
-
 #include "AdaptiveCruiseControl.h"
+
+#include <math.h>
+#include <cmath>
 
 bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<double>>& per) {
     double dist_min = dim;
     int min_index = -1;
     for (int i = 1; i < per.size(); i++) {
-        if (per.at(i).at(2) < dist_min and std::abs(per.at(i).at(1)) < 45) {
+        double lateral = per.at(i).at(2) * std::sin(per.at(i).at(1) * M_PI / 180.0);
+        double forward = per.at(i).at(2) * std::cos(per.at(i).at(1) * M_PI / 180.0);
+        bool inPath = forward > 0 and std::abs(lateral) < dim / 15.0;
+        if (per.at(i).at(2) < dist_min and inPath) {
             dist_min = per.at(i).at(2);
             min_index = i;
         }
@@ -27,9 +29,19 @@ bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<do
     if (obs.at(2) < tracking_dist) {
         //there's a vehicle to track
         if (tracking) {
-            //it was already tracked
-            measures.emplace_front(obs.at(1), obs.at(2));
-            measureSize++;
+            //it was already tracked, but i have to check whether it's the old one or a new one
+            if (std::abs(obs.at(1) - measures.front().first) < 10 and std::abs(obs.at(2) - measures.front().second) < dim/50.0) {
+                //it's the same as before
+                measures.emplace_front(obs.at(1), obs.at(2));
+                measureSize++;
+            }
+            else {
+                //it's a new target
+                measures.clear();
+                measureSize = 0;
+                measures.emplace_front(obs.at(1), obs.at(2));
+                measureSize++;
+            }
         }
         else {
             //it's a new one
@@ -37,7 +49,7 @@ bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<do
             measures.emplace_front(obs.at(1), obs.at(2));
             measureSize++;
         }
-        if (measureSize == maxMeasures) {
+        if (measureSize == maxMeasures + 1) {
             measures.pop_back();
             measureSize--;
         }
@@ -52,10 +64,29 @@ bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<do
     }
 }
 
+bool AdaptiveCruiseControl::emergencyBrake(const std::vector<std::vector<double>>& per) const {
+    double r = dim/15.4;
+    double toll = dim/30;
+    double half_width = dim/15.0;
+
+    for (const auto& obs: per) {
+        double forward = obs.at(2) * std::cos(obs.at(1) * M_PI / 180.0);
+        double lateral = obs.at(2) * std::sin(obs.at(1) * M_PI / 180.0);
+        if (forward > 0 and std::abs(lateral) < half_width and forward < (2 * r + toll)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 //this returns the speed suggested by the ACC
 double AdaptiveCruiseControl::update(double speed, const std::vector<std::vector<double>>& per) {
+    if (emergencyBrake(per)) {
+        return speed/3; //TO CHANGE
+    }
     if (checkVehicleInFront(per)) {
-        //
+
     }
     return speed;
 }
