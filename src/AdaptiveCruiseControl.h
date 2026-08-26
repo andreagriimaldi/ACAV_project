@@ -20,6 +20,7 @@ public:
     bool checkVehicleInFront(const std::vector<std::vector<double>>&);
     bool emergencyBrake(const std::vector<std::vector<double>> &per) const;
     double update(double, const std::vector<std::vector<double>>&);
+    double computeSpeed(double) const;
 };
 
 

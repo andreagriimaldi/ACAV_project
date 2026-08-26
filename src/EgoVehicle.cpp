@@ -13,6 +13,10 @@ void EgoVehicle::move() {
         speed = std::min(adaptiveCruiseControl(speed, perc), optimizer(speed, futurePerc));
     }
 
+    if (speed > maxspeed) {
+        speed = maxspeed;
+    }
+
     updateBicycle(speed);
 }
 

@@ -29,9 +29,13 @@ bool Point::occupied() const {
 }
 
 void Point::setNotOccupied() {
-    count = 0;
-    vehicleID = "";
-    //MAYBE TO FIX
+    if (count <= 1) {
+        count = 0;
+        vehicleID = "";
+    }
+    else {
+        count--;
+    }
 }
 
 Point_type Point::getType() const {

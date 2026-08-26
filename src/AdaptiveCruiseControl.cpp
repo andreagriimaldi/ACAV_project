@@ -1,7 +1,8 @@
 #include "AdaptiveCruiseControl.h"
-
-#include <math.h>
 #include <cmath>
+#include <iostream>
+
+#include "Vehicle.h"
 
 bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<double>>& per) {
     double dist_min = dim;
@@ -65,9 +66,9 @@ bool AdaptiveCruiseControl::checkVehicleInFront(const std::vector<std::vector<do
 }
 
 bool AdaptiveCruiseControl::emergencyBrake(const std::vector<std::vector<double>>& per) const {
-    double r = dim/15.4;
-    double toll = dim/30;
-    double half_width = dim/15.0;
+    double r = dim/18.0;
+    double toll = dim/30.0;
+    double half_width = dim/10.0;
 
     for (const auto& obs: per) {
         double forward = obs.at(2) * std::cos(obs.at(1) * M_PI / 180.0);
@@ -83,10 +84,38 @@ bool AdaptiveCruiseControl::emergencyBrake(const std::vector<std::vector<double>
 //this returns the speed suggested by the ACC
 double AdaptiveCruiseControl::update(double speed, const std::vector<std::vector<double>>& per) {
     if (emergencyBrake(per)) {
-        return speed/3; //TO CHANGE
+        return speed/2; //TO CHANGE
     }
     if (checkVehicleInFront(per)) {
-
+        return computeSpeed(speed);
     }
     return speed;
 }
+
+double AdaptiveCruiseControl::computeSpeed(double speed) const {
+    const double bearing = measures.front().first * M_PI / 180.0;
+    const double forward = measures.front().second * std::cos(bearing);
+
+    const double time_gap = 5;
+    const double distCOGs = dim/9 + dim/30;
+    const double kp = 0.05;
+
+    const double desired = distCOGs + speed * time_gap;
+    const double e = forward - desired;
+
+    double cmd = speed + kp * e;
+
+    if (cmd < 0) {
+        cmd = 0;
+    }
+    if (cmd - speed > Vehicle::a_str_max) {
+        cmd = speed + Vehicle::a_str_max;
+    }
+    if (speed - cmd >  Vehicle::a_str_max) {
+        cmd = speed - Vehicle::a_str_max;
+    }
+
+    return cmd;
+}
+
+
