@@ -29,7 +29,7 @@ class IntersectionCoordinator {
         bool isEgoInTheMiddle() const;
         bool inTheMiddle(const std::string&) const;
         std::shared_ptr<Vehicle> idVehicleMiddle(const std::string &) const;
-        std::shared_ptr<Vehicle> otherVehicleMiddle(const std::string &) const;
+        std::vector<std::shared_ptr<Vehicle>> otherVehicleMiddle(const std::string &) const;
         bool pastPoint(int, int, int, int, int, double) const;
         double distance(int, int, int, int) const;
         double speedForPoint(int, int, int, int, int, int, int, int, const std::string&, const std::string&, double) const;
@@ -38,6 +38,7 @@ class IntersectionCoordinator {
         std::shared_ptr<Vehicle> findVehicle(const std::string &) const;
         std::vector<std::string> othersInQueue(const std::string &) const;
         bool rightFree(int, int) const;
+        double speedAgainst(int, int, int, int, const std::shared_ptr<Vehicle>&, const std::string&, double) const;
 };
 
 

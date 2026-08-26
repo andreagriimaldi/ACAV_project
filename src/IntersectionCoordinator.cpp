@@ -65,84 +65,28 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
         return speed;
     }
 
-    if (currents.size() < 2) {
+    if (currents.size() < 2 and !isEgoInTheMiddle()) {
         return speed;
     }
 
     //Let's find which vehicles are in the middle and save them in a shared pointer
     std::shared_ptr<Vehicle> vehicle1 = idVehicleMiddle(id); //CURRENT
-    std::shared_ptr<Vehicle> vehicle2 = otherVehicleMiddle(id); //OTHER
+    std::vector<std::shared_ptr<Vehicle>> otherVehicles = otherVehicleMiddle(id); //OTHER
 
     int glob1 = vehicle1->getGlobalPlan();
-    int glob2 = vehicle2->getGlobalPlan();
 
     int x1 = oldCOGs.at(vehicle1->getID()).x;
     int y1 = oldCOGs.at(vehicle1->getID()).y;
     int h1 = oldCOGs.at(vehicle1->getID()).heading;
 
-    int x2 = oldCOGs.at(vehicle2->getID()).x;
-    int y2 = oldCOGs.at(vehicle2->getID()).y;
-    int h2 = oldCOGs.at(vehicle2->getID()).heading;
+    double result = speed;
 
-    std::vector<int> collision = pathCollisionFinder(glob1, glob2);
-
-    if (collision.at(0) == 0) {
-        return speed;
+    // every other vehicle physically in the middle, CPU or ego
+    for (const std::shared_ptr<Vehicle>& vehicle2 : otherVehicles) {
+        result = std::min(result, speedAgainst(x1, y1, h1, glob1, vehicle2, id, speed));
     }
 
-    if (collision.at(3) == 0) {
-        //This is the case where the paths intersect in just a point
-        return speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(1), collision.at(2), id, vehicle2->getID(), speed);
-    }
-    else {
-        //This is the case where the paths intersect in two points (true just for GlobalPlans 1-5 and 3-7)
-        int centerX = (collision.at(1) + collision.at(3))/2;
-        int centerY = (collision.at(2) + collision.at(4))/2;
-        double dist1 = distance(x1, y1, centerX, centerY);
-        double dist2 = distance(x2, y2, centerX, centerY);
-
-        if (dist1 < dist2 or (dist1 == dist2 and id < vehicle2->getID())) {
-            //Vehicle1 is closer to the center and so it goes on
-            return speed;
-        }
-        else {
-            if (!pastPoint(x1, y1, h1, centerX, centerY, 0.0)) {
-                //Vehicle1 is not past the center
-                if (pastPoint(x2, y2, h2, centerX, centerY, 0.0)) {
-                    //Vehicle2 is past the center, but Vehicle1 is not
-                    double gap = distance(x1, y1, x2, y2);
-                    if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15.0)) {
-                        double bodyLen = m.getDim()/9.0;
-                        if (gap < bodyLen + m.getDim()/30.0) {
-                            return speed/3;
-                        }
-                        if (gap < m.getDim()/5.0) {
-                            return speed/1.2;
-                        }
-                    }
-                    return speed;
-                }
-                else {
-                    //Vehicle2 is not past the center
-                    double dToCenter = distance(x1, y1, centerX, centerY);
-                    double bodyLen  = m.getDim()/9.0;
-                    double stopBand = bodyLen + m.getDim()/12.0;
-                    double slowBand = 2*stopBand;
-
-                    if (dToCenter < stopBand) {
-                        return speed / 4; //TO CHANGE MAYBE
-                    }
-                    if (dToCenter < slowBand) {
-                        return speed / 1.5;
-                    }
-                    return speed;
-                }
-            }
-            else {
-                return speed;
-            }
-        }
-    }
+    return result;
 
 }
 
@@ -227,15 +171,17 @@ std::shared_ptr<Vehicle> IntersectionCoordinator::idVehicleMiddle(const std::str
     return {nullptr};
 }
 
-std::shared_ptr<Vehicle> IntersectionCoordinator::otherVehicleMiddle(const std::string &id) const {
+std::vector<std::shared_ptr<Vehicle>> IntersectionCoordinator::otherVehicleMiddle(const std::string &id) const {
     std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
+
+    std::vector<std::shared_ptr<Vehicle>> vehiclesMiddle;
+
     for (auto& v: vehicles) {
         if (v->getID() != id && v->getPercState() == 2) {
-            return v;
+            vehiclesMiddle.push_back(v);
         }
     }
-    std::cerr << "There is not another vehicle in the middle" << std::endl;
-    return {nullptr};
+    return vehiclesMiddle;;
 }
 
 bool IntersectionCoordinator::pastPoint(int vx, int vy, int heading, int px, int py, double toll) const {
@@ -344,4 +290,72 @@ bool IntersectionCoordinator::rightFree(int plan1, int plan2) const {
     };
 
     return matrix.at(plan1).at(plan2);
+}
+
+double IntersectionCoordinator::speedAgainst(int x1, int y1, int h1, int glob1, const std::shared_ptr<Vehicle>& vehicle2, const std::string& id, double speed) const {
+    int x2 = oldCOGs.at(vehicle2->getID()).x;
+    int y2 = oldCOGs.at(vehicle2->getID()).y;
+    int h2 = oldCOGs.at(vehicle2->getID()).heading;
+
+    int glob2 = vehicle2->getGlobalPlan();
+
+    std::vector<int> collision = pathCollisionFinder(glob1, glob2);
+
+    if (collision.at(0) == 0) {
+        return speed;
+    }
+
+    if (collision.at(3) == 0) {
+        //This is the case where the paths intersect in just a point
+        return speedForPoint(x1, y1, h1, x2, y2, h2, collision.at(1), collision.at(2), id, vehicle2->getID(), speed);
+    }
+    else {
+        //This is the case where the paths intersect in two points (true just for GlobalPlans 1-5 and 3-7)
+        int centerX = (collision.at(1) + collision.at(3))/2;
+        int centerY = (collision.at(2) + collision.at(4))/2;
+        double dist1 = distance(x1, y1, centerX, centerY);
+        double dist2 = distance(x2, y2, centerX, centerY);
+
+        if (dist1 < dist2 or (dist1 == dist2 and id < vehicle2->getID())) {
+            //Vehicle1 is closer to the center and so it goes on
+            return speed;
+        }
+        else {
+            if (!pastPoint(x1, y1, h1, centerX, centerY, 0.0)) {
+                //Vehicle1 is not past the center
+                if (pastPoint(x2, y2, h2, centerX, centerY, 0.0)) {
+                    //Vehicle2 is past the center, but Vehicle1 is not
+                    double gap = distance(x1, y1, x2, y2);
+                    if (!pastPoint(x1, y1, h1, x2, y2, m.getDim()/15.0)) {
+                        double bodyLen = m.getDim()/9.0;
+                        if (gap < bodyLen + m.getDim()/30.0) {
+                            return speed/3;
+                        }
+                        if (gap < m.getDim()/5.0) {
+                            return speed/1.2;
+                        }
+                    }
+                    return speed;
+                }
+                else {
+                    //Vehicle2 is not past the center
+                    double dToCenter = distance(x1, y1, centerX, centerY);
+                    double bodyLen  = m.getDim()/9.0;
+                    double stopBand = bodyLen + m.getDim()/12.0;
+                    double slowBand = 2*stopBand;
+
+                    if (dToCenter < stopBand) {
+                        return speed / 4; //TO CHANGE MAYBE
+                    }
+                    if (dToCenter < slowBand) {
+                        return speed / 1.5;
+                    }
+                    return speed;
+                }
+            }
+            else {
+                return speed;
+            }
+        }
+    }
 }
