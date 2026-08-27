@@ -33,6 +33,12 @@ add_executable(ACAV main.cpp
         MotionPrediction.h
         AdaptiveCruiseControl.cpp
         AdaptiveCruiseControl.h
+        Optimizer.cpp
+        Optimizer.h
+        EgoTelemetry.cpp
+        EgoTelemetry.h
+        HUD.cpp
+        HUD.h
 )
 
 set(CORE_SOURCES
@@ -42,7 +48,13 @@ set(CORE_SOURCES
         MotionPrediction.cpp
         MotionPrediction.h
         AdaptiveCruiseControl.cpp
-        AdaptiveCruiseControl.h)
+        AdaptiveCruiseControl.h
+        Optimizer.cpp
+        Optimizer.h
+        EgoTelemetry.cpp
+        EgoTelemetry.h
+        HUD.cpp
+        HUD.h)
 
 add_executable(ACAV_mc
         test/mc_main.cpp

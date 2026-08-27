@@ -118,4 +118,8 @@ double AdaptiveCruiseControl::computeSpeed(double speed) const {
     return cmd;
 }
 
+bool AdaptiveCruiseControl::isTracking() const {
+    return tracking;
+}
+
 

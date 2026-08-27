@@ -30,6 +30,7 @@ public:
     const vector<std::shared_ptr<Vehicle>>& getVehicles() const;
     void firstUpdate();
     void removeVehicle(const std::shared_ptr<Vehicle>&);
+    std::shared_ptr<Vehicle> getEgo() const;
 };
 
 

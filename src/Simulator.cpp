@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 
+#include "EgoVehicle.h"
 #include "Vehicle.h"
 
 void Simulator::init() {
@@ -21,7 +22,16 @@ void Simulator::init() {
             loop();
         }
 
-        renderer.draw(map);
+        if (egoActual > 0) {
+            std::shared_ptr<Vehicle> ego = map.getEgo();
+            if (auto e = std::dynamic_pointer_cast<EgoVehicle>(ego)) {
+                const EgoTelemetry& t = e->getTelemetry();
+                renderer.draw(map, t);
+            }
+        }
+        else {
+            renderer.draw(map, EgoTelemetry());
+        }
         SDL_Delay(8);
 
         if (crash()) {
@@ -78,7 +88,16 @@ void Simulator::terminate() const {
 bool Simulator::crash() {
     if (map.crash()) {
         std::string path = "crash_t" + std::to_string(time) + ".png";
-        renderer.draw(map, &path);
+        if (egoActual > 0) {
+            std::shared_ptr<Vehicle> ego = map.getEgo();
+            if (auto e = std::dynamic_pointer_cast<EgoVehicle>(ego)) {
+                const EgoTelemetry& t = e->getTelemetry();
+                renderer.draw(map, t);
+            }
+        }
+        else {
+            renderer.draw(map, EgoTelemetry());
+        }
         return true;
     }
     return false;

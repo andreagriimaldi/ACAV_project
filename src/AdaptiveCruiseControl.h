@@ -21,6 +21,7 @@ public:
     bool emergencyBrake(const std::vector<std::vector<double>> &per) const;
     double update(double, const std::vector<std::vector<double>>&);
     double computeSpeed(double) const;
+    bool isTracking() const;
 };
 
 

@@ -81,7 +81,6 @@ double IntersectionCoordinator::suggestedSpeed(const std::string& id, double spe
 
     double result = speed;
 
-    // every other vehicle physically in the middle, CPU or ego
     for (const std::shared_ptr<Vehicle>& vehicle2 : otherVehicles) {
         result = std::min(result, speedAgainst(x1, y1, h1, glob1, vehicle2, id, speed));
     }

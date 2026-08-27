@@ -18,7 +18,7 @@ SDLRenderer::SDLRenderer(int guiSize)
         "ACAV",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        windowSize,
+        windowSize + HUD::GUI_WIDTH,
         windowSize,
         SDL_WINDOW_SHOWN
     );
@@ -66,7 +66,7 @@ void SDLRenderer::recreateTexture(int mapDim) {
     currentMapDim = mapDim;
 }
 
-void SDLRenderer::draw(const Map& map, const std::string* savePath) {
+void SDLRenderer::draw(const Map& map, const EgoTelemetry& tel, const std::string* savePath) {
     int mapDim = map.getDim() + 1;
 
     if (mapDim != currentMapDim) {
@@ -110,7 +110,10 @@ void SDLRenderer::draw(const Map& map, const std::string* savePath) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, mapTexture, nullptr, nullptr);
+    SDL_Rect mapDst{0, 0, windowSize, windowSize};
+    SDL_RenderCopy(renderer, mapTexture, nullptr, &mapDst);   // was nullptr, nullptr
+
+    hud.render(renderer, tel, windowSize, 0);
 
     if (savePath) {                       // read BEFORE present
         int w, h;

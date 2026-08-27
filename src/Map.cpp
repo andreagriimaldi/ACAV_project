@@ -182,4 +182,14 @@ void Map::removeVehicle(const std::shared_ptr<Vehicle>& vehicle) {
     std::erase(vehicles, vehicle);
 }
 
+std::shared_ptr<Vehicle> Map::getEgo() const {
+    for (const auto& v: vehicles) {
+        if (v->getID() == "ego") {
+            return v;
+        }
+    }
+    std::cerr << "No ego vehicle in the map" << std::endl;
+    return nullptr;
+}
+
 
