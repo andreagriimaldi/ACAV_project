@@ -13,7 +13,7 @@ void EgoVehicle::move() {
 
     if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
-        optSpeed = optimizer(speed, futurePerc);
+        optSpeed = optimizer(speed, futurePerc, static_cast<int>(perc.at(0).at(0)));
     }
 
     if (accSpeed < speed or optSpeed < speed) {
@@ -51,8 +51,8 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
     return acc.update(oldspeed, per);
 }
 
-double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer) {
-    return op.optimizer(oldspeed, futurePer);
+double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer, int vState) {
+    return op.optimizer(oldspeed, futurePer, vState);
 }
 
 const EgoTelemetry & EgoVehicle::getTelemetry() const {

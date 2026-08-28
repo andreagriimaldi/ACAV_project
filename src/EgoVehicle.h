@@ -20,7 +20,7 @@ public:
     void move() override;
     std::vector<std::vector<double>> computeFuture();
     double adaptiveCruiseControl(double, const std::vector<std::vector<double>>&);
-    double optimizer(double, std::vector<std::vector<double>>);
+    double optimizer(double, std::vector<std::vector<double>>, int);
     const EgoTelemetry& getTelemetry() const;
 };
 
