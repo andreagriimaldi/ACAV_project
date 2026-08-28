@@ -1,12 +1,13 @@
 #include "EgoTelemetry.h"
 
-void EgoTelemetry::update(double s, bool acc, double sACC, double optS, int choice, bool emBr) {
+void EgoTelemetry::update(double s, bool acc, double sACC, double optS, int choice, bool emBr, FSM stat) {
     speed = s;
     accTracking = acc;
     accSpeed = sACC;
     optimizerSpeed = optS;
     speedChoice = choice;
     emergencyBraking = emBr;
+    state = stat;
 }
 
 double EgoTelemetry::getMaxSpeed() const {
@@ -35,6 +36,10 @@ int EgoTelemetry::getSpeedChoice() const {
 
 bool EgoTelemetry::getBraking() const {
     return emergencyBraking;
+}
+
+FSM EgoTelemetry::getState() const {
+    return state;
 }
 
 

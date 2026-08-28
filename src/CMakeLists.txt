@@ -39,6 +39,7 @@ add_executable(ACAV main.cpp
         EgoTelemetry.h
         HUD.cpp
         HUD.h
+        FSM.h
 )
 
 set(CORE_SOURCES
@@ -54,7 +55,8 @@ set(CORE_SOURCES
         EgoTelemetry.cpp
         EgoTelemetry.h
         HUD.cpp
-        HUD.h)
+        HUD.h
+        FSM.h)
 
 add_executable(ACAV_mc
         test/mc_main.cpp

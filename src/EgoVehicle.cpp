@@ -26,7 +26,7 @@ void EgoVehicle::move() {
         speed = maxspeed;
     }
 
-    tel.update(speed, acc.isTracking(), accSpeed, optSpeed, choice, acc.isBraking());
+    tel.update(speed, acc.isTracking(), accSpeed, optSpeed, choice, acc.isBraking(), op.getState());
 
     updateBicycle(speed);
 }
@@ -52,7 +52,7 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
 }
 
 double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer) {
-    return oldspeed; //TO CHANGE
+    return op.optimizer(oldspeed, futurePer);
 }
 
 const EgoTelemetry & EgoVehicle::getTelemetry() const {

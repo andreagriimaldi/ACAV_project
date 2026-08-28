@@ -84,6 +84,31 @@ double frac01(double num, double den) {
     return std::clamp(num / den, 0.0, 1.0);
 }
 
+inline void colAmber(SDL_Renderer* r) { SDL_SetRenderDrawColor(r, 235, 175,  50, 255); }
+inline void colBlue (SDL_Renderer* r) { SDL_SetRenderDrawColor(r,  90, 160, 235, 255); }
+
+const char* fsmName(FSM s) {
+switch (s) {
+    case FSM::NONE:            return "---";
+    case FSM::NORMAL:          return "NORMAL";
+    case FSM::REQUESTING_STOP: return "REQ STOP";
+    case FSM::STOPPED:         return "STOPPED";
+    case FSM::RESTART:         return "RESTART";
+}
+return "???";
+}
+
+void colFSM(SDL_Renderer* r, FSM s) {
+switch (s) {
+    case FSM::NONE:            colLabel(r);   return;
+    case FSM::NORMAL:          colGreen(r);   return;
+    case FSM::REQUESTING_STOP: colAmber(r);   return;
+    case FSM::STOPPED:         colRedEdge(r); return;
+    case FSM::RESTART:         colBlue(r);    return;
+}
+colLabel(r);
+}
+
 } // namespace
 
 // -------------------------------------------------------------- glyphs ----
@@ -241,10 +266,28 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
         colLabel(r);
         text(r, "OPTIMIZER", sec.x + pad, sec.y + pad, px);
 
+        // suggested speed, lifted to leave room for the state below
         const int midPx = std::max(px, static_cast<int>(secH / 30));
         std::snprintf(nbuf, sizeof nbuf, "%.2f", t.getOptimizerSpeed());
         colValue(r);
-        textCentered(r, nbuf, cx, sec.y + secH / 2 - 7 * midPx / 2, midPx);
+        textCentered(r, nbuf, cx, sec.y + (2 * secH) / 5 - 7 * midPx / 2, midPx);
+
+        // FSM state, colour-coded, bottom of the section
+        const char* sname = fsmName(t.getState());
+        const int fitPx   = (sec.w - 2 * pad) / (8 * 6 - 1);   // "REQ STOP"
+        const int stPx    = std::max(px, std::min(3 * px / 2, fitPx));
+
+        const int mx = 4 * stPx;                    // horizontal margin per side
+        const int my = 2 * stPx;                    // vertical margin per side
+
+        const int bw = textWidth(sname, stPx) + 2 * mx;
+        const int bh = 7 * stPx + 2 * my;
+        SDL_Rect band{cx - bw / 2, sec.y + sec.h - 2 * pad - bh, bw, bh};
+        colTrack(r);
+        SDL_RenderFillRect(r, &band);
+
+        colFSM(r, t.getState());
+        textCentered(r, sname, cx, band.y + my, stPx);
 
         y += secH;
     }

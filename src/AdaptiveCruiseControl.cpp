@@ -85,7 +85,7 @@ bool AdaptiveCruiseControl::emergencyBrake(const std::vector<std::vector<double>
 double AdaptiveCruiseControl::update(double speed, const std::vector<std::vector<double>>& per) {
     if (emergencyBrake(per)) {
         emergencyBraking = true;
-        return std::clamp(speed - 2 * Vehicle::a_str_max, 0.0, speed + 2 * Vehicle::a_str_max); //TUNING PARAMETER
+        return std::clamp(speed - 3 * Vehicle::a_str_max, 0.0, speed + 2 * Vehicle::a_str_max); //TUNING PARAMETER
     }
     emergencyBraking = false;
     if (checkVehicleInFront(per)) {
