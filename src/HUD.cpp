@@ -75,6 +75,9 @@ inline void colValue(SDL_Renderer* r) { SDL_SetRenderDrawColor(r, 228, 234, 244,
 inline void colGreen (SDL_Renderer* r){ SDL_SetRenderDrawColor(r,  46, 204,  96, 255); }
 inline void colOff  (SDL_Renderer* r) { SDL_SetRenderDrawColor(r,  38,  42,  52, 255); }
 inline void colTrack(SDL_Renderer* r) { SDL_SetRenderDrawColor(r,  52,  58,  70, 255); }
+inline void colRedBG  (SDL_Renderer* r) { SDL_SetRenderDrawColor(r, 110,  20,  26, 255); }
+inline void colRedEdge(SDL_Renderer* r) { SDL_SetRenderDrawColor(r, 235,  60,  60, 255); }
+inline void colRedTxt (SDL_Renderer* r) { SDL_SetRenderDrawColor(r, 255, 225, 225, 255); }
 
 double frac01(double num, double den) {
     if (!std::isfinite(num) || den <= 0.0) return 0.0;
@@ -123,6 +126,10 @@ void HUD::bar(SDL_Renderer* r, const SDL_Rect& rect, double f) {
     SDL_Rect fill{rect.x, rect.y, w, rect.h};
     colValue(r);
     SDL_RenderFillRect(r, &fill);
+}
+
+int HUD::getWidth() const {
+    return GUI_WIDTH;
 }
 
 // -------------------------------------------------------------- render ----
@@ -178,26 +185,48 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
     {
         const int secH = static_cast<int>(F_ACC * H);
         SDL_Rect sec{x0, y, innW, secH - pad};
-        frame(r, sec);
 
-        colLabel(r);
-        text(r, "ACC", sec.x + pad, sec.y + pad, px);
+        if (t.getBraking()) {
+            colRedBG(r);
+            SDL_RenderFillRect(r, &sec);
+            colRedEdge(r);
+            SDL_RenderDrawRect(r, &sec);
 
-        if (t.getACCTracking()) {
+            // two lines, sized to fit the longer word inside the section
+            const int fitPx = (sec.w - 2 * pad) / (9 * 6 - 1);   // "EMERGENCY"
+            const int ebPx  = std::max(px, std::min(2 * px, fitPx));
+            const int blockH = 17 * ebPx;                        // 7 + gap 3 + 7
+            const int top    = sec.y + secH / 2 - blockH / 2;
+
+            colRedTxt(r);
+            textCentered(r, "EMERGENCY", cx, top, ebPx);
+            textCentered(r, "BRAKING",   cx, top + 10 * ebPx, ebPx);
+
+            colRedTxt(r);
+            text(r, "ACC", sec.x + pad, sec.y + pad, px);
+        }
+        else {
+            frame(r, sec);
+
             colLabel(r);
-            text(r, "TRACKING", sec.x + sec.w - pad - textWidth("TRACKING", px),
-                 sec.y + pad, px);
+            text(r, "ACC", sec.x + pad, sec.y + pad, px);
 
-            const int midPx = std::max(px, static_cast<int>(secH / 20));
-            std::snprintf(nbuf, sizeof nbuf, "%.2f", t.getACCSpeed());
-            colValue(r);
-            textCentered(r, nbuf, cx, sec.y + secH / 2 - 7 * midPx / 2, midPx);
+            if (t.getACCTracking()) {
+                colLabel(r);
+                text(r, "TRACKING", sec.x + sec.w - pad - textWidth("TRACKING", px),
+                     sec.y + pad, px);
 
-            SDL_Rect b{sec.x + pad, sec.y + sec.h - 3 * pad, sec.w - 2 * pad, pad};
-            bar(r, b, frac01(t.getACCSpeed(), t.getMaxSpeed()));
-        } else {
-            colLabel(r);
-            textCentered(r, "NO TARGET", cx, sec.y + secH / 2 - 7 * px / 2, px);
+                const int midPx = std::max(px, static_cast<int>(secH / 20));
+                std::snprintf(nbuf, sizeof nbuf, "%.2f", t.getACCSpeed());
+                colValue(r);
+                textCentered(r, nbuf, cx, sec.y + secH / 2 - 7 * midPx / 2, midPx);
+
+                SDL_Rect b{sec.x + pad, sec.y + sec.h - 3 * pad, sec.w - 2 * pad, pad};
+                bar(r, b, frac01(t.getACCSpeed(), t.getMaxSpeed()));
+            } else {
+                colLabel(r);
+                textCentered(r, "NO TARGET", cx, sec.y + secH / 2 - 7 * px / 2, px);
+            }
         }
 
         y += secH;

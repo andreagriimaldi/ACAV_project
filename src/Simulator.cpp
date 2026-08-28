@@ -92,11 +92,11 @@ bool Simulator::crash() {
             std::shared_ptr<Vehicle> ego = map.getEgo();
             if (auto e = std::dynamic_pointer_cast<EgoVehicle>(ego)) {
                 const EgoTelemetry& t = e->getTelemetry();
-                renderer.draw(map, t);
+                renderer.draw(map, t, &path);
             }
         }
         else {
-            renderer.draw(map, EgoTelemetry());
+            renderer.draw(map, EgoTelemetry(), &path);
         }
         return true;
     }

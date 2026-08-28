@@ -4,7 +4,7 @@
 #include <vector>
 
 SDLRenderer::SDLRenderer(int guiSize)
-    : windowSize(guiSize), mapTexture(nullptr), currentMapDim(0) {
+    : windowSize(guiSize), mapTexture(nullptr), currentMapDim(0), hud(windowSize) {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         throw std::runtime_error(std::string("SDL init failed: ") + SDL_GetError());
@@ -18,7 +18,7 @@ SDLRenderer::SDLRenderer(int guiSize)
         "ACAV",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        windowSize + HUD::GUI_WIDTH,
+        windowSize + hud.getWidth(),
         windowSize,
         SDL_WINDOW_SHOWN
     );

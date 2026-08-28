@@ -14,7 +14,7 @@ private:
     std::deque<std::pair<double, double>> measures;
     int measureSize = 0;
     const int maxMeasures = 5;
-    double speed_before = 0;
+    bool emergencyBraking = false;
 public:
     explicit AdaptiveCruiseControl(int d, std::string idV): dim(d), tracking_dist(dim/5), id(idV){};
     bool checkVehicleInFront(const std::vector<std::vector<double>>&);
@@ -22,6 +22,7 @@ public:
     double update(double, const std::vector<std::vector<double>>&);
     double computeSpeed(double) const;
     bool isTracking() const;
+    bool isBraking() const;
 };
 
 

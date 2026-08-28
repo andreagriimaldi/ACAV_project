@@ -10,13 +10,14 @@
 // rescales the whole panel with no other edit.
 class HUD {
 public:
-    static constexpr int    GUI_SIZE   = 800;                  // panel height, px
+    int GUI_SIZE;                  // panel height, px
     static constexpr double GUI_ASPECT = 9.0 / 19.5;           // width / height
-    static constexpr int    GUI_WIDTH  = static_cast<int>(GUI_SIZE * GUI_ASPECT);
+    int GUI_WIDTH;
 
+    explicit HUD(int size): GUI_SIZE(size), GUI_WIDTH(static_cast<int>(GUI_SIZE * GUI_ASPECT)){};
     // Draws the panel with its top-left corner at (originX, originY).
     void render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int originY) const;
-
+    int getWidth() const;
 private:
     // section heights as fractions of GUI_SIZE (must sum to 1.0)
     static constexpr double F_SPEED  = 0.30;

@@ -8,12 +8,11 @@ void EgoVehicle::move() {
 
     std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);
 
-    double accSpeed = maxspeed, optSpeed = maxspeed;
+    double accSpeed = adaptiveCruiseControl(speed, perc), optSpeed = maxspeed;
     int choice = 0;
 
     if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
-        accSpeed = adaptiveCruiseControl(speed, perc);
         optSpeed = optimizer(speed, futurePerc);
 
         if (accSpeed < speed or optSpeed < speed) {
@@ -27,7 +26,7 @@ void EgoVehicle::move() {
         speed = maxspeed;
     }
 
-    tel.update(speed, acc.isTracking(), accSpeed, optSpeed, choice);
+    tel.update(speed, acc.isTracking(), accSpeed, optSpeed, choice, acc.isBraking());
 
     updateBicycle(speed);
 }

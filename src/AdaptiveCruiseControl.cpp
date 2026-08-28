@@ -84,8 +84,10 @@ bool AdaptiveCruiseControl::emergencyBrake(const std::vector<std::vector<double>
 //this returns the speed suggested by the ACC
 double AdaptiveCruiseControl::update(double speed, const std::vector<std::vector<double>>& per) {
     if (emergencyBrake(per)) {
+        emergencyBraking = true;
         return speed/2; //TO CHANGE
     }
+    emergencyBraking = false;
     if (checkVehicleInFront(per)) {
         return computeSpeed(speed);
     }
@@ -121,5 +123,10 @@ double AdaptiveCruiseControl::computeSpeed(double speed) const {
 bool AdaptiveCruiseControl::isTracking() const {
     return tracking;
 }
+
+bool AdaptiveCruiseControl::isBraking() const {
+    return emergencyBraking;
+}
+
 
 
