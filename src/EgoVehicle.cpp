@@ -14,13 +14,13 @@ void EgoVehicle::move() {
     if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
         optSpeed = optimizer(speed, futurePerc);
-
-        if (accSpeed < speed or optSpeed < speed) {
-            choice = accSpeed < optSpeed ? 1 : 2;
-        }
-
-        speed = std::min(accSpeed, optSpeed);
     }
+
+    if (accSpeed < speed or optSpeed < speed) {
+        choice = accSpeed < optSpeed ? 1 : 2;
+    }
+
+    speed = std::min(accSpeed, optSpeed);
 
     if (speed > maxspeed) {
         speed = maxspeed;

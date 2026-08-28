@@ -3,6 +3,10 @@
 
 
 class Optimizer {
+private:
+
+public:
+
 };
 
 
