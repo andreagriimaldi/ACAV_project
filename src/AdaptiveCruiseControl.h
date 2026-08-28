@@ -15,8 +15,9 @@ private:
     int measureSize = 0;
     const int maxMeasures = 5;
     bool emergencyBraking = false;
+    const double maxspeed;
 public:
-    explicit AdaptiveCruiseControl(int d, std::string idV): dim(d), tracking_dist(dim/5), id(idV){};
+    explicit AdaptiveCruiseControl(int d, std::string idV, double max): dim(d), tracking_dist(dim/5), id(idV), maxspeed(max){};
     bool checkVehicleInFront(const std::vector<std::vector<double>>&);
     bool emergencyBrake(const std::vector<std::vector<double>> &per) const;
     double update(double, const std::vector<std::vector<double>>&);

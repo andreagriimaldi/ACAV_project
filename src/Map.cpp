@@ -83,7 +83,7 @@ void Map::updatePositions() {
 
 //ego is true when the ego vehicle is being generated
 //int represents the spawn point (0 N, 1 E, 2 S, 3 W)
-void Map::generateVehicle(bool ego, int spawn, double speed, int gplan, int maxs) {
+void Map::generateVehicle(bool ego, int spawn, double speed, int gplan, double maxs) {
     vector<std::shared_ptr<Point>> spawnPosition;
     int x_min, x_max, y_min, y_max, heading;
 

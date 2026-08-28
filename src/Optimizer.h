@@ -4,9 +4,10 @@
 
 class Optimizer {
 private:
-
+    const double maxspeed;
 public:
-
+    Optimizer(double max): maxspeed(max){};
+    double optimizer();
 };
 
 

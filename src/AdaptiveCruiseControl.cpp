@@ -117,6 +117,10 @@ double AdaptiveCruiseControl::computeSpeed(double speed) const {
         cmd = speed - Vehicle::a_str_max;
     }
 
+    if (cmd > maxspeed) {
+        cmd = maxspeed;
+    }
+
     return cmd;
 }
 

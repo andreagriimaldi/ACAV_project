@@ -7,7 +7,7 @@ class CPUVehicle: public Vehicle{
 private:
     IntersectionCoordinator& coord;
 public:
-    CPUVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s, string id, int gplan, int maxs)
+    CPUVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s, string id, int gplan, double maxs)
         : Vehicle(m, surf, h, s, id, gplan, maxs), coord(map.getCoordinator()) {
     }
     void move() override;

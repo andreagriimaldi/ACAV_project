@@ -23,7 +23,7 @@ public:
     const vector<vector<std::shared_ptr<Point>>>& getGrid() const;
     int getDim() const;
     void updatePositions();
-    void generateVehicle(bool, int, double, int, int);
+    void generateVehicle(bool, int, double, int, double);
     void moveVehicles();
     vector<std::pair<int, int>> getCOGs() const;
     IntersectionCoordinator& getCoordinator();

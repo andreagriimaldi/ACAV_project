@@ -156,8 +156,8 @@ int Simulator::vehicleSpawnedFromHere(int direction) const{
 void Simulator::generateCPUVehicle(int spawn, double speed, int gplan) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(180, 240);
-    map.generateVehicle(false, spawn, speed, gplan,  map.getDim()/(dist(gen)));
+    std::uniform_real_distribution<double> dist(1.0/240.0, 1.0/180.0);
+    map.generateVehicle(false, spawn, speed, gplan, map.getDim() * dist(gen));
     cpuActual++;
     cpuGenerated++;
 }
@@ -165,8 +165,8 @@ void Simulator::generateCPUVehicle(int spawn, double speed, int gplan) {
 void Simulator::generateEgoVehicle(int spawn, double speed, int gplan) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(180, 240);
-    map.generateVehicle(true, spawn, speed, gplan,  map.getDim()/(dist(gen)));
+    std::uniform_real_distribution<double> dist(1.0/240.0, 1.0/180.0);
+    map.generateVehicle(true, spawn, speed, gplan, map.getDim() * dist(gen));
     egoActual++;
     egoGenerated++;
 }
