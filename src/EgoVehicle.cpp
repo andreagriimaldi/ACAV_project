@@ -13,9 +13,9 @@ void EgoVehicle::move() {
 
     bool shortTurn = (getGlobalPlan() == 0) or (getGlobalPlan() == 2) or (getGlobalPlan() == 4) or (getGlobalPlan() == 6);
 
-    if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1 and !shortTurn) {
+    if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
-        optSpeed = optimizer(new_speed, speed, futurePerc, static_cast<int>(perc.at(0).at(0)), perc);
+        optSpeed = optimizer(new_speed, speed, futurePerc, static_cast<int>(perc.at(0).at(0)), perc, shortTurn);
     }
 
     if (accSpeed < new_speed or optSpeed < new_speed) {
@@ -53,8 +53,8 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
     return acc.update(oldspeed, per);
 }
 
-double EgoVehicle::optimizer(double new_speed, double oldspeed, const std::vector<std::vector<double>>& futurePer, int vState, const std::vector<std::vector<double>>& per) {
-    return op.optimizer(new_speed, oldspeed, futurePer, vState, per);
+double EgoVehicle::optimizer(double new_speed, double oldspeed, const std::vector<std::vector<double>>& futurePer, int vState, const std::vector<std::vector<double>>& per, bool shortTurn) {
+    return op.optimizer(new_speed, oldspeed, futurePer, vState, per, shortTurn);
 }
 
 const EgoTelemetry & EgoVehicle::getTelemetry() const {

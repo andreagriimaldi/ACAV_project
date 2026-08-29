@@ -53,7 +53,7 @@ void Simulator::loop() {
 
     for (int i = 0; i < 4; i++) {
         if (isSpawnPointFree(i) && vehicleSpawnedFromHere(i) < 2) {
-            if (chance(gen) < 0.02) {
+            if (chance(gen) < 0.01) {
                 generateCPUVehicle(i, 0, GlobalPlan::spawnToRandomPlan(i));
             }
         }

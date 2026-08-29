@@ -12,12 +12,13 @@ private:
     const int dim;
 public:
     Optimizer(double max, int d): maxspeed(max), state(FSM::NORMAL), dim(d){};
-    double optimizer(double, double, const std::vector<std::vector<double>>&, int, const std::vector<std::vector<double>>&);
-    void updateFSM(double, double, const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
+    double optimizer(double, double, const std::vector<std::vector<double>>&, int, const std::vector<std::vector<double>>&, bool);
+    void updateFSM(double, double, const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool);
     FSM getState() const;
-    double requestingStop(double, const std::vector<std::vector<double>>&) const;
-    bool rightFree(const std::vector<std::vector<double>>&) const;
-    bool crossingAllowed(const std::vector<std::vector<double>>&) const;
+    double requestingStop(double, const std::vector<std::vector<double>>&, bool) const;
+    bool rightFree(const std::vector<std::vector<double>>&, bool) const;
+    bool crossingAllowed(const std::vector<std::vector<double>>&, bool) const;
+    bool colliding(const std::vector<std::vector<double>>&) const;
 };
 
 
