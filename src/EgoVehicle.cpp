@@ -4,31 +4,31 @@
 
 void EgoVehicle::move() {
     double steer = computeSteering();
-    double speed = computeNewSpeed(steer, maxspeed);
+    double new_speed = computeNewSpeed(steer, maxspeed);
 
     std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);
 
-    double accSpeed = adaptiveCruiseControl(speed, perc), optSpeed = maxspeed;
+    double accSpeed = adaptiveCruiseControl(new_speed, perc), optSpeed = maxspeed;
     int choice = 0;
 
     if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
-        optSpeed = optimizer(speed, futurePerc, static_cast<int>(perc.at(0).at(0)));
+        optSpeed = optimizer(new_speed, speed, futurePerc, static_cast<int>(perc.at(0).at(0)), perc);
     }
 
-    if (accSpeed < speed or optSpeed < speed) {
+    if (accSpeed < new_speed or optSpeed < new_speed) {
         choice = accSpeed < optSpeed ? 1 : 2;
     }
 
-    speed = std::min(accSpeed, optSpeed);
+    new_speed = std::min(accSpeed, optSpeed);
 
-    if (speed > maxspeed) {
-        speed = maxspeed;
+    if (new_speed > maxspeed) {
+        new_speed = maxspeed;
     }
 
-    tel.update(speed, acc.isTracking(), accSpeed, optSpeed, choice, acc.isBraking(), op.getState());
+    tel.update(new_speed, acc.isTracking(), accSpeed, optSpeed, choice, acc.isBraking(), op.getState());
 
-    updateBicycle(speed);
+    updateBicycle(new_speed);
 }
 
 std::vector<std::vector<double>> EgoVehicle::computeFuture() {
@@ -51,8 +51,8 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
     return acc.update(oldspeed, per);
 }
 
-double EgoVehicle::optimizer(double oldspeed, std::vector<std::vector<double>> futurePer, int vState) {
-    return op.optimizer(oldspeed, futurePer, vState);
+double EgoVehicle::optimizer(double new_speed, double oldspeed, const std::vector<std::vector<double>>& futurePer, int vState, const std::vector<std::vector<double>>& per) {
+    return op.optimizer(new_speed, oldspeed, futurePer, vState, per);
 }
 
 const EgoTelemetry & EgoVehicle::getTelemetry() const {

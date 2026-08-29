@@ -2,31 +2,35 @@
 
 #include <iostream>
 
+#include "Vehicle.h"
+
 //getPerc.at(0) is the ego vehicle
 std::vector<std::vector<double>> Perception::getPerc(int egoX, int egoY, int egoHeading) const {
-    std::vector<std::pair<int, int>> COGs = m.getCOGs();
+    const std::vector<std::shared_ptr<Vehicle>>& vs = m.getVehicles();
     std::vector<std::vector<double>> per;
-    per.reserve(COGs.size());
+    per.reserve(vs.size());
 
-    for (const auto& pair: COGs) {
-        if (pair.first == egoX and pair.second == egoY) {
-            per.push_back({computeState(pair.first, pair.second, gplan, m.getDim()), 0, 0});
+    for (const auto& v: vs) {
+        if (v->getCOGx() == egoX and v->getCOGy() == egoY) {
+            per.push_back({computeState(egoX, egoY, gplan, m.getDim()), 0, 0});
             break;
         }
     }
 
-    for (const auto& pair: COGs) {
-        if (pair.first != egoX or pair.second != egoY) {
-            double dx = pair.first - egoX;
-            double dy = egoY - pair.second;
+    for (const auto& v: vs) {
+        const int vx = v->getCOGx(), vy = v->getCOGy();
+        if (!(vx == egoX and vy == egoY)) {
+            double dx = vx - egoX;
+            double dy = egoY - vy;
             double theta = std::atan2(dy, dx) * 180.0 / M_PI;
             double difference = egoHeading - theta;
             while (difference > 180.0)  difference -= 360.0;
             while (difference < -180.0) difference += 360.0;
 
-            double dist = std::sqrt((pair.first - egoX)*(pair.first - egoX) + (pair.second - egoY)*(pair.second - egoY));
+            double dist = std::sqrt(dx*dx + dy*dy);
+            double state = computeState(vx, vy, v->getGlobalPlan(), m.getDim());
 
-            per.push_back({-1, difference, dist});
+            per.push_back({state, difference, dist});
         }
     }
 
@@ -84,6 +88,14 @@ std::vector<std::vector<double>> Perception::getFuturePerc(int egoX, int egoY, i
 
     for (const auto& entry: future) {
         if (entry.first != "ego") {
+            int gp = -1;
+            for (const auto& v: m.getVehicles()) {
+                if (v->getID() == entry.first) {
+                    gp = v->getGlobalPlan();
+                    break;
+                }
+            }
+
             double dx = entry.second.first - egoX;
             double dy = egoY - entry.second.second;
             double theta = std::atan2(dy, dx) * 180.0 / M_PI;
@@ -91,9 +103,10 @@ std::vector<std::vector<double>> Perception::getFuturePerc(int egoX, int egoY, i
             while (difference > 180.0)  difference -= 360.0;
             while (difference < -180.0) difference += 360.0;
 
-            double dist = std::sqrt((entry.second.first - egoX)*(entry.second.first - egoX) + (entry.second.second - egoY)*(entry.second.second - egoY));
+            double dist  = std::sqrt(dx*dx + dy*dy);
+            double state = computeState(entry.second.first, entry.second.second, gp, m.getDim());
 
-            futurePer.push_back({-1, difference, dist});
+            futurePer.push_back({state, difference, dist});
         }
     }
 
