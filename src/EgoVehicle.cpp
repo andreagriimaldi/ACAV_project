@@ -11,7 +11,9 @@ void EgoVehicle::move() {
     double accSpeed = adaptiveCruiseControl(new_speed, perc), optSpeed = maxspeed;
     int choice = 0;
 
-    if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1) {
+    bool shortTurn = (getGlobalPlan() == 0) or (getGlobalPlan() == 2) or (getGlobalPlan() == 4) or (getGlobalPlan() == 6);
+
+    if ((perc.at(0).at(0) == 1 or perc.at(0).at(0) == 2) and perc.size() > 1 and !shortTurn) {
         std::vector<std::vector<double>> futurePerc = computeFuture();
         optSpeed = optimizer(new_speed, speed, futurePerc, static_cast<int>(perc.at(0).at(0)), perc);
     }

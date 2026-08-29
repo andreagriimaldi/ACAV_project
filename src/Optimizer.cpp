@@ -2,6 +2,8 @@
 #include <iostream>
 #include <ostream>
 
+#include "Vehicle.h"
+
 double Optimizer::optimizer(double speed, double oldspeed, const std::vector<std::vector<double>>& futurePerc, int vState, const std::vector<std::vector<double>>& perc) {
     vehicleState = vState;
     updateFSM(speed, oldspeed, futurePerc, perc);
@@ -37,10 +39,9 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
         }
         else {
             //Vehicle is now stopped
+            state = FSM::STOPPED;
             if (rightFree(perc) and crossingAllowed(perc)) {
-                if (state == FSM::STOPPED) {
-                    state = FSM::RESTART;
-                }
+                state = FSM::RESTART;
             }
         }
     }
@@ -59,11 +60,12 @@ FSM Optimizer::getState() const {
 
 double Optimizer::requestingStop(double oldspeed, const std::vector<std::vector<double>>& futurePerc) const {
     //this will return the suggested speed (when the vehicle has to stop)
+    return std::clamp(oldspeed - 2 * Vehicle::a_str_max, 0.0, maxspeed); //TO CHANGE
 }
 
 bool Optimizer::rightFree(const std::vector<std::vector<double>>& perc) const {
     const double DEG = M_PI / 180.0;
-    const double range = (2.0 * dim) / 3.0;
+    const double range = (1.5 * dim) / 3.0;
     const double lane = dim / 30.0;
     const double back = dim / 9.0;
 
