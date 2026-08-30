@@ -34,7 +34,7 @@ void Simulator::init() {
         }
         SDL_Delay(8);
 
-        if (crash()) {
+        if (crash() or stall()) {
             running = false;
         }
     }
@@ -79,6 +79,9 @@ void Simulator::loop() {
 void Simulator::terminate() const {
     if (map.crash()) {
         std::cerr << "A crash has happened" << std::endl;
+    }
+    if (stallTicks > 499) {
+        std::cerr << "The vehicles are stalled" << std::endl;
     }
     std::cout << "The simulation lasted " << time << " time instants" << std::endl;
     std::cout << "CPU Vehicle generated: " << cpuGenerated << std::endl;
@@ -204,6 +207,40 @@ bool Simulator::isVehicleAtTheEnd(std::pair<int, int> cog, int gplan) const{
     }
 
     return false;
+}
+
+bool Simulator::stall() {
+    updateStall();
+    if (stallTicks > 500) {
+        std::string path = "stall_t" + std::to_string(time) + ".png";
+        if (egoActual > 0) {
+            std::shared_ptr<Vehicle> ego = map.getEgo();
+            if (auto e = std::dynamic_pointer_cast<EgoVehicle>(ego)) {
+                const EgoTelemetry& t = e->getTelemetry();
+                renderer.draw(map, t, &path);
+            }
+        }
+        else {
+            renderer.draw(map, EgoTelemetry(), &path);
+        }
+        return true;
+    }
+    return false;
+}
+
+void Simulator::updateStall() {
+    const auto& vs = map.getVehicles();
+    if (vs.empty()) {
+        stallTicks = 0;
+        return;
+    }
+    for (const auto& v: vs) {
+        if (v->getSpeed() > mapDim/2000.0) {
+            stallTicks = 0;
+            return;
+        }
+    }
+    stallTicks++;
 }
 
 

@@ -16,6 +16,7 @@ class Simulator {
         int cpuActual = 0;
         int egoActual = 0;
         SDLRenderer renderer;
+        int stallTicks = 0;
     public:
         explicit Simulator(int sizeGUI, int mDim, const bool ego): GUI_SIZE(sizeGUI), mapDim(mDim), map(Map(mapDim)), egoPresence(ego), renderer(GUI_SIZE) {
             init();
@@ -30,6 +31,8 @@ class Simulator {
         void generateEgoVehicle(int spawn, double speed, int gplan);
         void removeVehicles();
         bool isVehicleAtTheEnd(std::pair<int, int>, int) const;
+        bool stall();
+        void updateStall();
 };
 
 

@@ -38,15 +38,6 @@ bool IntersectionCoordinator::askPermission(const std::string& id) {
         }
     }
 
-    std::vector<std::shared_ptr<Vehicle>> vehicles = m.getVehicles();
-    for (const auto& v: vehicles) {
-        if (v->getID() == "ego") {
-            if (v->getPercState() == 1 && !currents.empty()) {
-                return false;
-            }
-        }
-    }
-
     if (currents.size() + currentlyGranted.size() > 1) {
         return false;
     }
