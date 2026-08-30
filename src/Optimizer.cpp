@@ -32,7 +32,13 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
     if (vehicleState == 1) {
         //Vehicle approaching
         if (oldspeed > 0.0) {
-            if (!rightFree(perc, shortTurn) or !crossingAllowed(perc, shortTurn)) {
+            if (!rightFree(perc, shortTurn) or !crossingAllowed(perc, futurePerc, shortTurn)) {
+                if (oldspeed <= 0.1) {
+                    state = FSM::STOPPED;
+                }
+                else state = FSM::REQUESTING_STOP;
+            }
+            else if (shortTurn and colliding(perc, futurePerc, shortTurn)) {
                 if (oldspeed <= 0.1) {
                     state = FSM::STOPPED;
                 }
@@ -43,7 +49,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
         else {
             //Vehicle is now stopped
             state = FSM::STOPPED;
-            if (rightFree(perc, shortTurn) and crossingAllowed(perc, shortTurn)) {
+            if (rightFree(perc, shortTurn) and crossingAllowed(perc, futurePerc, shortTurn)) {
                 state = FSM::RESTART;
             }
         }
@@ -130,8 +136,9 @@ bool Optimizer::rightFree(const std::vector<std::vector<double>>& perc, bool sho
     return true;
 }
 
-bool Optimizer::crossingAllowed(const std::vector<std::vector<double>>& perc, bool shortTurn) const {
+bool Optimizer::crossingAllowed(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, bool shortTurn) {
     //basically this checks how many vehicles are in the middle and says y/n
+    //MAYBE TO BE MODIFIED, ALLOW IF ONE IS CLOSER TO THE END AND THE OTHER DONT CARE
     if (shortTurn) {
         return true;
     }
@@ -141,7 +148,7 @@ bool Optimizer::crossingAllowed(const std::vector<std::vector<double>>& perc, bo
             count++;
         }
     }
-    return count < 3;
+    return count < 3 and oneMovingAway(perc, futurePerc);
 }
 
 bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, bool shortTurn) const {
@@ -160,6 +167,46 @@ bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const st
         }
     }
     //still to implement the case where the turn is not short
+}
+
+bool Optimizer::oneMovingAway(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) {
+    if (oneMovingAwayAllowed) {
+        return true;
+    }
+    std::vector<std::vector<double>> middleT;
+    for (int i = 1; i < perc.size(); i++) {
+        if (perc.at(i).at(0) == 2) {
+            middleT.push_back(perc.at(i));
+        }
+    }
+
+    if (middleT.size() > 1) { //oneMovingAway() gets called when there are at least two vehicles in the middle
+        for (const auto&v : middleT) {
+            double bestCost = 2.0;
+            double closestDistDiff = 0.0;
+            double closestAngDiff = 0;
+            bool matched = false;
+
+            for (int i = 1; i < futurePerc.size(); i++) {
+                const std::vector<double>& fut = futurePerc.at(i);
+                const double cost = std::abs(v.at(1) - fut.at(1)) / 180.0 + std::abs(v.at(2) - fut.at(2)) / dim;
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    closestDistDiff = v.at(2) - fut.at(2);
+                    closestAngDiff = std::abs(v.at(1)) - std::abs(fut.at(1));
+                    matched = true;
+                }
+            }
+            if (matched and (closestDistDiff < 0 and closestAngDiff <  0)) {
+                std::cerr << "ONEMOVINGAWAY() TRUE" << std::endl;
+                oneMovingAwayAllowed = true;
+                return true;
+            }
+        }
+        std::cerr << "ONEMOVINGAWAY() FALSE " << std::endl;
+        return false;
+    }
+    return true;
 }
 
 

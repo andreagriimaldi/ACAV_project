@@ -10,6 +10,7 @@ private:
     FSM state;
     int vehicleState = 0;
     const int dim;
+    bool oneMovingAwayAllowed = false;
 public:
     Optimizer(double max, int d): maxspeed(max), state(FSM::NORMAL), dim(d){};
     double optimizer(double, double, const std::vector<std::vector<double>>&, int, const std::vector<std::vector<double>>&, bool);
@@ -17,8 +18,9 @@ public:
     FSM getState() const;
     double requestingStop(double, const std::vector<std::vector<double>>&, bool) const;
     bool rightFree(const std::vector<std::vector<double>>&, bool) const;
-    bool crossingAllowed(const std::vector<std::vector<double>>&, bool) const;
+    bool crossingAllowed(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool);
     bool colliding(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool) const;
+    bool oneMovingAway(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
 };
 
 
