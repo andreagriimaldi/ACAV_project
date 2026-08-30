@@ -20,7 +20,7 @@ public:
     bool rightFree(const std::vector<std::vector<double>>&, bool) const;
     bool crossingAllowed(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool);
     bool colliding(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool) const;
-    bool oneMovingAway(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
+    bool closestMovingAway(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
 };
 
 
