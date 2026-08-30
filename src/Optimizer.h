@@ -18,7 +18,7 @@ public:
     double requestingStop(double, const std::vector<std::vector<double>>&, bool) const;
     bool rightFree(const std::vector<std::vector<double>>&, bool) const;
     bool crossingAllowed(const std::vector<std::vector<double>>&, bool) const;
-    bool colliding(const std::vector<std::vector<double>>&) const;
+    bool colliding(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, bool) const;
 };
 
 

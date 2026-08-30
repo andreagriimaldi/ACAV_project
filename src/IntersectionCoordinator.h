@@ -17,7 +17,7 @@ class IntersectionCoordinator {
         std::vector<std::string> currentlyGranted;
         std::unordered_map<std::string, snapshot> oldCOGs;
     public:
-        IntersectionCoordinator(Map& map): m(map) {
+        explicit IntersectionCoordinator(Map& map): m(map) {
             currents.reserve(4);
             currentlyGranted.reserve(4);
             queue.reserve(4);

@@ -50,7 +50,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
     }
     else if (vehicleState == 2) {
         if (oldspeed > 0.0) {
-            if (colliding(futurePerc)) {
+            if (colliding(perc, futurePerc, shortTurn)) {
                 if (oldspeed <= 0.1) {
                     state = FSM::STOPPED;
                 }
@@ -61,7 +61,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
         else {
             //Vehicle is now stopped
             state = FSM::STOPPED;
-            if (!colliding(futurePerc)) {
+            if (!colliding(perc, futurePerc, shortTurn)) {
                 state = FSM::RESTART;
             }
         }
@@ -91,13 +91,13 @@ double Optimizer::requestingStop(double oldspeed, const std::vector<std::vector<
         const double dist = futurePerc.at(i).at(2);
 
         if (!(st == 1 or st == 2)) continue;
-        if (dist * std::cos(ang * DEG) < 0.0) continue;   // behind me
+        if (dist * std::cos(ang * DEG) < 0.0) continue;
 
         closest = std::min(closest, dist);
     }
 
     //TUNING PARAMETER
-    const double f     = std::clamp(closest / (dim / 3.0), 0.0, 1.0);
+    const double f = std::clamp(closest / (dim / 3.0), 0.0, 1.0);
     const double brake = (2.0 - f) * Vehicle::a_str_max;
 
     return std::clamp(oldspeed - brake, 0.0, maxspeed);
@@ -144,8 +144,22 @@ bool Optimizer::crossingAllowed(const std::vector<std::vector<double>>& perc, bo
     return count < 3;
 }
 
-bool Optimizer::colliding(const std::vector<std::vector<double>>& futurePerc) const {
-    return false; //TO CHANGE
+bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, bool shortTurn) const {
+    if (shortTurn) {
+        if (vehicleState == 1 or vehicleState == 2) {
+            //when vehicle is approaching it must stop if there's an obstacle ahead
+            for (int i = 1; i < perc.size(); i++) {
+                int obsState = static_cast<int>(perc.at(i).at(0));
+                double obsAngleDiff = perc.at(i).at(1);
+                double obsDistance = perc.at(i).at(2);
+                if ((obsState == 2 or obsState == 3) and std::abs(obsAngleDiff) < 45 and obsDistance < dim/6.0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    //still to implement the case where the turn is not short
 }
 
 
