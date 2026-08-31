@@ -216,7 +216,7 @@ bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, 
 
 bool Optimizer::centerCollision(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) {
     if (stopped) {
-        if (timerStop > 5) {
+        if (timerStop > 10) {
             stopped = false;
             timerStop = 0;
         }
@@ -230,14 +230,12 @@ bool Optimizer::centerCollision(const std::vector<std::vector<double>>& perc, co
     }
     //check if there's a vehicle that's gonna be close
     for (const auto& obs: futurePerc) {
-        if (obs.at(0) == 2 and (obs.at(1) > - 45 and obs.at(1) < 0) and obs.at(2) < dim/5) {
-            std::cerr << "COLLISION AVOIDED VEHICLE STOPPED" << std::endl;
+        if (obs.at(0) == 2 and (obs.at(1) > - 45 and obs.at(1) < 5) and obs.at(2) < dim/4 and !closestGoing(perc, futurePerc)) {
             stopped = true;
             timerStop++;
             return true;
         }
     }
-    std::cerr << "NO COLLISIONS DETECTED" << std::endl;
     return false;
 }
 
@@ -249,6 +247,40 @@ bool Optimizer::pastTheCenter() const {
     auto [ux, uy] = GlobalPlan::exitDir(gplan);
 
     return (px*ex + py*ey) + (px*ux + py*uy) > 0.0;
+}
+
+bool Optimizer::closestGoing(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) const {
+    double minDist = dim / 4;
+    std::vector<double> closestV;
+    for (int i = 1; i < perc.size(); i++) {
+        if (perc.at(i).at(0) == 2 and perc.at(i).at(2) < minDist and std::abs(perc.at(i).at(1)) < 45) {
+            minDist = perc.at(i).at(2);
+            closestV = perc.at(i);
+        }
+    }
+
+    if (minDist < dim / 4) { //oneMovingAway() gets called when there's at least a vehicle in the middle
+        double bestCost = 2.0;
+        double closestDistDiff = 0.0;
+        double closestAngDiff = 0;
+        bool matched = false;
+
+        for (int i = 1; i < futurePerc.size(); i++) {
+            const std::vector<double>& fut = futurePerc.at(i);
+            const double cost = std::abs(closestV.at(1) - fut.at(1)) / 180.0 + std::abs(closestV.at(2) - fut.at(2)) / dim;
+            if (cost < bestCost) {
+                bestCost = cost;
+                closestDistDiff = closestV.at(2) - fut.at(2);
+                closestAngDiff = std::abs(closestV.at(1)) - std::abs(fut.at(1));
+                matched = true;
+            }
+        }
+        if (matched and (closestDistDiff < 0 or closestAngDiff < 0)) {
+            return true;
+        }
+        return false;
+    }
+    return true;
 }
 
 

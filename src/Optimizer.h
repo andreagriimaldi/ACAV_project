@@ -27,6 +27,7 @@ public:
     bool closestMovingAway(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
     bool centerCollision(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
     bool pastTheCenter() const;
+    bool closestGoing(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&) const;
 };
 
 
