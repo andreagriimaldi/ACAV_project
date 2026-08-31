@@ -15,7 +15,7 @@ private:
     EgoTelemetry tel;
 public:
     EgoVehicle(Map &m, const vector<std::shared_ptr<Point>> &surf, int h, double s, string id, int gplan, double maxs)
-        : Vehicle(m, surf, h, s, id, gplan, maxs), mp(m, id), acc(map.getDim(),id, maxspeed), tel(maxspeed), op(maxspeed, map.getDim()) {
+        : Vehicle(m, surf, h, s, id, gplan, maxs), mp(m, id), acc(map.getDim(),id, maxspeed), tel(maxspeed), op(maxspeed, map.getDim(), gplan) {
     }
     void move() override;
     std::vector<std::vector<double>> computeFuture();

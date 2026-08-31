@@ -4,9 +4,11 @@
 
 #include "Vehicle.h"
 
-double Optimizer::optimizer(double speed, double oldspeed, const std::vector<std::vector<double>>& futurePerc, int vState, const std::vector<std::vector<double>>& perc, bool shortTurn) {
+double Optimizer::optimizer(double speed, double oldspeed, const std::vector<std::vector<double>>& futurePerc, int vState, const std::vector<std::vector<double>>& perc, bool shortTurn, int x, int y) {
     vehicleState = vState;
     updateFSM(speed, oldspeed, futurePerc, perc, shortTurn);
+    COGx = x;
+    COGy = y;
     switch (state) {
         case FSM::NORMAL: {
             return speed;
@@ -38,7 +40,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
                 }
                 else state = FSM::REQUESTING_STOP;
             }
-            else if (shortTurn and colliding(perc, futurePerc, shortTurn)) {
+            else if (colliding(perc, futurePerc, shortTurn)) {
                 if (oldspeed <= 0.1) {
                     state = FSM::STOPPED;
                 }
@@ -151,7 +153,7 @@ bool Optimizer::crossingAllowed(const std::vector<std::vector<double>>& perc, co
     return count < 3 and closestMovingAway(perc, futurePerc);
 }
 
-bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, bool shortTurn) const {
+bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, bool shortTurn) {
     if (shortTurn) {
         if (vehicleState == 1 or vehicleState == 2) {
             //when vehicle is approaching it must stop if there's an obstacle ahead
@@ -166,7 +168,8 @@ bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const st
             return false;
         }
     }
-    //still to implement the case where the turn is not short
+    return centerCollision(perc, futurePerc);
+
 }
 
 bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) {
@@ -175,7 +178,7 @@ bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, 
         return true;
     }
 
-    double minDist = dim/3;
+    double minDist = dim / 3;
     std::vector<double> closestV;
     for (int i = 1; i < perc.size(); i++) {
         if (perc.at(i).at(0) == 2 and perc.at(i).at(2) < minDist) {
@@ -184,7 +187,7 @@ bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, 
         }
     }
 
-    if (minDist < dim/3) { //oneMovingAway() gets called when there's at least a vehicle in the middle
+    if (minDist < dim / 3) { //oneMovingAway() gets called when there's at least a vehicle in the middle
         double bestCost = 2.0;
         double closestDistDiff = 0.0;
         double closestAngDiff = 0;
@@ -202,13 +205,50 @@ bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, 
         }
         if (matched and (closestDistDiff < 0 or closestAngDiff < 0)) {
             oneMovingAwayAllowed = true;
-            std::cerr << "oneMovingAway() true" << std::endl;
+            //std::cerr << "oneMovingAway() true" << std::endl;
             return true;
         }
-        std::cerr << "oneMovingAway() false" << std::endl;
+        //std::cerr << "oneMovingAway() false" << std::endl;
         return false;
     }
     return true;
+}
+
+bool Optimizer::centerCollision(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) {
+    if (stopped) {
+        if (timerStop > 5) {
+            stopped = false;
+            timerStop = 0;
+        }
+        else {
+            timerStop++;
+            return true;
+        }
+    }
+    if (pastTheCenter()) {
+        return false;
+    }
+    //check if there's a vehicle that's gonna be close
+    for (const auto& obs: futurePerc) {
+        if (obs.at(0) == 2 and (obs.at(1) > - 45 and obs.at(1) < 0) and obs.at(2) < dim/5) {
+            std::cerr << "COLLISION AVOIDED VEHICLE STOPPED" << std::endl;
+            stopped = true;
+            timerStop++;
+            return true;
+        }
+    }
+    std::cerr << "NO COLLISIONS DETECTED" << std::endl;
+    return false;
+}
+
+bool Optimizer::pastTheCenter() const {
+    const double c = dim / 2.0;
+    const double px = COGx - c, py = COGy - c;
+
+    auto [ex, ey] = GlobalPlan::entryDir(gplan);
+    auto [ux, uy] = GlobalPlan::exitDir(gplan);
+
+    return (px*ex + py*ey) + (px*ux + py*uy) > 0.0;
 }
 
 

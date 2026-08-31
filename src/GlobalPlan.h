@@ -27,6 +27,8 @@ class GlobalPlan {
         static int planToSpawn(int);
         static int planToEnd(int, int);
         static int spawnToRandomPlan(int);
+        static std::pair<double, double> entryDir(int);
+        static std::pair<double, double> exitDir(int);
 };
 
 

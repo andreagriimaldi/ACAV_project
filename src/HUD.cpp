@@ -179,6 +179,8 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
     int y = originY + pad;
     char buf[48], nbuf[24];
 
+    const int choice = t.getSpeedChoice();   // 0 physics, 1 ACC, 2 optimizer
+
     // ============================ 1. SPEED ================================
     {
         const int secH = static_cast<int>(F_SPEED * H);
@@ -211,7 +213,7 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
         const int secH = static_cast<int>(F_ACC * H);
         SDL_Rect sec{x0, y, innW, secH - pad};
 
-        if (t.getBraking()) {
+        if (choice == 1 and t.getBraking()) {
             colRedBG(r);
             SDL_RenderFillRect(r, &sec);
             colRedEdge(r);
@@ -236,7 +238,7 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
             colLabel(r);
             text(r, "ACC", sec.x + pad, sec.y + pad, px);
 
-            if (t.getACCTracking()) {
+            if (choice == 1 and t.getACCTracking()) {
                 colLabel(r);
                 text(r, "TRACKING", sec.x + sec.w - pad - textWidth("TRACKING", px),
                      sec.y + pad, px);
@@ -268,7 +270,11 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
 
         // suggested speed, lifted to leave room for the state below
         const int midPx = std::max(px, static_cast<int>(secH / 30));
-        std::snprintf(nbuf, sizeof nbuf, "%.2f", t.getOptimizerSpeed());
+        if (choice == 2) {
+            std::snprintf(nbuf, sizeof nbuf, "%.2f", t.getOptimizerSpeed());
+        } else {
+            std::snprintf(nbuf, sizeof nbuf, "---");
+        }
         colValue(r);
         textCentered(r, nbuf, cx, sec.y + (2 * secH) / 5 - 7 * midPx / 2, midPx);
 
@@ -304,8 +310,6 @@ void HUD::render(SDL_Renderer* r, const EgoTelemetry& t, int originX, int origin
         const int boxY = sec.y + 4 * pad + 7 * px;
         const int boxH = sec.h - (boxY - sec.y) - 2 * pad;
         const int boxW = (sec.w - 3 * pad) / 2;
-
-        const int choice = t.getSpeedChoice();   // 0 physics, 1 ACC, 2 optimizer
 
         const char* labels[2] = {"ACC", "OPT"};
         for (int i = 0; i < 2; ++i) {

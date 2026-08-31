@@ -188,3 +188,30 @@ int GlobalPlan::spawnToRandomPlan(int spawn) {
     std::uniform_int_distribution<int> dist(0, 2);
     return plans[spawn][dist(gen)];
 }
+
+std::pair<double,double> GlobalPlan::entryDir(int plan) {
+    // side: 0 = N, 1 = E, 2 = S, 3 = W
+    int side = (plan < 8) ? (plan / 2) : (plan - 8);
+
+    switch (side) {
+        case 0: return { 0.0,  1.0};
+        case 1: return {-1.0,  0.0};
+        case 2: return { 0.0, -1.0};
+        case 3: return { 1.0,  0.0};
+    }
+    return {0.0, 0.0};
+}
+
+std::pair<double,double> GlobalPlan::exitDir(int plan) {
+    auto [ex, ey] = entryDir(plan);
+
+    if (plan >= 8) {
+        return {ex, ey};
+    }
+
+    if (plan % 2 == 0) {
+        return {-ey,  ex};
+    }
+
+    return { ey, -ex};
+}

@@ -54,7 +54,7 @@ double EgoVehicle::adaptiveCruiseControl(double oldspeed, const std::vector<std:
 }
 
 double EgoVehicle::optimizer(double new_speed, double oldspeed, const std::vector<std::vector<double>>& futurePer, int vState, const std::vector<std::vector<double>>& per, bool shortTurn) {
-    return op.optimizer(new_speed, oldspeed, futurePer, vState, per, shortTurn);
+    return op.optimizer(new_speed, oldspeed, futurePer, vState, per, shortTurn, COGx, COGy);
 }
 
 const EgoTelemetry & EgoVehicle::getTelemetry() const {
