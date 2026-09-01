@@ -68,7 +68,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
         }
         else {
             //Vehicle is now stopped
-            state = FSM::STOPPED;
+            //state = FSM::STOPPED;
             if (!colliding(perc, futurePerc, shortTurn)) {
                 state = FSM::RESTART;
             }

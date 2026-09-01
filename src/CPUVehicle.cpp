@@ -57,7 +57,8 @@ void CPUVehicle::avoidObstacles(double& s, std::vector<std::vector<double>>& per
             double suggested = coord.suggestedSpeed(ID, s);
             //std::cerr << "Vehicle " << ID << " suggested: " << suggested << " speed before: " << s << std::endl; //DEBUG 1
             if (suggested < 2 * maxspeed) {
-                s = computeNewSpeed(0, suggested);
+                //s = computeNewSpeed(computeSteering(), suggested);
+                s = suggested;
             }
             else std::cerr << "suggestedSpeed() must be reasonable" << std::endl;
 
