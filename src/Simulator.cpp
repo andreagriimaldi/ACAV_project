@@ -32,7 +32,7 @@ void Simulator::init() {
         else {
             renderer.draw(map, EgoTelemetry());
         }
-        SDL_Delay(8);
+        SDL_Delay(20);
 
         if (crash() or stall()) {
             running = false;

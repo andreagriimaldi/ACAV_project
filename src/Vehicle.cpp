@@ -118,7 +118,7 @@ void Vehicle::updateBicycle(double v) {
 
     double L = (map.getDim() / 9) * 0.65;
 
-    const double max_disp_per_substep = 0.05; //Integration accuracy (tuning parameter)
+    const double max_disp_per_substep = map.getDim()/27000.0; //Integration accuracy (tuning parameter)
     int substeps = std::max(1, static_cast<int>(std::ceil(v / max_disp_per_substep)));
     double dt = 1.0 / substeps;
 
@@ -178,8 +178,7 @@ double Vehicle::computeSteeringFrom(double x, double y, double hdg) const {
 }
 
 int Vehicle::getPercState() const {
-    std::vector<std::vector<double>> perc = per.getPerc(getCOGx(), getCOGy(), heading);;
-    return static_cast<int>(perc.at(0).at(0));
+    return static_cast<int>(Perception::computeState(getCOGx(), getCOGy(), getGlobalPlan(), map.getDim()));
 }
 
 const Perception& Vehicle::getPerception() const {
