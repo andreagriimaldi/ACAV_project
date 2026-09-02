@@ -28,6 +28,8 @@ public:
     bool centerCollision(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&);
     bool pastTheCenter() const;
     bool closestGoing(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&) const;
+    bool trasversalNotFree(const std::vector<std::vector<double>>&, const std::vector<std::vector<double>>&, double) const;
+    bool movingAway(const std::vector<double> &obs, const std::vector<std::vector<double>> &futurePerc, double egoStep) const;
 };
 
 

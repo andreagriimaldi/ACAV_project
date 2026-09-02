@@ -40,7 +40,7 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
                 }
                 else state = FSM::REQUESTING_STOP;
             }
-            else if (colliding(perc, futurePerc, shortTurn)) {
+            else if (colliding(perc, futurePerc, shortTurn) or trasversalNotFree(perc, futurePerc, oldspeed)) {
                 if (oldspeed <= 0.1) {
                     state = FSM::STOPPED;
                 }
@@ -51,12 +51,13 @@ void Optimizer::updateFSM(double speed, double oldspeed, const std::vector<std::
         else {
             //Vehicle is now stopped
             state = FSM::STOPPED;
-            if (rightFree(perc, shortTurn) and crossingAllowed(perc, futurePerc, shortTurn)) {
+            if (rightFree(perc, shortTurn) and crossingAllowed(perc, futurePerc, shortTurn) and !colliding(perc, futurePerc, shortTurn) and !trasversalNotFree(perc, futurePerc, oldspeed)) {
                 state = FSM::RESTART;
             }
         }
     }
     else if (vehicleState == 2) {
+        //Vehicle in the middle
         if (oldspeed > 0.0) {
             if (colliding(perc, futurePerc, shortTurn)) {
                 if (oldspeed <= 0.1) {
@@ -169,7 +170,6 @@ bool Optimizer::colliding(const std::vector<std::vector<double>>& perc, const st
         }
     }
     return centerCollision(perc, futurePerc);
-
 }
 
 bool Optimizer::closestMovingAway(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc) {
@@ -281,6 +281,46 @@ bool Optimizer::closestGoing(const std::vector<std::vector<double>>& perc, const
         return false;
     }
     return true;
+}
+
+bool Optimizer::trasversalNotFree(const std::vector<std::vector<double>>& perc, const std::vector<std::vector<double>>& futurePerc, double speed) const {
+    if (gplan != 1 and gplan != 3 and gplan != 5 and gplan != 7) {
+        return false;
+    }
+
+    for (int i = 1; i < perc.size(); i++) {
+        double state = perc.at(i).at(0);
+        double deg = perc.at(i).at(1);
+        double dist = perc.at(i).at(2);
+
+        if (state == 2 and (deg > - 45.0 and deg < -15.0) and dist < dim/2 and !movingAway(perc.at(i), futurePerc, speed * 10 )) {
+            //std::cerr << "trasversalNotFree() TRUE" << std::endl;
+            return true;
+        }
+    }
+    //std::cerr << "trasversalNotFree() FALSE" << std::endl;
+    return false;
+}
+
+bool Optimizer::movingAway(const std::vector<double>& obs, const std::vector<std::vector<double>>& futurePerc, double egoStep) const {
+    const double DEG = M_PI / 180.0;
+    const double dead = dim / 200.0;
+
+    double bestCost = 0.3;
+    double radial = 0.0;
+    bool matched = false;
+
+    for (int i = 1; i < static_cast<int>(futurePerc.size()); i++) {
+        const std::vector<double>& fut = futurePerc.at(i);
+        const double cost = std::abs(obs.at(1) - fut.at(1)) / 180.0 + std::abs(obs.at(2) - fut.at(2)) / dim;
+        if (cost < bestCost) {
+            bestCost = cost;
+            radial = (fut.at(2) - obs.at(2)) + egoStep * std::cos(obs.at(1) * DEG);
+            matched = true;
+        }
+    }
+
+    return matched and radial > dead;
 }
 
 
