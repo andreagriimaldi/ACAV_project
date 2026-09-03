@@ -6,7 +6,7 @@ Final project for Automation and Control for Autonomous Vehicles (ACAV), held at
 
 ## Project Overview
 
-A real-time simulator of a four-way intersection, written in C++23 using SDL2 for rendering. The scene is a square grid of configurable size; every geometric quantity in the code is expressed as a fraction of that size, so the whole simulation rescales with a single parameter.
+A real-time simulator of a four-way intersection, written in C++23 using SDL2 for rendering. The scene is a square grid of configurable size, every geometric quantity in the code is expressed as a fraction of that size, so the whole simulation rescales with a single parameter.
 
 Two classes of agent share the road:
 
@@ -73,8 +73,6 @@ src/
 │   ├── CollisionMatrix_generator.py    Generates the route conflict table
 │   ├── GlobalPlans_plotter.py          Plots the twelve routes
 │   └── mp_validation.py                Motion prediction error analysis
-├── test/
-│   └── plots_mc_validation/            Prediction accuracy, by horizon length
 │
 ├── main.cpp                            Entry point
 ├── Simulator.{h,cpp}                   Main loop, spawning, crash and deadlock detection
