@@ -110,14 +110,6 @@ double Vehicle::computeSteering() const {
 }
 
 void Vehicle::updateBicycle(double v) {
-
-    //std::cout << "=== UPDATE ===" << std::endl;
-    //std::cout << "COG: (" << getCOGx() << ", " << getCOGy() << ")" << std::endl;
-    //std::cout << "Heading: " << heading << std::endl;
-    //std::cout << "Velocity: " << v << std::endl;
-
-    double L = (map.getDim() / 9) * 0.65;
-
     const double max_disp_per_substep = map.getDim()/27000.0; //Integration accuracy (tuning parameter)
     int substeps = std::max(1, static_cast<int>(std::ceil(v / max_disp_per_substep)));
     double dt = 1.0 / substeps;
@@ -169,7 +161,6 @@ double Vehicle::computeSteeringFrom(double x, double y, double hdg) const {
 
         double alpha = std::atan2(-d_next_y, d_next_x) - (hdg * M_PI) / 180.0;
 
-        double L = (map.getDim() / 9) * 0.65;
         double delta = std::atan2(2 * L * std::sin(alpha), dist);
 
         return delta;
@@ -235,8 +226,6 @@ const std::pair<std::pair<int, int>, std::pair<int, int>> Vehicle::twoNextPoints
 }
 
 double Vehicle::computeNewSpeed(double steer, double v_max) const {
-    double L = (map.getDim()/9) * 0.65;
-
     if (std::abs(steer) > 0.001) {
         double v_lat = std::sqrt(a_lat_max * L / std::abs(std::tan(steer)));
         v_max = std::min(v_max, v_lat);

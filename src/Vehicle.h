@@ -23,6 +23,7 @@ protected:
     GlobalPlan p;
     const double maxspeed; //TUNING PARAMETER (IT WILL BE PASSED AS A PARAMETER)
     Perception per;
+    const double L = (map.getDim() / 9.0) * 0.65;
 public:
     explicit Vehicle(Map& m, const vector<std::shared_ptr<Point>>& surf, int h, double s, string id, int gplan, double maxs): ID(id), map(m), heading(h), speed(s), p(m, gplan), maxspeed(maxs), per(m, p.getType()) {
         surface = surf;
