@@ -72,6 +72,7 @@ src/
 │   ├── GIFs/                           Demo recordings
 │   ├── CollisionMatrix_generator.py    Generates the route conflict table
 │   ├── GlobalPlans_plotter.py          Plots the twelve routes
+│   ├── PerformanceAnalysis.py          Plots performance analysis
 │   └── mp_validation.py                Motion prediction error analysis
 │
 ├── main.cpp                            Entry point
